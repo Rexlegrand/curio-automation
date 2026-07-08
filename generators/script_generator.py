@@ -16,7 +16,7 @@ SCHEMA_TYPE_A = """\
   "titre": "titre court pour la miniature (6 mots max)",
   "theme": "un parmi: sport, nature, histoire, maths, science, transport, meteo, default",
   "hook": "Attends... [fait surprenant en question ou affirmation choc]",
-  "narration": "texte complet parlé, commence par la phrase hook, 65-75 mots au total",
+  "narration": "texte complet parlé, commence par la phrase hook, 85-100 mots au total",
   "segments": [
     {"start": 0, "end": 4, "role": "hook", "texte": "..."},
     {"start": 4, "end": 9, "role": "illustration_1", "texte": "..."},
@@ -38,7 +38,7 @@ SCHEMA_TYPE_B_MATHS = """\
   "titre": "titre court pour la miniature (6 mots max)",
   "theme": "maths",
   "hook": "Attends... tu sais vraiment comment [compétence] ?",
-  "narration": "texte complet parlé, commence par la phrase hook, 65-75 mots au total",
+  "narration": "texte complet parlé, commence par la phrase hook, 85-100 mots au total",
   "segments": [ même découpage 0-4/4-9/9-13/13-18/18-22/22-25/25-30 que Type A ],
   "illustrations": [
     {
@@ -57,7 +57,7 @@ SCHEMA_TYPE_B_FRANCAIS = """\
   "titre": "titre court pour la miniature (6 mots max)",
   "theme": "default",
   "hook": "Attends... tu sais vraiment comment [compétence] ?",
-  "narration": "texte complet parlé, commence par la phrase hook, 65-75 mots au total",
+  "narration": "texte complet parlé, commence par la phrase hook, 85-100 mots au total",
   "segments": [ même découpage 0-4/4-9/9-13/13-18/18-22/22-25/25-30 que Type A ],
   "illustrations": [
     {
@@ -144,7 +144,7 @@ def _build_prompt(reel_type, sujet, niveau, matiere, cta_type):
             "tous les accents présents, règle conforme aux programmes officiels."
         )
     cta_instruction = CTA_INSTRUCTIONS[cta_type]
-    return f"""Tu écris le script d'un Reel Instagram de 25-30 secondes pour @curio.education,
+    return f"""Tu écris le script d'un Reel Instagram de 28-35 secondes pour @curio.education,
 compte éducatif français pour enfants de primaire (CP-CM2) et leurs parents.
 Le narrateur est Curio, un pingouin curieux et enthousiaste. Ton : simple, vivant,
 phrases courtes, vocabulaire accessible à un enfant de 8 ans.

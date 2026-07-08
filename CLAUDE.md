@@ -8,7 +8,7 @@ Ne jamais empiler du code sur du code existant. Si une modification est nécessa
 
 ## 1. OBJECTIF DU PROJET
 
-Construire un pipeline CLI Python semi-automatisé qui produit un Reel Instagram complet (25-30 secondes) pour le compte @curio.education en moins de 30 minutes, avec validation humaine à chaque étape critique.
+Construire un pipeline CLI Python semi-automatisé qui produit un Reel Instagram complet (28-35 secondes) pour le compte @curio.education en moins de 30 minutes, avec validation humaine à chaque étape critique.
 
 Stack :
 * Python 3.10+
@@ -74,11 +74,11 @@ Règles de montage :
 
 | Asset | Outil | Quantité | Paramètres |
 |---|---|---|---|
-| Script JSON horodaté | Claude API | 1 | 65-75 mots, segments timecodes, doit correspondre au temps 25-30s |
+| Script JSON horodaté | Claude API | 1 | 85-100 mots, segments timecodes, doit correspondre au temps 28-35s |
 | Image hook frame | GPT Image 2 | 1 | 1024×1792, standard quality |
 | Illustrations structure | GPT Image 2 | 3 | 1024×1792, standard quality |
 | Miniature feed | GPT Image 2 | 1 | 1024×1792, high quality |
-| Audio voix | ElevenLabs | 2 versions | Curio 8, Eleven v3, ~25-30s |
+| Audio voix | ElevenLabs | 2 versions | Curio 8, Eleven v3, ~28-35s |
 | Prompt Seedance | Texte généré | 1 | Fichier .txt à copier-coller |
 | Sous-titres | Whisper local | 1 | .srt depuis audio validé |
 | Montage final | FFmpeg Python | 1 | MP4 9:16 1080p |
