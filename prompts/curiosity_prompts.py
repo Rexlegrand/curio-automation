@@ -39,15 +39,22 @@ No text. No watermark. Vertical 9:16.
 """
 
 PROMPT_MINIATURE = """\
-Instagram feed thumbnail for an educational Reel, vertical 9:16.
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
 Follow EXACTLY the layout and typography style of the provided reference
 thumbnail (notebook page background, tilted magazine-clipping photos).
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
 Reuse the provided illustration image as the main visual.
-Add ONLY these two elements:
+Add ONLY these two elements, both inside the central 4:3 safe area:
 1. The provided Curio penguin logo as a small rounded app-icon badge,
-   centered at the bottom of the page (same placement as the reference).
-2. The Reel title in the top safe zone, same style as the reference:
-   bold rounded handwritten-style lettering, dark blue ink on the paper:
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
 "{titre}"
 Title must be perfectly legible and correctly spelled, every accent present.
 No other text. No watermark.

@@ -41,7 +41,17 @@ def parse_args():
     parser.add_argument("--assemble", action="store_true", help="Relance uniquement le montage")
     parser.add_argument("--output-dir", help="Dossier output existant (pour --only / --assemble)")
     parser.add_argument("--audio", type=int, choices=[1, 2], help="Version audio pour le montage")
+    parser.add_argument("--cta", choices=["abonnement", "commentaire"], help="Type de CTA (défaut : alternance automatique)")
     return parser.parse_args()
+
+
+def next_cta():
+    """Alternance 50-50 : l'opposé du CTA du dernier script généré."""
+    scripts = sorted(OUTPUT_DIR.glob("*/*/script.json"), key=lambda p: p.stat().st_mtime)
+    if scripts:
+        last = json.loads(scripts[-1].read_text()).get("cta_type", "abonnement")
+        return "commentaire" if last == "abonnement" else "abonnement"
+    return "abonnement"
 
 
 def load_existing(output_dir):
@@ -194,9 +204,11 @@ def run_full_pipeline(args):
     else:
         if not confirm_cost("Génération du script (Claude API)", COST_SCRIPT):
             sys.exit("Pipeline annulé.")
+        cta_type = args.cta or next_cta()
+        print(f"CTA de ce reel : {cta_type}")
         script = retry_loop(
             "script",
-            lambda: script_generator.generate_script(args.type, sujet, args.niveau, args.matiere),
+            lambda: script_generator.generate_script(args.type, sujet, args.niveau, args.matiere, cta_type),
         )
         script_generator.save_script(script, output_dir)
     write_prompt_files(script, output_dir)

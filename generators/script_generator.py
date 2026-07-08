@@ -106,7 +106,21 @@ def pick_competence(niveau, matiere):
     return competence
 
 
-def _build_prompt(reel_type, sujet, niveau, matiere):
+CTA_INSTRUCTIONS = {
+    "abonnement": (
+        "Le dernier segment (role cta) est un appel à s'abonner, court et naturel "
+        "(variante de : Abonne-toi pour une nouvelle curiosité chaque jour !)."
+    ),
+    "commentaire": (
+        "Le dernier segment (role cta) demande de commenter un MOT-CLÉ en majuscules "
+        "lié au sujet pour recevoir une activité pédagogique gratuite "
+        "(ex : Commente VELO et je t'envoie une activité gratuite !). "
+        "Ajoute aussi un champ \"cta_mot\" dans le JSON avec ce mot-clé exact."
+    ),
+}
+
+
+def _build_prompt(reel_type, sujet, niveau, matiere, cta_type):
     if reel_type == "curiosite":
         schema = SCHEMA_TYPE_A
         contexte = f"Sujet du Reel (Type A — Curiosité du jour) : {sujet}"
@@ -129,6 +143,7 @@ def _build_prompt(reel_type, sujet, niveau, matiere):
             "- EXACTITUDE PÉDAGOGIQUE STRICTE : chaque mot correctement orthographié, "
             "tous les accents présents, règle conforme aux programmes officiels."
         )
+    cta_instruction = CTA_INSTRUCTIONS[cta_type]
     return f"""Tu écris le script d'un Reel Instagram de 25-30 secondes pour @curio.education,
 compte éducatif français pour enfants de primaire (CP-CM2) et leurs parents.
 Le narrateur est Curio, un pingouin curieux et enthousiaste. Ton : simple, vivant,
@@ -137,9 +152,12 @@ phrases courtes, vocabulaire accessible à un enfant de 8 ans.
 {contexte}
 
 Contraintes :
-- La narration fait STRICTEMENT entre {WORD_MIN} et {WORD_MAX} mots (~140 mots/minute pour 28-32s).
+- La narration fait STRICTEMENT entre {WORD_MIN} et {WORD_MAX} mots (la voix lit ~180 mots/minute : cible 28-35 secondes, jamais plus de 35).
 - La narration commence par la phrase hook exacte.
 - Les segments suivent le découpage timecode imposé et la somme des textes = la narration.
+- AUCUNE DIGRESSION : chaque phrase sert directement le sujet principal. Si une info est
+  seulement cousine du sujet (autre règle, autre récompense, anecdote hors sujet), ne pas l'inclure.
+- {cta_instruction}
 {regles}
 
 Réponds UNIQUEMENT avec un objet JSON valide (aucun texte autour, pas de bloc markdown) suivant ce schéma :
@@ -150,10 +168,10 @@ def _count_words(text):
     return len(text.split())
 
 
-def generate_script(reel_type, sujet, niveau=None, matiere=None):
+def generate_script(reel_type, sujet, niveau=None, matiere=None, cta_type="abonnement"):
     """Appelle Claude, valide le nombre de mots, retourne le dict script."""
     client = anthropic.Anthropic(api_key=ENV["ANTHROPIC_API_KEY"])
-    prompt = _build_prompt(reel_type, sujet, niveau, matiere)
+    prompt = _build_prompt(reel_type, sujet, niveau, matiere, cta_type)
     feedback = ""
     for attempt in range(3):
         response = client.messages.create(
@@ -179,6 +197,7 @@ def generate_script(reel_type, sujet, niveau=None, matiere=None):
     script["sujet"] = sujet
     script["niveau"] = niveau
     script["matiere"] = matiere
+    script["cta_type"] = cta_type
     script["word_count"] = _count_words(script["narration"])
     return script
 

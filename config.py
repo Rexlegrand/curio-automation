@@ -43,8 +43,8 @@ COST_DESCRIPTION = 0.02
 ELEVENLABS_CONFIG = {
     "model_id": "eleven_v3",
     "language": "fr",
-    "target_duration_seconds": (28, 32),
-    "word_count_target": (65, 75),
+    "target_duration_seconds": (28, 35),
+    "word_count_target": (85, 100),  # eleven_v3 lit ~180 mots/min mesurés
     "versions_to_generate": 2,
     "output_format": "mp3_44100_128",
 }
@@ -70,9 +70,9 @@ VIDEO_FPS = 30
 VIDEO_BITRATE = "6M"
 
 # Sous-titres : style aligné sur la référence publiée @curio.education
-# (blanc bold, contour noir épais, sans boîte), baseline à 75% de la hauteur
+# (blanc bold, contour noir épais, sans boîte), une seule phrase à l'écran
 SUBTITLE_FONT_SIZE = 60
-SUBTITLE_MARGIN_V = int(VIDEO_HEIGHT * 0.25)
+SUBTITLE_MARGIN_V = int(VIDEO_HEIGHT * 0.21)  # baseline ~79% de la hauteur
 
 
 def load_env():

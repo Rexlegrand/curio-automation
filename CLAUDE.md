@@ -1,5 +1,5 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.2 — Durée du reel calée sur l'audio (timeline dynamique, illustrations flexibles, CTA rogné)
+Version : 2.3 — Sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA alterné 50-50, anti-digression
 Modèle cible : Claude-fable 5 (ou équivalent le plus puissant disponible)
 Rédigé par : Benjamin Petry—Hummel — Juillet 2026
 
@@ -24,18 +24,28 @@ Coût cible : < 1,10 € par Reel — Temps cible : < 30 minutes par Reel — Fr
 
 Type A — Curiosité du jour
 * Fréquence : 4/semaine (lundi, mardi, jeudi, vendredi)
-* Durée : 25-30 secondes
+* Durée : 28-35 secondes (jamais plus de 35)
 * Sujet : fait insolite, anecdote, phénomène scientifique, histoire
 * Hook : "Attends... [fait surprenant en question ou affirmation choc]"
 
 Type B — Compétence scolaire
 * Fréquence : 2/semaine (mercredi, samedi)
-* Durée : 25-30 secondes
+* Durée : 28-35 secondes (jamais plus de 35)
 * Sujet : règle de maths ou français — niveaux CP, CE1, CE2, CM1, CM2
 * Hook : "Attends... tu sais vraiment comment [compétence] ?"
 * Source des sujets : data/Competences_Curio.xlsx
     * Colonnes : Matière | Difficulté | Compétence
     * Onglets : CP / CE1 / CE2 / CM1 / CM2
+
+Règles éditoriales du script (tous types) :
+* AUCUNE DIGRESSION : chaque phrase sert le sujet principal. Une info « cousine » du sujet
+  (autre règle, autre récompense, anecdote annexe) est exclue — média éducatif, exactitude
+  factuelle non négociable (leçon du reel #20 : dossard rouge hors sujet des sanctions).
+* Narration : 85-100 mots (la voix eleven_v3 lit ~180 mots/min mesurés → 28-35 secondes).
+* CTA alterné 50-50, automatique (l'opposé du dernier reel, forçable via --cta) :
+  - « abonnement » : Abonne-toi pour une nouvelle curiosité chaque jour !
+  - « commentaire » : Commente [MOT-CLÉ] et reçois une activité pédagogique gratuite !
+    Le mot-clé (champ cta_mot du script.json) est repris dans la description Instagram.
 
 ## 3. STRUCTURE D'UN REEL — SÉQUENCE DE MONTAGE EXACTE
 
@@ -57,7 +67,7 @@ Le pipeline bloque avec une erreur claire si l'audio est trop court (< ~16,5s).
 Règles de montage :
 * Format sortie : MP4 1080×1920 (9:16), 30fps, 4-8 Mbps
 * Audio : fichier ElevenLabs choisi (v1 ou v2), plaqué sur toute la durée (les clips Curio n'ont pas de piste audio)
-* Sous-titres : générés par Whisper depuis le fichier audio, format SRT, rendu ASS : taille police 60px, blanc bold, contour noir épais + ombre légère, sans boîte de fond (aligné sur la référence publiée dans assets/curio_reference/sous titre + safe zone/), position Y = 75% de la hauteur (hors zone UI Instagram — safe zone)
+* Sous-titres : Whisper avec timestamps mot à mot, format SRT, rendu ASS : 60px, blanc bold, contour noir épais + ombre légère, sans boîte de fond, baseline ~79% de la hauteur. UNE SEULE PHRASE à l'écran à la fois — « Attends... » s'affiche seul, le reste du hook n'apparaît que quand il est prononcé. Phrases longues coupées en blocs équilibrés de 2 lignes max (28 caractères/ligne), contractions et typographie françaises respectées (qu'il, Abonne-toi, espace avant ? et !)
 * Transitions : cut sec entre chaque segment (pas de fondu)
 
 ## 4. ASSETS À GÉNÉRER PAR REEL
@@ -117,9 +127,13 @@ No text. No watermark. Vertical 9:16.
 
 Miniature :
 La miniature réutilise 1 ou 2 images déjà générées pour le Reel. Elle ajoute uniquement :
-* Logo Curio en bas à droite (fichier : assets/logo_curio.png)
-* Titre du Reel en texte blanc bold, positionné dans la zone haute (safe zone)
+* Logo Curio en badge arrondi centré en bas (fichier : assets/logo_curio.png)
+* Titre du Reel en lettrage manuscrit bleu foncé, zone haute
 C'est le seul endroit où le logo Curio apparaît dans les visuels.
+
+RÈGLE FEED 4:3 : le feed Instagram n'affiche que le crop central 4:3 du canvas 9:16.
+Titre, photos et logo doivent tenir ENTIÈREMENT dans la zone 4:3 centrale ; les ~20%
+haut et bas du canvas restent du fond cahier sans rien d'important.
 
 ## 6. RÉFÉRENCE VISUELLE OBLIGATOIRE
 
