@@ -44,8 +44,8 @@ Règles éditoriales du script (tous types) :
 * Narration : 85-100 mots (la voix eleven_v3 lit ~180 mots/min mesurés → 28-35 secondes).
 * CTA alterné 50-50, automatique (l'opposé du dernier reel, forçable via --cta) :
   - « abonnement » : Abonne-toi pour une nouvelle curiosité chaque jour !
-  - « commentaire » : Commente [MOT-CLÉ] et reçois une activité pédagogique gratuite !
-    Le mot-clé (champ cta_mot du script.json) est repris dans la description Instagram.
+  - « commentaire » : Commente CURIO et reçois une activité pédagogique gratuite !
+    Le mot-clé est TOUJOURS « CURIO » (jamais un mot lié au sujet), repris dans la description.
 
 ## 3. STRUCTURE D'UN REEL — SÉQUENCE DE MONTAGE EXACTE
 

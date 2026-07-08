@@ -22,14 +22,19 @@ STRUCTURE = """[EMOJI] [ACCROCHE — reformulation du hook]
 
 👇 [QUESTION D'ENGAGEMENT pour les commentaires]
 
-📩 Envoie CURIO en MP et reçois gratuitement une activité pédagogique
-niveau CP-CM2 sur [SUJET].
+{ligne_cta}
 
 🔔 Suis Curio pour une nouvelle curiosité chaque jour.
 
-[5 HASHTAGS MAX, jamais de majuscule, toujours inclure #curio]
+[5 HASHTAGS MAX, jamais de majuscule, toujours inclure #curio.
+Jamais de hashtag de niveau scolaire (#cp, #ce1, #cm1...) sauf Reel compétence.]
 
 [2-3 MENTIONS STRATÉGIQUES selon sujet]"""
+
+LIGNE_CTA = {
+    "abonnement": "📩 Envoie CURIO en MP et reçois gratuitement une activité pédagogique\nniveau CP-CM2 sur [SUJET].",
+    "commentaire": "💬 Commente CURIO et reçois gratuitement une activité pédagogique\nniveau CP-CM2 sur [SUJET].",
+}
 
 
 def generate_description(script, output_dir):
@@ -42,15 +47,9 @@ def generate_description(script, output_dir):
     client = anthropic.Anthropic(api_key=ENV["ANTHROPIC_API_KEY"])
     mentions_pool = "\n".join(f"- {k} : {', '.join(v)}" for k, v in MENTIONS.items())
     niveau = f"\nNiveau scolaire : {script['niveau']}" if script.get("niveau") else ""
-    if script.get("cta_type") == "commentaire":
-        mot = script.get("cta_mot", "CURIO")
-        cta_note = (
-            f"\nCTA du Reel : commenter le mot {mot} pour recevoir l'activité. "
-            f"Remplace la ligne 📩 par : 💬 Commente {mot} et reçois gratuitement "
-            "une activité pédagogique niveau CP-CM2 sur le sujet."
-        )
-    else:
-        cta_note = "\nCTA du Reel : abonnement. Garde la ligne 📩 Envoie CURIO en MP telle quelle."
+    cta_type = script.get("cta_type", "abonnement")
+    structure = STRUCTURE.format(ligne_cta=LIGNE_CTA[cta_type])
+    cta_note = f"\nCTA du Reel : {cta_type}. La ligne CTA de la structure est déjà la bonne, reprends-la."
 
     prompt = f"""Écris la description Instagram d'un Reel du compte @curio.education
 (éducation primaire française, mascotte pingouin Curio).
@@ -61,7 +60,7 @@ Narration complète : {script['narration']}{niveau}{cta_note}
 Thème : {script.get('theme', 'default')}
 
 Structure OBLIGATOIRE (respecte-la exactement, remplace les crochets) :
-{STRUCTURE}
+{structure}
 
 Règles :
 - 5 hashtags maximum, jamais de majuscule dans les hashtags.

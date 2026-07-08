@@ -112,10 +112,10 @@ CTA_INSTRUCTIONS = {
         "(variante de : Abonne-toi pour une nouvelle curiosité chaque jour !)."
     ),
     "commentaire": (
-        "Le dernier segment (role cta) demande de commenter un MOT-CLÉ en majuscules "
-        "lié au sujet pour recevoir une activité pédagogique gratuite "
-        "(ex : Commente VELO et je t'envoie une activité gratuite !). "
-        "Ajoute aussi un champ \"cta_mot\" dans le JSON avec ce mot-clé exact."
+        "Le dernier segment (role cta) demande de commenter le mot CURIO (toujours CURIO, "
+        "jamais un autre mot) pour recevoir une activité pédagogique gratuite "
+        "(ex : Commente CURIO et je t'envoie une activité gratuite !). "
+        "Ajoute aussi un champ \"cta_mot\": \"CURIO\" dans le JSON."
     ),
 }
 
