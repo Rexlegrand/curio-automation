@@ -1,5 +1,5 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.3 — Sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA alterné 50-50, anti-digression
+Version : 2.6 — Moteur de rendu code pour les compétences maths (division/soustraction/addition/multiplication posées + astuces de calcul mental) : 0€, 0 risque de chiffre halluciné, routage automatique via classification faite par Claude dans le même appel script. Thèmes "velo"/"combat", sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA alterné 50-50, anti-digression (hérité v2.5).
 Modèle cible : Claude-fable 5 (ou équivalent le plus puissant disponible)
 Rédigé par : Benjamin Petry—Hummel — Juillet 2026
 
@@ -16,6 +16,7 @@ Stack :
 * ElevenLabs API (audio voix Curio 8)
 * Anthropic API (génération de scripts et prompts)
 * FFmpeg (montage vidéo local, gratuit)
+* Pillow (rendu code des opérations posées maths, gratuit — v2.6)
 * Seedance 2.0 / Dreamina (hook animé — manuel, pas d'API)
 
 Coût cible : < 1,10 € par Reel — Temps cible : < 30 minutes par Reel — Fréquence cible : 6 Reels/semaine
@@ -51,11 +52,11 @@ Règles éditoriales du script (tous types) :
 
 ```
 Hook animé        — Seedance MP4, 4s fixes (généré manuellement, droppé dans output/)
-Illustration 1    — PNG GPT Image 2, durée flexible (poids 5)
+Illustration 1    — PNG GPT Image 2 ou rendu code (maths posé), durée flexible (poids 5)
 Clip Curio A      — curio_explication.mp4, 4s fixes
-Illustration 2    — PNG GPT Image 2, durée flexible (poids 5)
+Illustration 2    — PNG GPT Image 2 ou rendu code, durée flexible (poids 5)
 Clip Curio B      — curio_explication_2.mp4, 4s fixes
-Illustration 3    — PNG GPT Image 2, durée flexible (poids 3)
+Illustration 3    — PNG GPT Image 2 ou rendu code, durée flexible (poids 3)
 CTA               — curio_cta.mp4, 3s fixes (on saute les 2 premières secondes du clip)
 ```
 
@@ -76,7 +77,7 @@ Règles de montage :
 |---|---|---|---|
 | Script JSON horodaté | Claude API | 1 | 85-100 mots, segments timecodes, doit correspondre au temps 28-35s |
 | Image hook frame | GPT Image 2 | 1 | 1024×1792, standard quality |
-| Illustrations structure | GPT Image 2 | 3 | 1024×1792, standard quality |
+| Illustrations structure | GPT Image 2 **ou rendu code (v2.6)** | 3 | 1024×1792 — code_render si compétence maths avec opération posée/astuce (§7 bis), sinon GPT Image 2 standard quality |
 | Miniature feed | GPT Image 2 | 1 | 1024×1792, high quality |
 | Audio voix | ElevenLabs | 2 versions | Curio 8, Eleven v3, ~28-35s |
 | Prompt Seedance | Texte généré | 1 | Fichier .txt à copier-coller |
@@ -84,11 +85,12 @@ Règles de montage :
 | Montage final | FFmpeg Python | 1 | MP4 9:16 1080p |
 | Description Instagram | Claude API | 1 | .txt avec hashtags + mentions |
 
-Total images GPT Image 2 : 5 par Reel (hook + 3 illus + miniature)
+Total images GPT Image 2 : 5 par Reel (hook + 3 illus + miniature), ou 2 par Reel
+(hook + miniature) quand les 3 illustrations passent par le rendu code (§7 bis).
 
 ## 5. RÈGLES VISUELLES — CHARTE GRAPHIQUE CURIO
 
-Fond obligatoire pour TOUTES les illustrations :
+Fond obligatoire pour TOUTES les illustrations (GPT Image 2 et rendu code) :
 
 ```
 Background: clean white French school notebook page, discrete light blue
@@ -126,10 +128,16 @@ No text. No watermark. Vertical 9:16.
 ```
 
 Miniature :
-La miniature réutilise 1 ou 2 images déjà générées pour le Reel. Elle ajoute uniquement :
+La miniature réutilise 1 ou 2 images déjà générées pour le Reel — SAUF si les
+illustrations viennent du rendu code (v2.6, §7 bis) : dans ce cas, la miniature
+ne réutilise jamais l'illustration à chiffres exacts (risque de chiffre
+halluciné par une repasse GPT Image), elle génère un visuel générique maths
+sans calcul (voir §7 bis). Elle ajoute uniquement :
 * Logo Curio en badge arrondi centré en bas (fichier : assets/logo_curio.png)
 * Titre du Reel en lettrage manuscrit bleu foncé, zone haute
-C'est le seul endroit où le logo Curio apparaît dans les visuels.
+C'est le seul endroit où le logo Curio apparaît dans les visuels — y compris
+pour les illustrations en rendu code, qui n'ont pas de logo (cohérence avec
+le comportement existant des illustrations GPT Image 2, qui n'en ont jamais eu).
 
 RÈGLE FEED 4:3 : le feed Instagram n'affiche que le crop central 4:3 du canvas 9:16.
 Titre, photos et logo doivent tenir ENTIÈREMENT dans la zone 4:3 centrale ; les ~20%
@@ -137,7 +145,7 @@ haut et bas du canvas restent du fond cahier sans rien d'important.
 
 ## 6. RÉFÉRENCE VISUELLE OBLIGATOIRE
 
-Règle non négociable : chaque génération d'image GPT Image 2 doit inclure les images de référence stockées dans assets/curio_reference/.
+Règle non négociable : chaque génération d'image GPT Image 2 doit inclure les images de référence stockées dans assets/curio_reference/. Cette règle ne s'applique qu'aux images GPT Image 2 — le rendu code (§7 bis) ne fait aucun appel API et ne consomme donc aucune référence.
 
 ```
 assets/curio_reference/
@@ -156,11 +164,18 @@ Les 5 fichiers canoniques ci-dessus sont des copies des "exemples parfaits" choi
 
 Les templates exacts vivent dans `prompts/curiosity_prompts.py`, `prompts/competence_prompts.py` et `prompts/seedance_prompts.py`. Ils reprennent mot pour mot les templates du brief v2.0 : fond cahier Seyès, clipping magazine, photoréalisme Type A, exactitude pédagogique stricte Type B (chaque chiffre/mot exact, méthode Éducation Nationale), hook frame Curio, prompt Seedance avec lip-sync.
 
+Depuis v2.6, `prompts/competence_prompts.py` ne sert plus de template maths à
+chiffres exacts (`build_maths_prompt` supprimé, remplacé par le rendu code,
+§7 bis) : il ne reste que `build_concept_prompt` (sujets maths sans calcul,
+ex. symétrie) et `build_francais_prompt` (inchangé, français toujours GPT Image 2).
+
 Backgrounds thématiques selon sujet :
 
 ```python
 BACKGROUNDS = {
     "sport":      "football stadium at golden hour, French flags, crowd blurred",
+    "combat":     "MMA octagon cage arena at night, dramatic spotlight, blurred cheering crowd",
+    "velo":       "Tour de France mountain road at golden hour, cheering crowd waving French flags, blurred peloton",
     "nature":     "relevant natural environment (fjord, ocean, meadow, etc.)",
     "histoire":   "relevant historical setting, dramatic lighting",
     "maths":      "giant chalkboard with relevant equation, classroom ambiance",
@@ -171,21 +186,105 @@ BACKGROUNDS = {
 }
 ```
 
-## 8. PARAMÈTRES ELEVENLABS — FIXES
+## 7 bis. MOTEUR DE RENDU CODE — COMPÉTENCES MATHS (v2.6)
+
+GPT Image 2 est un modèle génératif : il imite un style, il ne calcule pas.
+Pour un contenu pédagogique où l'exactitude du chiffre est non négociable
+(division, soustraction avec emprunt, addition avec retenue, multiplication
+posée), le risque d'hallucination augmente avec la complexité de l'opération.
+**Règle : router selon le type de contenu, pas tout traiter pareil.**
+
+### Trois catégories
+
+| Catégorie | `render_type` | Moteur |
+|---|---|---|
+| Opération posée classique | `division_posee`, `soustraction_colonnes`, `addition_colonnes`, `multiplication_posee` | Code (0€) |
+| Astuce de calcul mental (chaîne d'égalités) | `astuce_chaine` | Code (0€) |
+| Concept sans calcul exact (symétrie, fractions en parts, unités) | — | GPT Image 2 |
+
+Le français n'est pas concerné (reste toujours GPT Image 2, prompt inchangé).
+
+### Classification — faite par Claude, dans l'appel script existant
+
+Aucun appel API supplémentaire : `generators/script_generator.py` enrichit le
+prompt système Claude (Type B maths uniquement) pour qu'il sorte, dans le même
+`script.json`, les champs `image_route` (`code_render`|`gpt_image`),
+`render_type` et `operation_data`. Règle de classification donnée à Claude :
+opération posée avec retenue/emprunt/potence → `code_render` + le render_type
+correspondant ; astuce de calcul mental présentable en chaîne d'égalités →
+`code_render` + `astuce_chaine` ; sinon (notion sans calcul chiffré) →
+`gpt_image`, `illustrations` rempli avec 3 `description_visuelle`.
+
+`operation_data` selon `render_type` :
+* `division_posee` : `{"dividende": int, "diviseur": int}` (diviseur 2 chiffres autorisé seulement niveau CM2)
+* `soustraction_colonnes` / `addition_colonnes` : `{"nombre1": int, "nombre2": int}` (nombre1 ≥ nombre2 pour la soustraction)
+* `multiplication_posee` : `{"multiplicande": int, "multiplicateur": int}` (multiplicateur à 1 chiffre)
+* `astuce_chaine` : `{"titre": str, "etapes": [str, ...]}`
+
+`generators/script_generator.py` revérifie lui-même chaque `operation_data`
+avant d'écrire le script.json : types/contraintes pour les opérations posées
+(le résultat est de toute façon recalculé par le renderer, jamais celui de
+Claude), et exactitude arithmétique de chaque ligne pour `astuce_chaine`
+(seul cas où Claude fournit un résultat en texte libre). Si invalide, le
+script est régénéré automatiquement (jusqu'à 3 tentatives) avant tout appel
+image ou audio.
+
+### Checkpoint 1 — veto conservé
+
+Le Checkpoint 1 existant (validation du sujet) affiche désormais aussi, en
+clair, `image_route` / `render_type` / `operation_data` — Benjamin voit
+« 847 ÷ 4 » écrit noir sur blanc avant que quoi que ce soit ne soit généré.
+Zéro friction ajoutée.
+
+### Routage — image_generator.py
 
 ```python
-ELEVENLABS_CONFIG = {
-    "voice_id": "depuis .env (ELEVENLABS_VOICE_ID)",
-    "model_id": "eleven_v3",
-    "language": "fr",
-    "target_duration_seconds": (28, 32),
-    "word_count_target": (65, 75),   # ~140 mots/min
-    "versions_to_generate": 2,       # Toujours générer v1 et v2
-    "output_format": "mp3_44100_128",
-}
+if script["image_route"] == "code_render":
+    renderer = MATH_RENDERERS[script["render_type"]]          # generators/math_renderers/
+    content_img = renderer(**script["operation_data"])         # dessin déterministe, fond transparent
+    compose_illustration(content_img, output_path)              # colle sur le fond cahier Curio
+    # coût loggé à 0.0 — zéro appel API
+else:
+    ...  # comportement GPT Image 2 existant, inchangé
 ```
 
-## 9. FLUX D'EXÉCUTION — CHECKPOINTS HUMAINS
+Le hook frame et la miniature restent TOUJOURS GPT Image 2 (Curio y apparaît,
+pas de calcul à représenter). Quand les illustrations sont en `code_render`,
+la miniature ne réutilise jamais l'illustration à chiffres (risque de
+hallucination si elle repasse par une génération GPT Image) : elle génère un
+visuel générique maths (crayons, règle, ardoise) sans aucun chiffre.
+
+### Rendu visuel
+
+Chaque renderer (`generators/math_renderers/division_posee.py`,
+`soustraction_colonnes.py`, `addition_colonnes.py`, `multiplication_posee.py`,
+`astuce_chaine.py`) dessine uniquement son contenu (fond transparent) ; les
+étapes de calcul (soustractions intermédiaires, retenues, emprunts) sont en
+rouge, le résultat final en vert. `generators/math_renderers/compose.py`
+colle ce contenu sur `cahier_background.py` (même fond Seyès que GPT Image 2)
+avec bordure blanche + ombre portée (style magazine-clip) et une légère
+rotation aléatoire -2°/+2° ("collé à la main"). Police : `Patrick Hand`
+(assets/fonts/PatrickHand-Regular.ttf, Google Fonts, gratuite) — n'étant pas
+une police à chasse fixe, l'alignement en colonnes centre chaque nombre sur
+sa colonne plutôt que de le positionner à un x fixe (`draw_col_text`).
+
+## 8. AMÉLIORATION VISUELLE — HÉRITÉ v2.4/v2.6
+
+1. Police manuscrite Patrick Hand intégrée pour le rendu code maths (§7 bis) — DejaVuSansMono abandonné.
+2. Pas de logo Curio sur les illustrations en rendu code, cohérent avec les illustrations GPT Image 2 (jamais eu de logo, §5).
+3. Légère rotation aléatoire (-2° à +2°) sur toutes les illustrations en rendu code — effet "collé à la main" cohérent avec le style magazine-clip existant.
+
+## 9. COÛT — IMPACT DU RENDU CODE (v2.6)
+
+| Reel | Avant v2.6 | Depuis v2.6 (maths avec opération posée/astuce) |
+|---|---|---|
+| Images | 5 GPT Image 2 × 0,011$ = 0,055$ | 2 GPT Image 2 (hook + miniature) × 0,011$ = 0,022$ |
+| Risque hallucination chiffre | réel | nul sur les illustrations (code_render) |
+
+Reels curiosité, compétence français, et compétence maths "concept sans
+calcul" : coût images inchangé (5 × GPT Image 2).
+
+## 10. FLUX D'EXÉCUTION — CHECKPOINTS HUMAINS
 
 ```
 ÉTAPE 0 — INPUT
@@ -193,10 +292,11 @@ ELEVENLABS_CONFIG = {
   Pipeline crée le dossier output/[date]/[slug_sujet]/
 
   CHECKPOINT 1 — Validation sujet ← Benjamin approuve avant de continuer
-  Affiche : script JSON complet + tous les prompts images + prompt Seedance
+  Affiche : script JSON complet + image_route/render_type/operation_data
+  (Type B maths) + tous les prompts images + prompt Seedance
 
 ÉTAPE 1 — GÉNÉRATION PARALLÈLE (si checkpoint 1 validé)
-  Thread A : GPT Image 2 → 5 images (hook + 3 illus + miniature)
+  Thread A : GPT Image 2 (et/ou rendu code maths, 0€) → 5 images (hook + 3 illus + miniature)
   Thread B : ElevenLabs → 2 fichiers audio (v1 + v2)
   Affiche : coût estimé avant lancement + demande confirmation
 
@@ -225,7 +325,7 @@ PUBLICATION (manuelle)
   Benjamin publie manuellement sur @curio.education
 ```
 
-## 10. STRUCTURE DE FICHIERS — OBLIGATOIRE
+## 11. STRUCTURE DE FICHIERS — OBLIGATOIRE
 
 ```
 curio-automation/
@@ -235,16 +335,25 @@ curio-automation/
 ├── requirements.txt
 │
 ├── generators/
-│   ├── script_generator.py            ← Claude API → script.json horodaté
-│   ├── image_generator.py             ← GPT Image 2 → images PNG avec référence
+│   ├── script_generator.py            ← Claude API → script.json horodaté (+ classification maths v2.6)
+│   ├── image_generator.py             ← Routage GPT Image 2 / rendu code (v2.6) → images PNG
 │   ├── audio_generator.py             ← ElevenLabs → v1 + v2 .mp3
 │   ├── subtitle_generator.py          ← Whisper local (CLI) → .srt
 │   ├── video_assembler.py             ← FFmpeg → montage final .mp4
-│   └── instagram_generator.py         ← Claude API → description .txt
+│   ├── instagram_generator.py         ← Claude API → description .txt
+│   └── math_renderers/                ← NOUVEAU v2.6 — rendu code opérations maths
+│       ├── __init__.py
+│       ├── cahier_background.py       ← make_cahier_background(), fond Seyès partagé
+│       ├── compose.py                 ← compose_illustration() générique + draw_col_text()
+│       ├── division_posee.py          ← potence, diviseur 1-2 chiffres
+│       ├── soustraction_colonnes.py   ← emprunt visible
+│       ├── addition_colonnes.py       ← retenue visible
+│       ├── multiplication_posee.py    ← multiplicande × 1 chiffre
+│       └── astuce_chaine.py           ← chaîne d'égalités alignées
 │
 ├── prompts/
-│   ├── curiosity_prompts.py           ← Templates prompts Type A
-│   ├── competence_prompts.py          ← Templates prompts Type B (validés prod)
+│   ├── curiosity_prompts.py           ← Templates prompts Type A (+ variante miniature générique v2.6)
+│   ├── competence_prompts.py          ← Type B : concept maths sans calcul + français (validés prod)
 │   └── seedance_prompts.py            ← Template prompt hook animé Seedance
 │
 ├── assets/
@@ -253,6 +362,8 @@ curio-automation/
 │   │   ├── curio_explication.mp4      ← Curio talking head segment 1 (5s)
 │   │   ├── curio_explication_2.mp4    ← Curio talking head segment 2 (5s)
 │   │   └── curio_cta.mp4              ← Curio CTA final (4s)
+│   ├── fonts/
+│   │   └── PatrickHand-Regular.ttf    ← NOUVEAU v2.6 — police manuscrite rendu code (Google Fonts)
 │   └── logo_curio.png                 ← Logo Curio pour miniatures
 │
 ├── data/
@@ -275,10 +386,10 @@ curio-automation/
             ├── subtitles.srt
             ├── reel_final.mp4
             ├── description_instagram.txt
-            └── api_log.jsonl          ← Log de chaque appel API
+            └── api_log.jsonl          ← Log de chaque appel API (0.0 pour code_render)
 ```
 
-## 11. INTERFACE CLI — COMMANDES
+## 12. INTERFACE CLI — COMMANDES
 
 ```bash
 # Reel curiosité
@@ -297,21 +408,22 @@ python main.py --only audio --output-dir ./output/2026-07-07/dilatation_rails/
 python main.py --assemble --output-dir ./output/2026-07-07/dilatation_rails/
 ```
 
-## 12. COÛTS API PAR REEL
+## 13. COÛTS API PAR REEL
 
 | Poste | Outil | Coût estimé |
 |---|---|---|
-| 5 images standard | GPT Image 2 (0,011$/image) | ~0,055$ |
+| Images (curiosité / français / maths concept) | GPT Image 2 (0,011$/image × 5) | ~0,055$ |
+| Images (maths opération posée/astuce, v2.6) | GPT Image 2 (hook+miniature) + rendu code (3 illus, 0€) | ~0,022$ |
 | 2 audios | ElevenLabs API | ~0,22$ |
 | Scripts + prompts | Claude API Sonnet | ~0,04$ |
 | Sous-titres | Whisper local | 0$ |
 | Montage | FFmpeg local | 0$ |
 | Hook animé | Dreamina 10€/mois | ~0,42€ |
-| TOTAL | | < 0,80$ + 0,42€ ≈ 1,15€ |
+| TOTAL | | < 0,80$ + 0,42€ ≈ 1,15€ (≤ 0,75€ pour un reel maths opération posée) |
 
 Projection juillet-août (48 reels) : ~55€ total. Si capacité à baisser le prix : good, mais surtout ne pas baisser la qualité du rendu.
 
-## 13. VARIABLES D'ENVIRONNEMENT REQUISES
+## 14. VARIABLES D'ENVIRONNEMENT REQUISES
 
 ```bash
 # .env (ne jamais committer)
@@ -321,7 +433,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 ELEVENLABS_VOICE_ID=...
 ```
 
-## 14. DESCRIPTION INSTAGRAM — STRUCTURE FIXE
+## 15. DESCRIPTION INSTAGRAM — STRUCTURE FIXE
 
 ```
 [EMOJI] [ACCROCHE — reformulation du hook]
@@ -358,28 +470,31 @@ MENTIONS = {
 }
 ```
 
-## 15. ÉTAT DES PRÉREQUIS (audit du 2026-07-07, soir)
+## 16. ÉTAT DES PRÉREQUIS (audit du 2026-07-21, v2.6)
 
 1. Clés API — ✅ testées OK (Anthropic 200, OpenAI 200, ElevenLabs 200)
 2. Voice ID ElevenLabs — ✅ voix « Curio 8 » confirmée via API (tier starter)
 3. Clips MP4 réutilisables — ✅ copiés dans assets/clips/ (structures 4s, CTA 5s, sans piste audio)
 4. Références visuelles — ✅ 5 PNG canoniques copiés depuis les « exemples parfaits »
 5. Logo Curio — ✅ assets/logo_curio.png (avatar circulaire détouré, fond transparent)
-6. FFmpeg — ✅ 8.1.1 installé (pas de ffprobe sur cette machine)
-7. Whisper — ✅ openai-whisper CLI installé (global, Python 3.9 user install)
-8. Python — ✅ 3.12.13 via uv, venv dans .venv/
-9. Excel compétences — ✅ data/Competences_Curio.xlsx (copié depuis assets/Compétences Curio/, 30 maths + 30 français par niveau)
-10. Démarrage — pipeline complet construit, montage validé sur assets synthétiques + clips réels
+6. Police Patrick Hand — ✅ assets/fonts/PatrickHand-Regular.ttf (v2.6)
+7. FFmpeg — ✅ 8.1.1 installé (pas de ffprobe sur cette machine)
+8. Whisper — ✅ openai-whisper CLI installé (global, Python 3.9 user install)
+9. Pillow — ✅ installé dans .venv (v2.6, requis par generators/math_renderers/)
+10. Python — ✅ 3.12.13 via uv, venv dans .venv/
+11. Excel compétences — ✅ data/Competences_Curio.xlsx (30 maths + 30 français par niveau)
+12. Démarrage — pipeline complet construit, montage validé sur assets synthétiques + clips réels, moteur de rendu code maths validé sur division/soustraction/addition/multiplication/astuce
 
-## 16. RÈGLES DE CODAGE NON NÉGOCIABLES
+## 17. RÈGLES DE CODAGE NON NÉGOCIABLES
 
 1. Un fichier = une responsabilité — chaque module fait une seule chose.
 2. Coût affiché avant chaque appel API — "Cette étape coûtera ~0,055$. Confirmer ? (o/n)"
 3. Checkpoints bloquants — le pipeline s'arrête et attend une saisie à chaque checkpoint.
-4. Logging systématique — chaque appel API logué avec : timestamp, coût réel, fichier généré.
+4. Logging systématique — chaque appel API logué avec : timestamp, coût réel, fichier généré (0.0 pour le rendu code).
 5. Gestion d'erreur explicite — si une API échoue, afficher l'erreur claire et proposer retry.
 6. Pas de régénération si le fichier existe déjà — vérifier l'existence avant chaque appel.
 7. Pas de dépendances inutiles — n'installer que ce qui est strictement nécessaire.
-8. Référence visuelle obligatoire — si assets/curio_reference/ est vide, le pipeline bloque et avertit.
+8. Référence visuelle obligatoire — si assets/curio_reference/ est vide, le pipeline bloque et avertit (illustrations GPT Image 2 uniquement — sans objet pour le rendu code).
+9. Aucun chiffre de compétence maths sans vérification — un render_type d'opération posée ne fait jamais confiance au résultat de Claude, il est recalculé par le code (§7 bis).
 
 Ce fichier est la source de vérité absolue pour Claude Code. En cas de contradiction avec toute autre source, ce fichier prime. Ne pas modifier sans mettre à jour la version en en-tête.

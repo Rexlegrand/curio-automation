@@ -2,6 +2,7 @@
 
 BACKGROUNDS = {
     "sport": "football stadium at golden hour, French flags, crowd blurred",
+    "combat": "MMA octagon cage arena at night, dramatic spotlight, blurred cheering crowd, professional fight venue ambiance",
     "velo": "Tour de France mountain road at golden hour, cheering crowd waving French flags, blurred peloton of cyclists in the background",
     "nature": "relevant natural environment (fjord, ocean, meadow, etc.)",
     "histoire": "relevant historical setting, dramatic lighting",
@@ -49,7 +50,7 @@ entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
 the canvas as plain notebook-page background with nothing important in them.
 Make the title and photos correspondingly compact.
 
-Reuse the provided illustration image as the main visual.
+{visual_instruction}
 Add ONLY these two elements, both inside the central 4:3 safe area:
 1. The provided Curio penguin logo as a small rounded app-icon badge,
    centered horizontally, at the BOTTOM EDGE of the central safe area.
@@ -73,5 +74,21 @@ def build_hook_frame_prompt(theme):
     return PROMPT_HOOK_FRAME.format(background_thematique=get_background(theme))
 
 
-def build_miniature_prompt(titre):
-    return PROMPT_MINIATURE.format(titre=titre)
+VISUAL_REUSE = "Reuse the provided illustration image as the main visual."
+VISUAL_GENERIC_MATHS = (
+    "Generate a generic magazine-clipping visual on the theme of maths (pencils, ruler, "
+    "notebook page, chalk doodle) in the same photographic/notebook style as the reference — "
+    "no exact numbers, no calculation, purely decorative. Do not attempt to reproduce a "
+    "mathematical operation."
+)
+
+
+def build_miniature_prompt(titre, reuse_illustration=True):
+    """reuse_illustration=False : cas code_render maths — pas de photo à réutiliser en
+
+    entrée (les chiffres du render code ne doivent jamais repasser par une
+    génération GPT Image, qui pourrait les halluciner), on demande un visuel
+    générique sans chiffre à la place.
+    """
+    visual_instruction = VISUAL_REUSE if reuse_illustration else VISUAL_GENERIC_MATHS
+    return PROMPT_MINIATURE.format(titre=titre, visual_instruction=visual_instruction)

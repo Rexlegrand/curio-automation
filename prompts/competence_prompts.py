@@ -1,26 +1,25 @@
-"""Templates de prompts images Type B — Compétence scolaire (validés prod)."""
+"""Templates de prompts images Type B — Compétence scolaire (validés prod).
 
-PROMPT_COMPETENCE_MATHS = """\
+Maths (ADDENDUM v2.6) : les opérations posées passent désormais par
+generators/math_renderers/ (code, 0€, 0 hallucination) — PROMPT_COMPETENCE_CONCEPT
+ne sert plus que pour les sujets sans calcul exact (image_route=gpt_image),
+ex : symétrie, fractions en parts, unités de mesure.
+"""
+
+PROMPT_COMPETENCE_CONCEPT = """\
 Background: clean white French school notebook page, Seyès grid style,
 subtle paper texture, vertical 9:16 format.
 
-STRICT EDUCATIONAL ACCURACY — French Éducation Nationale standards.
-Grade: {niveau}
-Operation: {type_operation}
+STRICT EDUCATIONAL ACCURACY — French Éducation Nationale standards, grade {niveau}.
+Concept to illustrate (no exact calculation involved):
+{description_visuelle}
 
-Exact operation to represent (copy every digit precisely):
-{operation_complete}
-
-Step-by-step annotations:
-{etapes_numerotees}
-
-CRITICAL: Every digit must be mathematically correct.
-The operation shown is {operation_resume}. Do not invent any number.
-French Éducation Nationale method only.
+Clear, minimalist pedagogical diagram. If arrows or numbers are needed, keep
+them simple and accurate — no invented values. No cartoon style, no Curio
+character.
 
 Magazine clipping style, fine white border, soft drop shadow.
-Empty space at bottom 30% for captions.
-No extra decorations. No watermark.
+Empty space at bottom 30% for captions. No watermark.
 """
 
 PROMPT_COMPETENCE_FRANCAIS = """\
@@ -45,15 +44,9 @@ Empty space at bottom 30% for captions. No watermark.
 """
 
 
-def build_maths_prompt(data):
-    """data : dict issu du script.json (clés maths exactes fournies par Claude)."""
-    return PROMPT_COMPETENCE_MATHS.format(
-        niveau=data["niveau"],
-        type_operation=data["type_operation"],
-        operation_complete=data["operation_complete"],
-        etapes_numerotees=data["etapes_numerotees"],
-        operation_resume=data["operation_resume"],
-    )
+def build_concept_prompt(description_visuelle, niveau):
+    """Sujet maths sans calcul exact (image_route=gpt_image) : data issu du script.json."""
+    return PROMPT_COMPETENCE_CONCEPT.format(description_visuelle=description_visuelle, niveau=niveau)
 
 
 def build_francais_prompt(data):

@@ -1,4 +1,11 @@
-"""Génération des 5 images PNG via GPT Image 2, références visuelles injectées."""
+"""Génération des 5 images PNG — GPT Image 2 (référence injectée) ou code_render (ADDENDUM v2.6).
+
+Routage par image : hook_frame et miniature restent toujours GPT Image 2
+(Curio y apparaît, pas de calcul à représenter). Les 3 illustrations d'un
+Reel compétence maths passent par generators/math_renderers/ (0€, 0 risque
+de chiffre halluciné) quand script["image_route"] == "code_render" ;
+sinon comportement GPT Image 2 existant, inchangé.
+"""
 
 import base64
 from contextlib import ExitStack
@@ -16,32 +23,79 @@ from config import (
     check_references,
     log_api_call,
 )
+from generators.math_renderers import addition_colonnes, astuce_chaine, division_posee, multiplication_posee, soustraction_colonnes
+from generators.math_renderers.compose import compose_illustration
 from prompts import competence_prompts, curiosity_prompts
 
 QUALITY_STANDARD = "medium"
 QUALITY_HIGH = "high"
 
+MATH_RENDERERS = {
+    "division_posee": division_posee.render,
+    "soustraction_colonnes": soustraction_colonnes.render,
+    "addition_colonnes": addition_colonnes.render,
+    "multiplication_posee": multiplication_posee.render,
+    "astuce_chaine": astuce_chaine.render,
+}
+
+
+def build_image_plan(script):
+    """Retourne la liste ordonnée des images à produire, chacune avec sa route.
+
+    Chaque entrée : {"name", "route": "gpt_image"|"code_render", ...}
+    - gpt_image : "prompt", "quality", "extra" (références supplémentaires)
+    - code_render : "render_type", "operation_data"
+    """
+    theme = script.get("theme", "default")
+    plan = [{
+        "name": "hook_frame.png",
+        "route": "gpt_image",
+        "prompt": curiosity_prompts.build_hook_frame_prompt(theme),
+        "quality": QUALITY_STANDARD,
+        "extra": [],
+    }]
+
+    illus_route = script.get("image_route", "gpt_image")
+    if illus_route == "code_render":
+        for i in range(1, 4):
+            plan.append({
+                "name": f"illus_{i}.png",
+                "route": "code_render",
+                "render_type": script["render_type"],
+                "operation_data": script["operation_data"],
+            })
+    else:
+        for i, illus in enumerate(script["illustrations"], start=1):
+            if script["type"] == "curiosite":
+                prompt = curiosity_prompts.build_illustration_prompt(illus["description_visuelle"])
+            elif script.get("matiere") and "math" in script["matiere"].lower():
+                prompt = competence_prompts.build_concept_prompt(illus["description_visuelle"], script["niveau"])
+            else:
+                data = dict(illus)
+                data["niveau"] = script["niveau"]
+                prompt = competence_prompts.build_francais_prompt(data)
+            plan.append({"name": f"illus_{i}.png", "route": "gpt_image", "prompt": prompt, "quality": QUALITY_STANDARD, "extra": []})
+
+    # code_render : illus_1.png contient des chiffres exacts calculés par code.
+    # Ne jamais le repasser dans une génération GPT Image (image-to-image) qui
+    # pourrait halluciner un chiffre différent sur la miniature publiée.
+    reuse_illustration = illus_route != "code_render"
+    plan.append({
+        "name": "miniature.png",
+        "route": "gpt_image",
+        "prompt": curiosity_prompts.build_miniature_prompt(script["titre"], reuse_illustration=reuse_illustration),
+        "quality": QUALITY_HIGH,
+        "extra": ["illus_1.png", "logo"] if reuse_illustration else ["logo"],
+    })
+    return plan
+
 
 def build_image_prompts(script):
-    """Retourne la liste ordonnée [(nom_fichier, prompt, qualité, refs_extra)]."""
-    theme = script.get("theme", "default")
-    prompts = [("hook_frame.png", curiosity_prompts.build_hook_frame_prompt(theme), QUALITY_STANDARD, [])]
+    """Compat : liste [(nom_fichier, prompt, qualité, refs_extra)] pour les entrées gpt_image uniquement.
 
-    for i, illus in enumerate(script["illustrations"], start=1):
-        if script["type"] == "curiosite":
-            prompt = curiosity_prompts.build_illustration_prompt(illus["description_visuelle"])
-        elif script.get("matiere") and "math" in script["matiere"].lower():
-            data = dict(illus)
-            data["niveau"] = script["niveau"]
-            prompt = competence_prompts.build_maths_prompt(data)
-        else:
-            data = dict(illus)
-            data["niveau"] = script["niveau"]
-            prompt = competence_prompts.build_francais_prompt(data)
-        prompts.append((f"illus_{i}.png", prompt, QUALITY_STANDARD, []))
-
-    prompts.append(("miniature.png", curiosity_prompts.build_miniature_prompt(script["titre"]), QUALITY_HIGH, ["illus_1.png", "logo"]))
-    return prompts
+    Utilisé par main.py pour écrire prompts_all.txt (rien à copier-coller pour code_render).
+    """
+    return [(e["name"], e["prompt"], e["quality"], e["extra"]) for e in build_image_plan(script) if e["route"] == "gpt_image"]
 
 
 def _reference_paths(target_name):
@@ -81,33 +135,50 @@ def _call_api(client, images, prompt, quality):
         )
 
 
+def _generate_gpt_image(client, entry, output_dir):
+    target = output_dir / entry["name"]
+    input_paths = list(_reference_paths(entry["name"]))
+    for item in entry["extra"]:
+        input_paths.append(LOGO_PATH if item == "logo" else output_dir / item)
+    missing = [p for p in input_paths if not p.exists()]
+    if missing:
+        raise FileNotFoundError(f"Images d'entrée manquantes pour {entry['name']} : {missing}")
+
+    with ExitStack() as stack:
+        files = [stack.enter_context(open(p, "rb")) for p in input_paths]
+        result = _call_api(client, files, entry["prompt"], entry["quality"])
+
+    target.write_bytes(base64.b64decode(result.data[0].b64_json))
+    log_api_call(output_dir, f"gpt-image ({entry['quality']})", COST_IMAGE, target)
+
+
+def _generate_code_render(entry, output_dir):
+    target = output_dir / entry["name"]
+    renderer = MATH_RENDERERS[entry["render_type"]]
+    content_img = renderer(**entry["operation_data"])
+    compose_illustration(content_img, str(target))
+    log_api_call(output_dir, f"code_render ({entry['render_type']})", 0.0, target)
+
+
 def generate_images(script, output_dir):
-    """Génère les 5 images. Skip si le fichier existe déjà. Bloque sans références."""
+    """Génère les 5 images. Skip si le fichier existe déjà. Bloque sans références GPT Image."""
     check_references()
     client = OpenAI(api_key=ENV["OPENAI_API_KEY"])
     generated = []
 
-    for name, prompt, quality, extra in build_image_prompts(script):
-        target = output_dir / name
+    for entry in build_image_plan(script):
+        target = output_dir / entry["name"]
         if target.exists():
-            print(f"  [skip] {name} existe déjà")
+            print(f"  [skip] {entry['name']} existe déjà")
             generated.append(target)
             continue
 
-        input_paths = list(_reference_paths(name))
-        for item in extra:
-            input_paths.append(LOGO_PATH if item == "logo" else output_dir / item)
-        missing = [p for p in input_paths if not p.exists()]
-        if missing:
-            raise FileNotFoundError(f"Images d'entrée manquantes pour {name} : {missing}")
+        if entry["route"] == "code_render":
+            _generate_code_render(entry, output_dir)
+        else:
+            _generate_gpt_image(client, entry, output_dir)
 
-        with ExitStack() as stack:
-            files = [stack.enter_context(open(p, "rb")) for p in input_paths]
-            result = _call_api(client, files, prompt, quality)
-
-        target.write_bytes(base64.b64decode(result.data[0].b64_json))
-        log_api_call(output_dir, f"gpt-image ({quality})", COST_IMAGE, target)
-        print(f"  [ok] {name}")
+        print(f"  [ok] {entry['name']} ({entry['route']})")
         generated.append(target)
 
     return generated

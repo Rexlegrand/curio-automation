@@ -29,6 +29,14 @@ from generators import (
 )
 from prompts.seedance_prompts import build_seedance_prompt
 
+OPERATION_DESCRIPTIONS = {
+    "division_posee": lambda d: f"{d['dividende']} ÷ {d['diviseur']}",
+    "soustraction_colonnes": lambda d: f"{d['nombre1']} - {d['nombre2']}",
+    "addition_colonnes": lambda d: f"{d['nombre1']} + {d['nombre2']}",
+    "multiplication_posee": lambda d: f"{d['multiplicande']} × {d['multiplicateur']}",
+    "astuce_chaine": lambda d: f"{d['titre']} : " + " / ".join(d["etapes"]),
+}
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Pipeline Reels Curio (@curio.education)")
@@ -76,12 +84,21 @@ def checkpoint(number, label):
     print(f"\n{'=' * 60}\nCHECKPOINT {number} — {label}\n{'=' * 60}")
 
 
+def _images_todo(script, output_dir):
+    """Images manquantes, séparées gpt_image (payant) / code_render (0€, ADDENDUM v2.6)."""
+    missing = [e for e in image_generator.build_image_plan(script) if not (output_dir / e["name"]).exists()]
+    n_gpt = sum(1 for e in missing if e["route"] == "gpt_image")
+    n_code = sum(1 for e in missing if e["route"] == "code_render")
+    return missing, n_gpt, n_code
+
+
 def run_images(script, output_dir):
-    todo = sum(1 for name, _, _, _ in image_generator.build_image_prompts(script) if not (output_dir / name).exists())
-    if todo == 0:
+    missing, n_gpt, n_code = _images_todo(script, output_dir)
+    if not missing:
         print("Toutes les images existent déjà, rien à générer.")
         return
-    if not confirm_cost(f"Génération de {todo} image(s) GPT Image 2", todo * COST_IMAGE):
+    label = f"Génération de {n_gpt} image(s) GPT Image 2" + (f" + {n_code} rendu(s) code (0€)" if n_code else "")
+    if not confirm_cost(label, n_gpt * COST_IMAGE):
         sys.exit("Génération images annulée.")
     retry_loop("images", lambda: image_generator.generate_images(script, output_dir))
 
@@ -101,16 +118,17 @@ def run_audio(script, output_dir):
 
 def run_parallel_generation(script, output_dir):
     """Étape 1 : Thread A images + Thread B audio, coût affiché avant lancement."""
-    n_images = sum(1 for name, _, _, _ in image_generator.build_image_prompts(script) if not (output_dir / name).exists())
+    missing_images, n_gpt, n_code = _images_todo(script, output_dir)
     n_audios = sum(
         1 for v in range(1, ELEVENLABS_CONFIG["versions_to_generate"] + 1)
         if not (output_dir / f"audio_v{v}.mp3").exists()
     )
-    total = n_images * COST_IMAGE + n_audios * COST_AUDIO_VERSION
-    if n_images == 0 and n_audios == 0:
+    total = n_gpt * COST_IMAGE + n_audios * COST_AUDIO_VERSION
+    if not missing_images and n_audios == 0:
         print("Images et audios déjà présents, étape 1 sautée.")
         return
-    if not confirm_cost(f"Étape 1 — {n_images} image(s) + {n_audios} audio(s) en parallèle", total):
+    label = f"Étape 1 — {n_gpt} image(s) GPT Image" + (f" + {n_code} rendu(s) code (0€)" if n_code else "") + f" + {n_audios} audio(s) en parallèle"
+    if not confirm_cost(label, total):
         sys.exit("Étape 1 annulée.")
 
     errors = []
@@ -215,6 +233,11 @@ def run_full_pipeline(args):
 
     checkpoint(1, "Validation sujet")
     print(json.dumps(script, ensure_ascii=False, indent=2))
+    if script.get("image_route") == "code_render":
+        describe = OPERATION_DESCRIPTIONS[script["render_type"]]
+        print(f"\nIllustrations : rendu code ({script['render_type']}, 0€) — {describe(script['operation_data'])}")
+    elif script.get("image_route") == "gpt_image" and script.get("matiere") and "math" in str(script.get("matiere", "")).lower():
+        print("\nIllustrations : GPT Image 2 (concept sans calcul exact, pas d'opération à vérifier)")
     print(f"\nTous les prompts : {output_dir / 'prompts_all.txt'}")
     print((output_dir / "prompts_all.txt").read_text())
     if not confirm("Script et prompts validés ?"):
