@@ -57,12 +57,17 @@ def build_image_plan(script):
 
     illus_route = script.get("image_route", "gpt_image")
     if illus_route == "code_render":
+        # Une opération n'a qu'un seul résultat : 3 illustrations identiques
+        # seraient redondantes. stage (1/2/3) fait varier le rendu — révélation
+        # progressive pour les opérations posées, frame différent (principe/
+        # exemple 1/exemple 2) pour astuce_chaine (voir chaque renderer).
         for i in range(1, 4):
             plan.append({
                 "name": f"illus_{i}.png",
                 "route": "code_render",
                 "render_type": script["render_type"],
                 "operation_data": script["operation_data"],
+                "stage": i,
             })
     else:
         for i, illus in enumerate(script["illustrations"], start=1):
@@ -155,7 +160,7 @@ def _generate_gpt_image(client, entry, output_dir):
 def _generate_code_render(entry, output_dir):
     target = output_dir / entry["name"]
     renderer = MATH_RENDERERS[entry["render_type"]]
-    content_img = renderer(**entry["operation_data"])
+    content_img = renderer(**entry["operation_data"], stage=entry["stage"])
     compose_illustration(content_img, str(target))
     log_api_call(output_dir, f"code_render ({entry['render_type']})", 0.0, target)
 

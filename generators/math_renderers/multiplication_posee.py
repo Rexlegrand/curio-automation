@@ -1,4 +1,10 @@
-"""Multiplication posée, multiplicande × 1 chiffre (méthode française), retenues visibles."""
+"""Multiplication posée, multiplicande × 1 chiffre (méthode française), retenues visibles.
+
+Une opération n'a qu'un seul résultat : render() accepte un paramètre `stage`
+(1/2/3) pour révéler l'opération progressivement sur 3 illustrations plutôt
+que de répéter 3 fois la même image : stage 1 = opérandes posés, stage 2 =
++ retenues, stage 3 = + résultat (comportement complet).
+"""
 
 from PIL import Image, ImageDraw
 
@@ -30,7 +36,7 @@ def compute_columns(multiplicande: int, multiplicateur: int):
     return s1, result_digits, carry, width
 
 
-def render(multiplicande: int, multiplicateur: int) -> Image.Image:
+def render(multiplicande: int, multiplicateur: int, stage: int = 3) -> Image.Image:
     s1, result_digits, final_carry, width = compute_columns(multiplicande, multiplicateur)
     result_str = (str(final_carry) if final_carry else "") + "".join(str(d) for d in result_digits)
 
@@ -57,15 +63,17 @@ def render(multiplicande: int, multiplicateur: int) -> Image.Image:
     bar_right = margin + (width + 1) * COL_W - 20
     draw.line([(bar_left, bar_y), (bar_right, bar_y)], fill=NAVY, width=5)
 
-    carry = 0
-    for i in range(width - 1, -1, -1):
-        total = int(s1[i]) * multiplicateur + carry
-        carry = total // 10
-        if carry and i > 0:
-            draw_col_text(draw, col_centers[i - 1], carry_y, str(carry), font_small, STEP_RED)
+    if stage >= 2:
+        carry = 0
+        for i in range(width - 1, -1, -1):
+            total = int(s1[i]) * multiplicateur + carry
+            carry = total // 10
+            if carry and i > 0:
+                draw_col_text(draw, col_centers[i - 1], carry_y, str(carry), font_small, STEP_RED)
 
-    result_cols = col_centers if not final_carry else [col_centers[0] - COL_W] + col_centers
-    for i, ch in enumerate(result_str):
-        draw_col_text(draw, result_cols[i], result_y, ch, font, GREEN_RESULT)
+    if stage >= 3:
+        result_cols = col_centers if not final_carry else [col_centers[0] - COL_W] + col_centers
+        for i, ch in enumerate(result_str):
+            draw_col_text(draw, result_cols[i], result_y, ch, font, GREEN_RESULT)
 
     return content

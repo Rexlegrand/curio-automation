@@ -2,7 +2,14 @@
 
 Généralisé depuis le prototype division_potence.py : diviseur à 1 ou 2
 chiffres (CE2 à CM2), alignement en colonnes centré (police non monospace).
+
+Une opération n'a qu'un seul résultat : pour éviter 3 illustrations
+identiques sur un même reel, render() accepte un paramètre `stage` (1/2/3)
+qui révèle l'opération progressivement plutôt que de tout dessiner d'un coup :
+stage 1 = opération posée seule, stage 2 = étapes partielles, stage 3 = complet.
 """
+
+from math import ceil
 
 from PIL import Image, ImageDraw
 
@@ -43,10 +50,25 @@ def compute_steps(dividende: int, diviseur: int):
     return steps, "".join(quotient_digits), remainder
 
 
-def render(dividende: int, diviseur: int) -> Image.Image:
-    """Rend le contenu de la division (fond transparent RGBA)."""
-    steps, quotient, remainder = compute_steps(dividende, diviseur)
+def _quotient_upto(steps, n_reveal):
+    """Quotient partiel affichable à partir des n_reveal premières étapes."""
+    digits = []
+    for step in steps[:n_reveal]:
+        if digits or step["quotient_digit"] != 0:
+            digits.append(str(step["quotient_digit"]))
+    return "".join(digits)
+
+
+def render(dividende: int, diviseur: int, stage: int = 3) -> Image.Image:
+    """Rend le contenu de la division (fond transparent RGBA).
+
+    stage 1 : dividende + diviseur + potence, aucune étape.
+    stage 2 : la moitié des étapes de calcul (arrondi au-dessus).
+    stage 3 : toutes les étapes + quotient + reste (comportement complet).
+    """
+    steps, full_quotient, remainder = compute_steps(dividende, diviseur)
     dividende_str = str(dividende)
+    n_reveal = {1: 0, 2: ceil(len(steps) / 2)}.get(stage, len(steps))
 
     font = get_font(FONT_SIZE)
     font_small = get_font(FONT_SIZE_SMALL)
@@ -70,10 +92,13 @@ def render(dividende: int, diviseur: int) -> Image.Image:
 
     diviseur_x = bar_x + (potence_w - 30) / 2
     draw_col_text(draw, diviseur_x, start_y, str(diviseur), font, INK)
-    draw_col_text(draw, diviseur_x, start_y + 90, quotient, font, GREEN_RESULT)
+
+    partial_quotient = full_quotient if stage >= 3 else _quotient_upto(steps, n_reveal)
+    if partial_quotient:
+        draw_col_text(draw, diviseur_x, start_y + 90, partial_quotient, font, GREEN_RESULT)
 
     y = start_y + 90
-    for i, step in enumerate(steps):
+    for i, step in enumerate(steps[:n_reveal]):
         col = col_centers[i]
         draw_col_text(draw, col - 25, y, f"-{step['product']}", font_small, STEP_RED)
         y += 55
@@ -82,9 +107,10 @@ def render(dividende: int, diviseur: int) -> Image.Image:
         draw_col_text(draw, col, y, str(step["remainder"]), font_small, INK)
         y += 70
 
-    result_text = f"{dividende} ÷ {diviseur} = {quotient}"
-    if remainder:
-        result_text += f" reste {remainder}"
-    draw.text((start_x, y + 30), result_text, font=font_small, fill=NAVY)
+    if stage >= 3:
+        result_text = f"{dividende} ÷ {diviseur} = {full_quotient}"
+        if remainder:
+            result_text += f" reste {remainder}"
+        draw.text((start_x, y + 30), result_text, font=font_small, fill=NAVY)
 
     return content

@@ -34,7 +34,9 @@ OPERATION_DESCRIPTIONS = {
     "soustraction_colonnes": lambda d: f"{d['nombre1']} - {d['nombre2']}",
     "addition_colonnes": lambda d: f"{d['nombre1']} + {d['nombre2']}",
     "multiplication_posee": lambda d: f"{d['multiplicande']} × {d['multiplicateur']}",
-    "astuce_chaine": lambda d: f"{d['titre']} : " + " / ".join(d["etapes"]),
+    "astuce_chaine": lambda d: f"{d['titre']} — principe: {d['frames'][0]['etapes'][0]}"
+    f" | exemple 1: {' / '.join(d['frames'][1]['etapes'])}"
+    f" | exemple 2: {' / '.join(d['frames'][2]['etapes'])}",
 }
 
 

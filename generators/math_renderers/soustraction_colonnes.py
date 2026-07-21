@@ -1,4 +1,10 @@
-"""Soustraction posée en colonnes (méthode française), emprunt visible."""
+"""Soustraction posée en colonnes (méthode française), emprunt visible.
+
+Une opération n'a qu'un seul résultat : render() accepte un paramètre `stage`
+(1/2/3) pour révéler l'opération progressivement sur 3 illustrations plutôt
+que de répéter 3 fois la même image : stage 1 = opérandes posés, stage 2 =
++ emprunts, stage 3 = + résultat (comportement complet).
+"""
 
 from PIL import Image, ImageDraw
 
@@ -40,7 +46,7 @@ def compute_columns(nombre1: int, nombre2: int):
     return s1, s2, result_digits, borrowed_from, width
 
 
-def render(nombre1: int, nombre2: int) -> Image.Image:
+def render(nombre1: int, nombre2: int, stage: int = 3) -> Image.Image:
     s1, s2, result_digits, borrowed_from, width = compute_columns(nombre1, nombre2)
     result_str = "".join(str(d) for d in result_digits).lstrip("0") or "0"
 
@@ -57,10 +63,11 @@ def render(nombre1: int, nombre2: int) -> Image.Image:
     col_centers = [margin + i * COL_W + COL_W / 2 for i in range(width)]
     borrow_y, line1_y, line2_y, bar_y, result_y = 20, 70, 150, 230, 250
 
-    for i in range(width):
-        if borrowed_from[i]:
-            reduced = int(s1[i]) - 1
-            draw_col_text(draw, col_centers[i] + 14, borrow_y, str(reduced), font_small, STEP_RED)
+    if stage >= 2:
+        for i in range(width):
+            if borrowed_from[i]:
+                reduced = int(s1[i]) - 1
+                draw_col_text(draw, col_centers[i] + 14, borrow_y, str(reduced), font_small, STEP_RED)
 
     for i, ch in enumerate(s1):
         draw_col_text(draw, col_centers[i], line1_y, ch, font, INK)
@@ -72,8 +79,9 @@ def render(nombre1: int, nombre2: int) -> Image.Image:
     bar_left, bar_right = margin - 20, margin + width * COL_W - 10
     draw.line([(bar_left, bar_y), (bar_right, bar_y)], fill=NAVY, width=5)
 
-    result_start_col = width - len(result_str)
-    for i, ch in enumerate(result_str):
-        draw_col_text(draw, col_centers[result_start_col + i], result_y, ch, font, GREEN_RESULT)
+    if stage >= 3:
+        result_start_col = width - len(result_str)
+        for i, ch in enumerate(result_str):
+            draw_col_text(draw, col_centers[result_start_col + i], result_y, ch, font, GREEN_RESULT)
 
     return content

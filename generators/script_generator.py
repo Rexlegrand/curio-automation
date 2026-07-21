@@ -57,9 +57,13 @@ SCHEMA_TYPE_B_MATHS = """\
     "nombre1": "int (nombre1 >= nombre2 pour la soustraction)", "nombre2": "int",
     "// si multiplication_posee": "",
     "multiplicande": "int", "multiplicateur": "int 1 chiffre (0-9)",
-    "// si astuce_chaine": "",
+    "// si astuce_chaine (3 frames = 3 illustrations DIFFÉRENTES, jamais la même image répétée)": "",
     "titre": "ex: Multiplier par 5",
-    "etapes": ["ligne 1 (ex: 46 × 5)", "ligne 2 avec =", "... dernière ligne = résultat final avec ="],
+    "frames": [
+      {"etapes": ["principe général, peut être en mots, pas de chiffre obligatoire"]},
+      {"etapes": ["ligne 1 exemple 1 (ex: 46 × 5)", "ligne avec =", "dernière ligne = résultat avec ="]},
+      {"etapes": ["ligne 1 exemple 2 (nombres DIFFÉRENTS de l'exemple 1)", "ligne avec =", "dernière ligne = résultat avec ="]}
+    ],
     "// si gpt_image (null operation_data)": "ne pas inclure operation_data"
   },
   "illustrations": [
@@ -102,13 +106,19 @@ Règle de classification image_route (obligatoire pour ce sujet maths) :
 - Si le sujet est une astuce de calcul mental présentable comme une chaîne
   d'égalités (ex: ×5 = ×10÷2, ×4 = ×2×2)
   → image_route = "code_render", render_type = "astuce_chaine"
-  → operation_data = {"titre": ..., "etapes": [...]}, illustrations = []
-  → FORMAT STRICT de chaque ligne d'etapes (chaque ligne vérifiée automatiquement) :
-    - la première ligne est une expression seule, SANS signe = (ex: "46 × 5")
-    - chaque ligne suivante est une égalité COMPLÈTE "valeur = valeur" avec un
-      nombre explicite des DEUX côtés (ex: "46 × 10 = 460", PAS "= 460")
-    - jamais de ligne commençant par "=", jamais de "?", jamais de variable :
-      uniquement des chiffres et opérateurs (+ - × ÷) des deux côtés du "="
+  → operation_data = {"titre": ..., "frames": [frame_principe, frame_exemple1, frame_exemple2]}
+    Ce sont 3 illustrations DIFFÉRENTES (jamais la même image répétée 3 fois) :
+    - frame 1 (principe) : la règle générale. Peut être en mots (ex: "Ajouter 9
+      = Ajouter 10 puis retirer 1"), pas besoin d'un nombre concret ici.
+    - frame 2 (exemple 1) et frame 3 (exemple 2) : DEUX exemples chiffrés
+      DIFFÉRENTS, entièrement résolus — c'est ce qui prouve que l'astuce marche
+      à chaque fois. Si la compétence source mentionne "2 exemples" ou
+      équivalent, respecte bien ce nombre.
+    - FORMAT STRICT des frames 2 et 3 (chaque ligne vérifiée automatiquement) :
+      la première ligne est une expression seule, SANS signe = (ex: "7 + 9") ;
+      chaque ligne suivante est une égalité COMPLÈTE "valeur = valeur" avec un
+      nombre explicite des DEUX côtés (ex: "7 + 10 = 17", PAS "= 17") ; jamais
+      de ligne commençant par "=", jamais de "?", jamais de variable.
 - Sinon (notion, concept visuel, règle sans calcul chiffré : symétrie,
   fractions en parts, unités de mesure)
   → image_route = "gpt_image", render_type = null, ne pas inclure operation_data,
@@ -226,21 +236,39 @@ def _safe_eval_arithmetic(expr):
 
 
 def _validate_astuce_chaine(operation_data):
-    """Vérifie que chaque ligne 'a = b' de l'astuce est arithmétiquement exacte."""
-    etapes = operation_data.get("etapes")
-    if not etapes or not isinstance(etapes, list):
-        raise ValueError("astuce_chaine : operation_data.etapes manquant ou invalide")
-    for ligne in etapes:
-        if "=" not in ligne:
-            continue
-        gauche, droite = ligne.rsplit("=", 1)
-        try:
-            valeur_gauche = _safe_eval_arithmetic(gauche)
-            valeur_droite = _safe_eval_arithmetic(droite)
-        except (ValueError, SyntaxError, ZeroDivisionError) as exc:
-            raise ValueError(f"astuce_chaine : ligne illisible '{ligne}' ({exc})") from exc
-        if abs(valeur_gauche - valeur_droite) > 1e-6:
-            raise ValueError(f"astuce_chaine : ligne fausse '{ligne}' ({valeur_gauche} != {valeur_droite})")
+    """Vérifie les 3 frames (principe/exemple 1/exemple 2) de l'astuce.
+
+    Frame 0 (principe) peut contenir du texte non chiffré (règle en mots) —
+    une ligne non numérique y est ignorée, rien à vérifier. Frames 1 et 2
+    (exemples) doivent être entièrement chiffrés : chaque ligne 'a = b' est
+    vérifiée arithmétiquement, et les deux exemples doivent porter sur des
+    nombres différents (c'est ce qui prouve que l'astuce marche à chaque fois).
+    """
+    frames = operation_data.get("frames")
+    if not frames or not isinstance(frames, list) or len(frames) != 3:
+        raise ValueError("astuce_chaine : operation_data.frames doit contenir exactement 3 frames (principe, exemple 1, exemple 2)")
+
+    for i, frame in enumerate(frames):
+        etapes = frame.get("etapes") if isinstance(frame, dict) else None
+        if not etapes or not isinstance(etapes, list):
+            raise ValueError(f"astuce_chaine : frame {i + 1} sans etapes valides")
+        strict = i > 0  # frame 0 = principe, peut contenir du texte non chiffré
+        for ligne in etapes:
+            if "=" not in ligne:
+                continue
+            gauche, droite = ligne.rsplit("=", 1)
+            try:
+                valeur_gauche = _safe_eval_arithmetic(gauche)
+                valeur_droite = _safe_eval_arithmetic(droite)
+            except (ValueError, SyntaxError, ZeroDivisionError) as exc:
+                if strict:
+                    raise ValueError(f"astuce_chaine : frame {i + 1} ligne illisible '{ligne}' ({exc})") from exc
+                continue
+            if abs(valeur_gauche - valeur_droite) > 1e-6:
+                raise ValueError(f"astuce_chaine : frame {i + 1} ligne fausse '{ligne}' ({valeur_gauche} != {valeur_droite})")
+
+    if frames[1]["etapes"][0].strip() == frames[2]["etapes"][0].strip():
+        raise ValueError("astuce_chaine : exemple 1 et exemple 2 utilisent le même nombre, il en faut deux différents")
 
 
 def _validate_operation_data(render_type, operation_data):

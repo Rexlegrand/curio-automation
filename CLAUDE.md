@@ -1,5 +1,5 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.6 — Moteur de rendu code pour les compétences maths (division/soustraction/addition/multiplication posées + astuces de calcul mental) : 0€, 0 risque de chiffre halluciné, routage automatique via classification faite par Claude dans le même appel script. Thèmes "velo"/"combat", sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA alterné 50-50, anti-digression (hérité v2.5).
+Version : 2.7 — Fix v2.6 : une opération n'a qu'un seul résultat, donc 3 illustrations identiques par reel étaient un bug. Opérations posées : révélation progressive (stage 1/2/3 par renderer). Astuce_chaine : operation_data devient 3 frames (principe + 2 exemples chiffrés différents), une image par frame. Hérite v2.6 (moteur de rendu code maths, 0€, 0 hallucination) et v2.5 (thèmes "velo"/"combat", sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA alterné 50-50, anti-digression).
 Modèle cible : Claude-fable 5 (ou équivalent le plus puissant disponible)
 Rédigé par : Benjamin Petry—Hummel — Juillet 2026
 
@@ -186,7 +186,7 @@ BACKGROUNDS = {
 }
 ```
 
-## 7 bis. MOTEUR DE RENDU CODE — COMPÉTENCES MATHS (v2.6)
+## 7 bis. MOTEUR DE RENDU CODE — COMPÉTENCES MATHS (v2.6, fix illustrations v2.7)
 
 GPT Image 2 est un modèle génératif : il imite un style, il ne calcule pas.
 Pour un contenu pédagogique où l'exactitude du chiffre est non négociable
@@ -219,15 +219,32 @@ correspondant ; astuce de calcul mental présentable en chaîne d'égalités →
 * `division_posee` : `{"dividende": int, "diviseur": int}` (diviseur 2 chiffres autorisé seulement niveau CM2)
 * `soustraction_colonnes` / `addition_colonnes` : `{"nombre1": int, "nombre2": int}` (nombre1 ≥ nombre2 pour la soustraction)
 * `multiplication_posee` : `{"multiplicande": int, "multiplicateur": int}` (multiplicateur à 1 chiffre)
-* `astuce_chaine` : `{"titre": str, "etapes": [str, ...]}`
+* `astuce_chaine` : `{"titre": str, "frames": [frame_principe, frame_exemple1, frame_exemple2]}`
+  — chaque frame = `{"etapes": [str, ...]}`. Le principe peut être en mots
+  (pas de chiffre obligatoire) ; les deux exemples doivent être entièrement
+  chiffrés et porter sur des nombres DIFFÉRENTS (c'est ce qui prouve que
+  l'astuce marche à chaque fois — jamais le même exemple répété).
 
 `generators/script_generator.py` revérifie lui-même chaque `operation_data`
 avant d'écrire le script.json : types/contraintes pour les opérations posées
 (le résultat est de toute façon recalculé par le renderer, jamais celui de
-Claude), et exactitude arithmétique de chaque ligne pour `astuce_chaine`
-(seul cas où Claude fournit un résultat en texte libre). Si invalide, le
-script est régénéré automatiquement (jusqu'à 3 tentatives) avant tout appel
-image ou audio.
+Claude), et pour `astuce_chaine` — exactitude arithmétique de chaque ligne
+chiffrée des frames exemple 1/2 (le principe, en mots, n'est pas vérifiable
+et n'a donc rien à vérifier) + contrôle que les deux exemples diffèrent. Si
+invalide, le script est régénéré automatiquement (jusqu'à 3 tentatives) avant
+tout appel image ou audio.
+
+**Pourquoi 3 illustrations différentes, pas 3 fois la même image (v2.7)** :
+une opération posée n'a qu'un seul résultat — `operation_data` reste un seul
+jeu de valeurs, jamais 3 opérations différentes (ça augmenterait la surface
+d'hallucination). À la place, chaque renderer accepte un paramètre `stage`
+(1/2/3) qui révèle l'opération progressivement : stage 1 = opérande posée
+seule, stage 2 = étapes/retenues/emprunts intermédiaires, stage 3 = résultat
+complet. Pour `astuce_chaine`, le paramètre `stage` sélectionne le frame
+(1=principe, 2=exemple 1, 3=exemple 2) — 3 images réellement différentes,
+cohérentes avec les 3 segments narratifs du reel (principe / exemple 1 /
+exemple 2). `image_generator.py` appelle `renderer(**operation_data, stage=i)`
+pour i=1,2,3 lors de la génération des 3 illustrations.
 
 ### Checkpoint 1 — veto conservé
 
@@ -241,7 +258,7 @@ Zéro friction ajoutée.
 ```python
 if script["image_route"] == "code_render":
     renderer = MATH_RENDERERS[script["render_type"]]          # generators/math_renderers/
-    content_img = renderer(**script["operation_data"])         # dessin déterministe, fond transparent
+    content_img = renderer(**script["operation_data"], stage=i)  # i=1,2,3 : révélation progressive / frame
     compose_illustration(content_img, output_path)              # colle sur le fond cahier Curio
     # coût loggé à 0.0 — zéro appel API
 else:
@@ -470,7 +487,7 @@ MENTIONS = {
 }
 ```
 
-## 16. ÉTAT DES PRÉREQUIS (audit du 2026-07-21, v2.6)
+## 16. ÉTAT DES PRÉREQUIS (audit du 2026-07-21, v2.7)
 
 1. Clés API — ✅ testées OK (Anthropic 200, OpenAI 200, ElevenLabs 200)
 2. Voice ID ElevenLabs — ✅ voix « Curio 8 » confirmée via API (tier starter)
