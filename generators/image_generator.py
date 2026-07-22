@@ -104,16 +104,20 @@ def build_image_prompts(script):
 
 
 def _reference_paths(target_name):
-    """Références injectées selon l'image cible (règle 6 du brief : toujours au moins une)."""
+    """Références injectées selon l'image cible (règle 6 du brief : toujours au moins une).
+
+    v2.8 : style_illustration_01/02.png retirés des références d'illustration —
+    ce sont en réalité des visuels d'anciens reels (canicule, drakkar viking),
+    pas des exemples de style neutres, et leur contenu se retrouvait recopié
+    tel quel dans des illustrations sans rapport (bug systémique GPT Image 2
+    image-to-image). Seul style_fond_cahier.png (fond Seyès pur, sans sujet)
+    reste utilisé pour les illustrations.
+    """
     if target_name == "hook_frame.png":
         return [REFERENCE_DIR / "curio_character_ref.png"]
     if target_name == "miniature.png":
         return [REFERENCE_DIR / "miniature_exemple.png"]
-    return [
-        REFERENCE_DIR / "style_fond_cahier.png",
-        REFERENCE_DIR / "style_illustration_01.png",
-        REFERENCE_DIR / "style_illustration_02.png",
-    ]
+    return [REFERENCE_DIR / "style_fond_cahier.png"]
 
 
 def _call_api(client, images, prompt, quality):

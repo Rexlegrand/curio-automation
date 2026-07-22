@@ -1,5 +1,35 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.7 — Fix v2.6 : une opération n'a qu'un seul résultat, donc 3 illustrations identiques par reel étaient un bug. Opérations posées : révélation progressive (stage 1/2/3 par renderer). Astuce_chaine : operation_data devient 3 frames (principe + 2 exemples chiffrés différents), une image par frame. Hérite v2.6 (moteur de rendu code maths, 0€, 0 hallucination) et v2.5 (thèmes "velo"/"combat", sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA alterné 50-50, anti-digression).
+Version : 2.9 — Fix v2.8 : le template compétence français demandait encore à GPT Image 2
+de dessiner un paragraphe entier (bloc ✅ Correct/Test/❌ Incorrect/Test complet) sur
+l'illustration — illisible sur mobile, et cette masse de texte débordait de la zone de
+sécurité 30% réservée aux sous-titres (le débordement venait du CONTENU de l'illustration,
+pas d'un mauvais calcul de position des sous-titres : SUBTITLE_MARGIN_V est un réglage
+unique correct pour tout le reel, qui suppose que l'illustration respecte elle-même sa
+zone basse vide). Remplacé par mot_cle/lettre_cle (ex: "tamBOUR", un mot court, une lettre
+en couleur) — toute l'explication pédagogique (règle, test de substitution, comparaison
+correct/incorrect) reste dans la narration audio uniquement, jamais imprimée sur l'image.
+Voir §5/§7.
+Hérite v2.8 — 3 bugs systémiques corrigés après retour terrain sur les reels des 21-22/07 :
+(1) Durée montage désynchronisée : les illustrations utilisaient des poids fixes codés en
+dur (5:5:3) déconnectés du contenu réel du reel. video_assembler.py cale désormais leur
+durée sur les timecodes réels du script.json (proportionnel à la durée finale de l'audio),
+plus de poids statique — voir §3. Chemin unique (main.py appelle video_assembler.assemble_reel
+aussi bien en pipeline complet qu'en --assemble), pas un fix isolé à un cas de test.
+(2) Durée audio hors cible 28-35s (jusqu'à 40s observés) : la cible de 85-100 mots
+supposait ~180 mots/min ; mesuré en prod, la voix Curio 8 lit 141-160 mots/min réels.
+Cible recalibrée à 78-88 mots, revérifiée automatiquement par script_generator.py (jusqu'à
+3 régénérations) AVANT le Checkpoint 1 — jamais de script hors cible qui compte sur le
+montage pour compenser après coup. Voir §2.
+(3) Illustrations français/curiosité polluées par du contenu d'anciens reels (canicule,
+drakkar viking) : les fichiers canoniques style_illustration_01/02.png n'étaient pas des
+exemples de style neutres mais des visuels réels d'anciens sujets, injectés en
+image-to-image à chaque génération. Retirés des références d'illustration (§6). Le
+template français n'avait par ailleurs aucune consigne de sujet photo — ajout du champ
+sujet_photo (un par illustration, concret et distinct) — voir §7.
+Hérite v2.7 (révélation progressive stage 1/2/3, astuce_chaine 3 frames distincts, une
+ligne = un calcul), v2.6 (moteur de rendu code maths, 0€, 0 hallucination) et v2.5 (thèmes
+"velo"/"combat", sous-titres 1 phrase/écran, miniature safe-zone 4:3, durée 28-35s, CTA
+alterné 50-50, anti-digression).
 Modèle cible : Claude-fable 5 (ou équivalent le plus puissant disponible)
 Rédigé par : Benjamin Petry—Hummel — Juillet 2026
 
@@ -42,7 +72,12 @@ Règles éditoriales du script (tous types) :
 * AUCUNE DIGRESSION : chaque phrase sert le sujet principal. Une info « cousine » du sujet
   (autre règle, autre récompense, anecdote annexe) est exclue — média éducatif, exactitude
   factuelle non négociable (leçon du reel #20 : dossard rouge hors sujet des sanctions).
-* Narration : 85-100 mots (la voix eleven_v3 lit ~180 mots/min mesurés → 28-35 secondes).
+* Narration : 78-88 mots (v2.8 — la voix eleven_v3 « Curio 8 » lit 141-160 mots/min
+  RÉELLEMENT mesurés en production, jamais les ~180 mots/min supposés en v2.7 ; cette
+  fourchette reste dans 28-35s même au débit le plus lent observé). script_generator.py
+  revérifie automatiquement le word_count après chaque génération et régénère (jusqu'à 3
+  tentatives) AVANT de présenter le script au Checkpoint 1 — un script hors cible ne doit
+  jamais être découvert au montage.
 * CTA alterné 50-50, automatique (l'opposé du dernier reel, forçable via --cta) :
   - « abonnement » : Abonne-toi pour une nouvelle curiosité chaque jour !
   - « commentaire » : Commente CURIO et reçois une activité pédagogique gratuite !
@@ -52,18 +87,21 @@ Règles éditoriales du script (tous types) :
 
 ```
 Hook animé        — Seedance MP4, 4s fixes (généré manuellement, droppé dans output/)
-Illustration 1    — PNG GPT Image 2 ou rendu code (maths posé), durée flexible (poids 5)
+Illustration 1    — PNG GPT Image 2 ou rendu code (maths posé), durée flexible
 Clip Curio A      — curio_explication.mp4, 4s fixes
-Illustration 2    — PNG GPT Image 2 ou rendu code, durée flexible (poids 5)
+Illustration 2    — PNG GPT Image 2 ou rendu code, durée flexible
 Clip Curio B      — curio_explication_2.mp4, 4s fixes
-Illustration 3    — PNG GPT Image 2 ou rendu code, durée flexible (poids 3)
+Illustration 3    — PNG GPT Image 2 ou rendu code, durée flexible
 CTA               — curio_cta.mp4, 3s fixes (on saute les 2 premières secondes du clip)
 ```
 
 Durée totale du reel = durée de l'audio choisi + 0,2s : la vidéo s'arrête quand la voix
-s'arrête. Les clips sont fixes (4+4+4+3 = 15s) ; les 3 illustrations se partagent le temps
-restant au prorata 5:5:3. Exemple audio 24,3s → illustrations 3,66s / 3,66s / 2,2s.
-Le pipeline bloque avec une erreur claire si l'audio est trop court (< ~16,5s).
+s'arrête. Les clips sont fixes (4+4+4+3 = 15s, assets physiques à longueur imposée) ; les
+3 illustrations se partagent le temps restant au prorata des TIMECODES RÉELS du
+script.json de ce reel (segments correspondant, dans l'ordre, aux 3 slots illustration —
+v2.8, plus de poids statique 5:5:3 codé en dur : un poids fixe désynchronisait l'affichage
+dès que l'audio final s'éloignait de la durée nominale visée par le script). Le pipeline
+bloque avec une erreur claire si l'audio est trop court (< ~16,5s).
 
 Règles de montage :
 * Format sortie : MP4 1080×1920 (9:16), 30fps, 4-8 Mbps
@@ -160,6 +198,17 @@ Ces fichiers sont passés en input_image (image-to-image) à chaque appel GPT Im
 
 Les 5 fichiers canoniques ci-dessus sont des copies des "exemples parfaits" choisis dans l'arborescence de travail de Benjamin (sous-dossiers de assets/curio_reference/ : « frame, image = exemple parfait », « fond blanc, feuille à carreaux », « illustrations avec images intégrés », « miniature parfait »). Pour changer une référence : remplacer le fichier canonique à la racine de curio_reference/. Les sous-dossiers servent de vivier (autres exemples valides) et de documentation de la safe zone / du style de sous-titres.
 
+**Bug v2.8 — pollution des illustrations** : style_illustration_01.png et
+style_illustration_02.png se sont révélés être des visuels RÉELS d'anciens reels
+(une carte canicule France, un drakkar viking), pas des exemples de style neutres.
+Injectés en image-to-image à chaque illustration, leur contenu se recopiait tel
+quel dans des reels sans rapport (ex : un reel sur "m devant m/b/p" affichant un
+bateau viking). image_generator.py ne les injecte plus pour les illustrations —
+seul style_fond_cahier.png (fond Seyès pur, sans sujet) reste utilisé pour cette
+route. Les deux fichiers restent listés ci-dessus (existence encore vérifiée par
+check_references) mais ne sont plus consommés pour les illustrations tant qu'ils
+n'ont pas été remplacés par de vrais exemples neutres.
+
 ## 7. PROMPTS IMAGES — TEMPLATES
 
 Les templates exacts vivent dans `prompts/curiosity_prompts.py`, `prompts/competence_prompts.py` et `prompts/seedance_prompts.py`. Ils reprennent mot pour mot les templates du brief v2.0 : fond cahier Seyès, clipping magazine, photoréalisme Type A, exactitude pédagogique stricte Type B (chaque chiffre/mot exact, méthode Éducation Nationale), hook frame Curio, prompt Seedance avec lip-sync.
@@ -167,7 +216,29 @@ Les templates exacts vivent dans `prompts/curiosity_prompts.py`, `prompts/compet
 Depuis v2.6, `prompts/competence_prompts.py` ne sert plus de template maths à
 chiffres exacts (`build_maths_prompt` supprimé, remplacé par le rendu code,
 §7 bis) : il ne reste que `build_concept_prompt` (sujets maths sans calcul,
-ex. symétrie) et `build_francais_prompt` (inchangé, français toujours GPT Image 2).
+ex. symétrie) et `build_francais_prompt` (français, toujours GPT Image 2).
+
+Depuis v2.8, chaque illustration du schéma Type B français porte un champ
+`sujet_photo` : description photoréaliste CONCRÈTE et DISTINCTE du mot-exemple
+de cette illustration (ex : "un tambour en bois, gros plan, lumière naturelle"
+pour "tambour"). Sans ce champ, le prompt français ne contenait aucune consigne
+de sujet visuel — GPT Image 2 comblait le vide en piochant dans les références
+(cause du bug de pollution ci-dessus, §6).
+
+Depuis v2.9, deux champs supplémentaires remplacent le paragraphe complet
+autrefois dessiné sur l'image : `mot_cle` (le mot-exemple seul, ex. "tambour")
+et `lettre_cle` (UNE lettre de ce mot à colorer, ex. "b" → "tamBOUR"). L'image
+ne contient plus QUE la photo (sujet_photo) + ce mot court — jamais la règle,
+les tests de substitution ni la comparaison correct/incorrect, qui restent
+uniquement dans la narration audio. Le prompt (`PROMPT_COMPETENCE_FRANCAIS`)
+demande aussi explicitement de laisser les 30% du bas de l'image entièrement
+vides (zone réservée aux sous-titres) : un paragraphe entier y débordait
+systématiquement, ce n'était pas un bug de calcul de position des sous-titres
+mais un débordement du contenu de l'illustration dans sa propre zone de
+sécurité. `script_generator.py` vérifie que les 3 `sujet_photo` sont renseignés
+et distincts, et que chaque `lettre_cle` est une seule lettre présente dans son
+`mot_cle`, avant Checkpoint 1 (régénère sinon, jusqu'à 3 tentatives, même
+mécanisme que la classification maths).
 
 Backgrounds thématiques selon sujet :
 

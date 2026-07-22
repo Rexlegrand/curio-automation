@@ -1,8 +1,12 @@
 """Montage final FFmpeg : hook + illustrations + clips + audio + sous-titres.
 
 La durée du reel est calée sur la durée de l'audio choisi (+ AUDIO_TAIL) :
-les clips gardent leur durée fixe, les illustrations se partagent le temps
-restant au prorata de leur poids défini dans TIMELINE.
+les clips (hook, Curio A/B, CTA) gardent leur durée fixe (assets physiques à
+longueur imposée) ; les 3 illustrations se partagent le temps restant au
+prorata des timecodes RÉELS du script.json de ce reel (segments correspondant,
+dans l'ordre, aux slots illustration_1/2/3 de TIMELINE) — jamais un poids
+statique codé en dur, pour rester synchronisé même quand l'audio final
+(ElevenLabs) s'éloigne de la durée nominale visée par le script (v2.8).
 """
 
 import re
@@ -79,21 +83,54 @@ def media_duration(path):
     return int(h) * 3600 + int(m) * 60 + int(s) + int(cs) / 10 ** len(cs)
 
 
+def _segment_duration(segment):
+    """Durée nominale d'un segment script.json : accepte {"start","end"} ou {"timecode":"a-b"}."""
+    if "start" in segment and "end" in segment:
+        return float(segment["end"]) - float(segment["start"])
+    if "timecode" in segment:
+        start, end = segment["timecode"].split("-")
+        return float(end) - float(start)
+    raise ValueError(f"segment sans start/end ni timecode exploitable : {segment!r}")
+
+
+def _load_segments(output_dir):
+    import json
+
+    script_path = output_dir / "script.json"
+    if not script_path.exists():
+        raise FileNotFoundError(f"{script_path} introuvable — impossible de caler les illustrations sur les timecodes réels.")
+    segments = json.loads(script_path.read_text()).get("segments")
+    if not segments or len(segments) != len(TIMELINE):
+        raise RuntimeError(
+            f"script.json a {len(segments) if segments else 0} segments, {len(TIMELINE)} attendus "
+            "(1 par slot de TIMELINE, même ordre) — structure incompatible avec le montage."
+        )
+    return [_segment_duration(s) for s in segments]
+
+
 def compute_segments(output_dir, audio_path):
-    """Retourne [(chemin, durée, trim_start)] : total = durée audio + AUDIO_TAIL."""
+    """Retourne [(chemin, durée, trim_start)] : total = durée audio + AUDIO_TAIL.
+
+    Les slots "fixed" gardent leur durée d'asset imposée. Les slots "flex"
+    (illustrations) se partagent le budget restant au prorata de la durée
+    nominale du segment script.json correspondant (même index que TIMELINE).
+    """
     total = media_duration(audio_path) + AUDIO_TAIL
+    nominal_durations = _load_segments(output_dir)
+
     fixed = sum(spec["fixed"] for _, spec in TIMELINE if "fixed" in spec)
-    flex_weights = sum(spec["flex"] for _, spec in TIMELINE if "flex" in spec)
+    flex_weights = sum(d for (_, spec), d in zip(TIMELINE, nominal_durations) if "flex" in spec)
     flex_budget = total - fixed
     if flex_budget < 1.5:
         raise RuntimeError(
             f"Audio trop court ({total - AUDIO_TAIL:.1f}s) : il reste {flex_budget:.1f}s "
             f"pour les 3 illustrations après les {fixed:.0f}s de clips fixes."
         )
+
     segments = []
-    for source, spec in TIMELINE:
+    for (source, spec), nominal in zip(TIMELINE, nominal_durations):
         path = output_dir / source if isinstance(source, str) else source
-        duration = spec["fixed"] if "fixed" in spec else flex_budget * spec["flex"] / flex_weights
+        duration = spec["fixed"] if "fixed" in spec else flex_budget * nominal / flex_weights
         segments.append((path, round(duration, 2), spec.get("trim_start", 0.0)))
     return segments, round(total, 2)
 

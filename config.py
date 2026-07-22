@@ -44,22 +44,30 @@ ELEVENLABS_CONFIG = {
     "model_id": "eleven_v3",
     "language": "fr",
     "target_duration_seconds": (28, 35),
-    "word_count_target": (85, 100),  # eleven_v3 lit ~180 mots/min mesurés
+    # Recalibré v2.8 : les 100 mots supposaient ~180 mots/min. Mesuré en prod
+    # sur 6 générations (voix Curio 8, eleven_v3) : 141-160 mots/min réels,
+    # jamais 180. 78-88 mots reste dans 28-35s même au débit le plus lent
+    # observé (141 mots/min) et au plus rapide (160 mots/min) — plus de marge
+    # qui compte sur le montage pour rattraper un script trop long.
+    "word_count_target": (78, 88),
     "versions_to_generate": 2,
     "output_format": "mp3_44100_128",
 }
 
 # Séquence de montage : la durée totale du reel = durée de l'audio choisi (+ AUDIO_TAIL).
-# Les clips sont fixes ; les illustrations sont flexibles et se partagent le temps
-# restant au prorata de leur poids (5:5:3), pour que le CTA rentre toujours.
-# CTA : on saute les 2 premières secondes du clip (inutiles), on garde les 3 dernières.
+# Les clips sont fixes (assets physiques à longueur imposée) ; les illustrations
+# sont flexibles et se partagent le temps restant au prorata des timecodes RÉELS
+# du script.json de chaque reel (v2.8 — plus de poids statique codé en dur : un
+# poids fixe désynchronise l'affichage dès que l'audio final s'éloigne de la
+# durée nominale visée par le script). CTA : on saute les 2 premières secondes
+# du clip (inutiles), on garde les 3 dernières.
 TIMELINE = [
     ("hook_video.mp4", {"fixed": 4}),
-    ("illus_1.png", {"flex": 5}),
+    ("illus_1.png", {"flex": True}),
     (CLIP_EXPLICATION_A, {"fixed": 4}),
-    ("illus_2.png", {"flex": 5}),
+    ("illus_2.png", {"flex": True}),
     (CLIP_EXPLICATION_B, {"fixed": 4}),
-    ("illus_3.png", {"flex": 3}),
+    ("illus_3.png", {"flex": True}),
     (CLIP_CTA, {"fixed": 3, "trim_start": 2.0}),
 ]
 AUDIO_TAIL = 0.2  # marge après la fin de la voix, en secondes

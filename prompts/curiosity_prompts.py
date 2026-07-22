@@ -41,8 +41,11 @@ No text. No watermark. Vertical 9:16.
 
 PROMPT_MINIATURE = """\
 Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
-Follow EXACTLY the layout and typography style of the provided reference
-thumbnail (notebook page background, tilted magazine-clipping photos).
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
 
 CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
 this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit

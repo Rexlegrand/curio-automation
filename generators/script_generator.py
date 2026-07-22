@@ -82,16 +82,19 @@ SCHEMA_TYPE_B_FRANCAIS = """\
   "segments": [ même découpage 0-4/4-9/9-13/13-18/18-22/22-25/25-30 que Type A ],
   "illustrations": [
     {
-      "regle_exacte": "la règle de grammaire exacte",
-      "exemple_correct": "phrase exemple correcte",
-      "test_substitution_ok": "test de substitution qui marche",
-      "conclusion_ok": "conclusion",
-      "exemple_incorrect": "phrase exemple incorrecte",
-      "test_substitution_ko": "test de substitution qui ne marche pas",
-      "conclusion_ko": "conclusion"
+      "regle_exacte": "la règle de grammaire exacte (sert à la narration audio uniquement, jamais imprimée sur l'image)",
+      "sujet_photo": "description photoréaliste CONCRÈTE du mot-exemple de CETTE illustration (ex: 'a wooden drum (tambour), close-up, natural light, on a wooden floor') — jamais une scène générique ou réutilisée d'un autre sujet, une par illustration",
+      "mot_cle": "LE mot-exemple seul, correctement orthographié, sans phrase autour (ex: 'tambour') — c'est le SEUL texte dessiné sur l'image",
+      "lettre_cle": "UNE seule lettre de mot_cle à colorer sur l'image pour la mettre en valeur (ex: 'b' pour tambour — la consonne qui impose la règle, ou la lettre de l'exception)",
+      "exemple_correct": "phrase exemple correcte (sert à la narration audio uniquement)",
+      "test_substitution_ok": "test de substitution qui marche (sert à la narration audio uniquement)",
+      "conclusion_ok": "conclusion (sert à la narration audio uniquement)",
+      "exemple_incorrect": "phrase exemple incorrecte (sert à la narration audio uniquement)",
+      "test_substitution_ko": "test de substitution qui ne marche pas (sert à la narration audio uniquement)",
+      "conclusion_ko": "conclusion (sert à la narration audio uniquement)"
     },
-    { "illustration 2, mêmes clés": "..." },
-    { "illustration 3, mêmes clés": "..." }
+    { "illustration 2, mêmes clés, sujet_photo/mot_cle DIFFÉRENTS (mot-exemple différent)": "..." },
+    { "illustration 3, mêmes clés, sujet_photo/mot_cle DIFFÉRENTS": "..." }
   ]
 }"""
 
@@ -119,6 +122,11 @@ Règle de classification image_route (obligatoire pour ce sujet maths) :
       chaque ligne suivante est une égalité COMPLÈTE "valeur = valeur" avec un
       nombre explicite des DEUX côtés (ex: "7 + 10 = 17", PAS "= 17") ; jamais
       de ligne commençant par "=", jamais de "?", jamais de variable.
+      UNE LIGNE = UNE SEULE OPÉRATION = UN SEUL RÉSULTAT VISIBLE. Ne jamais
+      fusionner deux étapes sur la même ligne (ex INTERDIT : "7 + 9 = 7 + 10 - 1"
+      cache le résultat intermédiaire 17). Décompose plutôt en 3 lignes :
+      "7 + 9" / "7 + 10 = 17" / "17 - 1 = 16" — chaque ligne réutilise le
+      résultat de la précédente et n'applique qu'un seul calcul.
 - Sinon (notion, concept visuel, règle sans calcul chiffré : symétrie,
   fractions en parts, unités de mesure)
   → image_route = "gpt_image", render_type = null, ne pas inclure operation_data,
@@ -198,6 +206,7 @@ def _build_prompt(reel_type, sujet, niveau, matiere, cta_type):
             "- EXACTITUDE PÉDAGOGIQUE STRICTE : chaque mot correctement orthographié, "
             "tous les accents présents, règle conforme aux programmes officiels."
         )
+    schema = schema.replace("85-100", f"{WORD_MIN}-{WORD_MAX}")
     cta_instruction = CTA_INSTRUCTIONS[cta_type]
     return f"""Tu écris le script d'un Reel Instagram de 28-35 secondes pour @curio.education,
 compte éducatif français pour enfants de primaire (CP-CM2) et leurs parents.
@@ -207,7 +216,10 @@ phrases courtes, vocabulaire accessible à un enfant de 8 ans.
 {contexte}
 
 Contraintes :
-- La narration fait STRICTEMENT entre {WORD_MIN} et {WORD_MAX} mots (la voix lit ~180 mots/minute : cible 28-35 secondes, jamais plus de 35).
+- La narration fait STRICTEMENT entre {WORD_MIN} et {WORD_MAX} mots (la voix lit plus
+  lentement que prévu — 141 à 160 mots/minute mesurés en production, jamais 180 : cette
+  fourchette est calibrée pour rester entre 28 et 35 secondes, jamais plus de 35, même au
+  débit le plus lent observé).
 - La narration commence par la phrase hook exacte.
 - Les segments suivent le découpage timecode imposé et la somme des textes = la narration.
 - AUCUNE DIGRESSION : chaque phrase sert directement le sujet principal. Si une info est
@@ -224,6 +236,15 @@ def _count_words(text):
 
 
 _SAFE_EXPR = re.compile(r"^[0-9+\-*/(). ]+$")
+_OPERATOR = re.compile(r"[+\-*/]")
+
+
+def _count_operators(expr):
+    """Compte les opérateurs d'une expression (ignore un '-' de signe en tête)."""
+    normalized = expr.replace("×", "*").replace("x", "*").replace("X", "*").replace("÷", "/").strip()
+    if normalized.startswith("-"):
+        normalized = normalized[1:]
+    return len(_OPERATOR.findall(normalized))
 
 
 def _safe_eval_arithmetic(expr):
@@ -241,8 +262,10 @@ def _validate_astuce_chaine(operation_data):
     Frame 0 (principe) peut contenir du texte non chiffré (règle en mots) —
     une ligne non numérique y est ignorée, rien à vérifier. Frames 1 et 2
     (exemples) doivent être entièrement chiffrés : chaque ligne 'a = b' est
-    vérifiée arithmétiquement, et les deux exemples doivent porter sur des
-    nombres différents (c'est ce qui prouve que l'astuce marche à chaque fois).
+    vérifiée arithmétiquement, chaque ligne ne porte qu'une seule opération
+    (jamais deux étapes fusionnées, sinon le résultat intermédiaire disparaît),
+    et les deux exemples doivent porter sur des nombres différents (c'est ce
+    qui prouve que l'astuce marche à chaque fois).
     """
     frames = operation_data.get("frames")
     if not frames or not isinstance(frames, list) or len(frames) != 3:
@@ -255,6 +278,11 @@ def _validate_astuce_chaine(operation_data):
         strict = i > 0  # frame 0 = principe, peut contenir du texte non chiffré
         for ligne in etapes:
             if "=" not in ligne:
+                if strict and _count_operators(ligne) != 1:
+                    raise ValueError(
+                        f"astuce_chaine : frame {i + 1} première ligne '{ligne}' doit être une "
+                        "expression à une seule opération (ex: '7 + 9')"
+                    )
                 continue
             gauche, droite = ligne.rsplit("=", 1)
             try:
@@ -266,6 +294,11 @@ def _validate_astuce_chaine(operation_data):
                 continue
             if abs(valeur_gauche - valeur_droite) > 1e-6:
                 raise ValueError(f"astuce_chaine : frame {i + 1} ligne fausse '{ligne}' ({valeur_gauche} != {valeur_droite})")
+            if strict and (_count_operators(gauche) > 1 or _count_operators(droite) > 1):
+                raise ValueError(
+                    f"astuce_chaine : frame {i + 1} ligne '{ligne}' fusionne plusieurs opérations "
+                    "sur une même ligne (une ligne = un seul calcul, résultat intermédiaire visible)"
+                )
 
     if frames[1]["etapes"][0].strip() == frames[2]["etapes"][0].strip():
         raise ValueError("astuce_chaine : exemple 1 et exemple 2 utilisent le même nombre, il en faut deux différents")
@@ -319,6 +352,36 @@ def _validate_classification(script):
             raise ValueError("gpt_image : 3 illustrations (description_visuelle) attendues")
 
 
+REQUIRED_FRANCAIS_KEYS = [
+    "regle_exacte", "sujet_photo", "mot_cle", "lettre_cle", "exemple_correct",
+    "test_substitution_ok", "conclusion_ok", "exemple_incorrect",
+    "test_substitution_ko", "conclusion_ko",
+]
+
+
+def _validate_francais_illustrations(script):
+    """Type B français : chaque illustration doit avoir un sujet_photo + mot_cle/lettre_cle
+    concrets et distincts (bug v2.7 : sans sujet_photo, GPT Image pioche du contenu générique
+    dans les références ; bug v2.9 : mot_cle/lettre_cle remplacent le paragraphe complet
+    illisible sur mobile — seul un mot court avec 1 lettre colorée est dessiné sur l'image)."""
+    illustrations = script.get("illustrations")
+    if not illustrations or len(illustrations) != 3:
+        raise ValueError("français : 3 illustrations attendues")
+    sujets = []
+    for i, illus in enumerate(illustrations):
+        missing = [k for k in REQUIRED_FRANCAIS_KEYS if not illus.get(k)]
+        if missing:
+            raise ValueError(f"français : illustration {i + 1} sans {', '.join(missing)}")
+        lettre_cle = illus["lettre_cle"].strip()
+        if len(lettre_cle) != 1:
+            raise ValueError(f"français : illustration {i + 1} lettre_cle doit être une seule lettre (reçu '{lettre_cle}')")
+        if lettre_cle.lower() not in illus["mot_cle"].lower():
+            raise ValueError(f"français : illustration {i + 1} lettre_cle '{lettre_cle}' absente de mot_cle '{illus['mot_cle']}'")
+        sujets.append(illus["sujet_photo"].strip().lower())
+    if len(set(sujets)) != len(sujets):
+        raise ValueError("français : sujet_photo identique/répété sur plusieurs illustrations, il en faut un différent par mot-exemple")
+
+
 def generate_script(reel_type, sujet, niveau=None, matiere=None, cta_type="abonnement"):
     """Appelle Claude, valide le nombre de mots (+ classification maths), retourne le dict script."""
     is_maths = reel_type == "competence" and matiere and "math" in matiere.lower()
@@ -344,6 +407,11 @@ def generate_script(reel_type, sujet, niveau=None, matiere=None, cta_type="abonn
         if is_maths:
             try:
                 _validate_classification(script)
+            except ValueError as exc:
+                problems.append(str(exc))
+        elif reel_type == "competence":
+            try:
+                _validate_francais_illustrations(script)
             except ValueError as exc:
                 problems.append(str(exc))
 
