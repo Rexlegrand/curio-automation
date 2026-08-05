@@ -1,0 +1,123 @@
+HOOKS À GÉNÉRER — Dreamina/Seedance 2.0
+Batch : 29/07/2026 → 04/08/2026 (6 reels)
+======================================================================
+
+======================================================================
+REEL DU 29/07/2026 — Multiplier par 4 et 8 facile
+======================================================================
+Image de référence (hook_frame) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-07-29/multiplier_par_4_ou_par_8_sans_calculatrice/hook_frame.png
+
+Prompt Seedance :
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment multiplier par 4 ou par 8 sans calculatrice ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: giant chalkboard with relevant equation, classroom ambiance
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+
+Déposer le MP4 généré ici (renommer en hook_video.mp4) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-07-29/multiplier_par_4_ou_par_8_sans_calculatrice/hook_video.mp4
+
+======================================================================
+REEL DU 30/07/2026 — Une île pleine de lapins
+======================================================================
+Image de référence (hook_frame) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-07-30/il_existe_une_ile_japonaise_couverte_de_lapins_des_centaines_de_lapins_y_vivent_en_liberte_et_viennent_a_la_rencontre_des_visiteurs_on_trouve_aussi_ailleurs_une_ile_pleine_de_chats/hook_frame.png
+
+Prompt Seedance :
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu savais qu'il existe une île remplie de lapins ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+
+Déposer le MP4 généré ici (renommer en hook_video.mp4) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-07-30/il_existe_une_ile_japonaise_couverte_de_lapins_des_centaines_de_lapins_y_vivent_en_liberte_et_viennent_a_la_rencontre_des_visiteurs_on_trouve_aussi_ailleurs_une_ile_pleine_de_chats/hook_video.mp4
+
+======================================================================
+REEL DU 31/07/2026 — Mais où est donc Ornicar
+======================================================================
+Image de référence (hook_frame) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-07-31/mais_ou_et_donc_or_ni_car_l_astuce_pour_les_retenir/hook_frame.png
+
+Prompt Seedance :
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment retenir les mots mais, ou, et, donc, or, ni, car ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: soft colorful gradient background, neutral and clean
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+
+Déposer le MP4 généré ici (renommer en hook_video.mp4) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-07-31/mais_ou_et_donc_or_ni_car_l_astuce_pour_les_retenir/hook_video.mp4
+
+======================================================================
+REEL DU 01/08/2026 — Multiplier par 5 : l'astuce
+======================================================================
+Image de référence (hook_frame) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-01/multiplier_par_5_l_astuce_10_puis_2/hook_frame.png
+
+Prompt Seedance :
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment multiplier par 5 ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: giant chalkboard with relevant equation, classroom ambiance
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+
+Déposer le MP4 généré ici (renommer en hook_video.mp4) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-01/multiplier_par_5_l_astuce_10_puis_2/hook_video.mp4
+
+======================================================================
+REEL DU 03/08/2026 — L'ours caché dans le Toblerone
+======================================================================
+Image de référence (hook_frame) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-03/un_ours_se_cache_dans_le_logo_du_toblerone_la_montagne_dessinee_est_le_cervin_un_sommet_des_alpes_l_ours_est_le_symbole_de_berne_la_ville_du_chocolat/hook_frame.png
+
+Prompt Seedance :
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... un ours se cache dans le logo du Toblerone !"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: soft colorful gradient background, neutral and clean
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+
+Déposer le MP4 généré ici (renommer en hook_video.mp4) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-03/un_ours_se_cache_dans_le_logo_du_toblerone_la_montagne_dessinee_est_le_cervin_un_sommet_des_alpes_l_ours_est_le_symbole_de_berne_la_ville_du_chocolat/hook_video.mp4
+
+======================================================================
+REEL DU 04/08/2026 — Le piège du participe passé
+======================================================================
+Image de référence (hook_frame) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-04/l_accord_du_participe_passe_qui_piege_tout_le_monde/hook_frame.png
+
+Prompt Seedance :
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment accorder le participe passé ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: soft colorful gradient background, neutral and clean
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+
+Déposer le MP4 généré ici (renommer en hook_video.mp4) : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-04/l_accord_du_participe_passe_qui_piege_tout_le_monde/hook_video.mp4

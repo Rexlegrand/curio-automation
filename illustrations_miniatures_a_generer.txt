@@ -1,0 +1,875 @@
+ILLUSTRATIONS + MINIATURES À GÉNÉRER (non urgent, après les hooks)
+======================================================================
+
+======================================================================
+REEL DU 05/08/2026 — Astuce : multiplier par 5 vite
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-05/multiplier_un_nombre_a_virgule_par_5_version_rapide
+======================================================================
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Generate a generic magazine-clipping visual on the theme of maths (pencils, ruler, notebook page, chalk doodle) in the same photographic/notebook style as the reference — no exact numbers, no calculation, purely decorative. Do not attempt to reproduce a mathematical operation.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Astuce : multiplier par 5 vite"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-05/multiplier_un_nombre_a_virgule_par_5_version_rapide/miniature.png]
+
+======================================================================
+REEL DU 06/08/2026 — Le sens caché du mot Lego
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-06/le_mot_lego_veut_dire_bien_jouer_il_vient_de_deux_mots_danois_leg_godt_la_marque_a_ete_fondee_au_danemark_le_nom_resume_ce_que_fait_le_jouet
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo réaliste de style magazine montrant la ville de Billund au Danemark, avec un panneau routier indiquant 'Billund' et des bâtiments modernes en arrière-plan, ciel nordique nuageux, lumière naturelle douce.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-06/le_mot_lego_veut_dire_bien_jouer_il_vient_de_deux_mots_danois_leg_godt_la_marque_a_ete_fondee_au_danemark_le_nom_resume_ce_que_fait_le_jouet/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo macro hyperréaliste de briques Lego colorées empilées sur une table en bois, gros plan sur les picots des briques, lumière naturelle chaude, arrière-plan légèrement flou.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-06/le_mot_lego_veut_dire_bien_jouer_il_vient_de_deux_mots_danois_leg_godt_la_marque_a_ete_fondee_au_danemark_le_nom_resume_ce_que_fait_le_jouet/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo réaliste style magazine des mains d'un enfant en train d'assembler une tour de briques Lego colorées sur un tapis de jeu, lumière naturelle, cadrage serré sur les mains et les briques.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-06/le_mot_lego_veut_dire_bien_jouer_il_vient_de_deux_mots_danois_leg_godt_la_marque_a_ete_fondee_au_danemark_le_nom_resume_ce_que_fait_le_jouet/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Le sens caché du mot Lego"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-06/le_mot_lego_veut_dire_bien_jouer_il_vient_de_deux_mots_danois_leg_godt_la_marque_a_ete_fondee_au_danemark_le_nom_resume_ce_que_fait_le_jouet/miniature.png]
+
+======================================================================
+REEL DU 07/08/2026 — D'où viennent ces mots français ?
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a modern smartphone lying on a wooden table, screen glowing, close-up, natural light
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "téléphone"
+Color ONLY the letter "p" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a glass aquarium filled with water and small colorful fish, close-up, natural light, on a wooden shelf
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "aquarium"
+Color ONLY the letter "a" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a green plant leaf under a microscope lens, close-up, natural light, on a laboratory table
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "biologie"
+Color ONLY the letter "b" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"D'où viennent ces mots français ?"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin/miniature.png]
+
+======================================================================
+REEL DU 08/08/2026 — C'est quoi un pourcentage ?
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+STRICT EDUCATIONAL ACCURACY — French Éducation Nationale standards, grade 6e.
+Concept to illustrate (no exact calculation involved):
+Une grille de 10 par 10 petits carrés (100 carrés au total) sur fond cahier, avec 50 carrés colorés en bleu et 50 carrés blancs, illustrant que 50 pour cent correspond à 50 parts sur 100, soit la moitié de la grille.
+
+Clear, minimalist pedagogical diagram. If arrows or numbers are needed, keep
+them simple and accurate — no invented values. No cartoon style, no Curio
+character.
+
+Magazine clipping style, fine white border, soft drop shadow.
+Empty space at bottom 30% for captions. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+STRICT EDUCATIONAL ACCURACY — French Éducation Nationale standards, grade 6e.
+Concept to illustrate (no exact calculation involved):
+Un cercle divisé en 4 parts égales sur fond cahier, une seule part colorée en jaune et les trois autres blanches, avec une petite étiquette montrant que cette part correspond à 25 pour cent, soit un quart du cercle.
+
+Clear, minimalist pedagogical diagram. If arrows or numbers are needed, keep
+them simple and accurate — no invented values. No cartoon style, no Curio
+character.
+
+Magazine clipping style, fine white border, soft drop shadow.
+Empty space at bottom 30% for captions. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+STRICT EDUCATIONAL ACCURACY — French Éducation Nationale standards, grade 6e.
+Concept to illustrate (no exact calculation involved):
+Une étiquette de prix sur fond cahier : le prix initial 20 euros est barré, une flèche indique moins 4 euros, et le nouveau prix 16 euros est écrit en dessous, illustrant une réduction de 20 pour cent sur un jouet.
+
+Clear, minimalist pedagogical diagram. If arrows or numbers are needed, keep
+them simple and accurate — no invented values. No cartoon style, no Curio
+character.
+
+Magazine clipping style, fine white border, soft drop shadow.
+Empty space at bottom 30% for captions. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"C'est quoi un pourcentage ?"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment/miniature.png]
+
+======================================================================
+REEL DU 10/08/2026 — Le Gecko Marche Au Plafond
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo macro hyper-réaliste en gros plan des doigts d'un gecko posés sur une vitre transparente, montrant la texture fine des coussinets et des rangées de minuscules poils (setae), éclairage naturel, style photo scientifique de magazine.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo réaliste d'un gecko entier accroché la tête en bas sous une vitre de fenêtre, corps bien visible, lumière du jour, arrière-plan flou, style photographie animalière de National Geographic.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Schéma minimaliste et scientifique montrant un doigt de gecko en coupe avec des flèches numérotées (1, 2, 3) illustrant le contact entre les poils microscopiques et une surface lisse, fond blanc épuré, style infographie pédagogique.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Le Gecko Marche Au Plafond"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt/miniature.png]
+
+======================================================================
+REEL DU 11/08/2026 — L'astuce anti-fautes en orthographe
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a fluffy grey house cat sitting on a wooden floor, close-up, natural light
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "chat"
+Color ONLY the letter "t" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a brown horse galloping across a green field, motion blur on legs, natural daylight
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "galop"
+Color ONLY the letter "p" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a grey lead fishing weight on a wooden table, close-up, natural light
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "plomb"
+Color ONLY the letter "b" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"L'astuce anti-fautes en orthographe"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes/miniature.png]
+
+======================================================================
+REEL DU 12/08/2026 — Les Compléments à 10
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-12/les_complements_a_10_la_base_du_calcul_mental
+======================================================================
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Generate a generic magazine-clipping visual on the theme of maths (pencils, ruler, notebook page, chalk doodle) in the same photographic/notebook style as the reference — no exact numbers, no calculation, purely decorative. Do not attempt to reproduce a mathematical operation.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Les Compléments à 10"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-12/les_complements_a_10_la_base_du_calcul_mental/miniature.png]
+
+======================================================================
+REEL DU 13/08/2026 — Vikings sans cornes : la vérité
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo réaliste style musée d'un vrai casque viking historique (réplique du casque de Gjermundbu), simple, en métal terne, forme arrondie avec protection nasale, sans aucune corne, posé sur un socle noir dans une vitrine de musée, éclairage doux et neutre, style photo documentaire ou Wikipédia.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo d'archive en noir et blanc ou sépia, style magazine du 19e siècle, montrant un chanteur d'opéra costumé en guerrier nordique avec un casque à grandes cornes décoratives, sur une scène de théâtre, éclairage dramatique, texture de vieille photographie.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Schéma minimaliste sur fond blanc : silhouette de profil d'un guerrier viking réaliste avec un casque simple sans cornes, une flèche et le chiffre 1 pointant vers le casque, légende sobre 'Vrai casque viking', style infographie épurée noir et blanc.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Vikings sans cornes : la vérité"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes/miniature.png]
+
+======================================================================
+REEL DU 14/08/2026 — Devine ce que ressent un personnage
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a young boy clenching his fists tightly, red-faced, shouting, close-up portrait, natural light, in a school playground
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "colère"
+Color ONLY the letter "c" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a little girl smiling widely and jumping with arms up in a sunny garden, natural light, joyful expression
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "joyeuse"
+Color ONLY the letter "j" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page, Seyès grid style,
+subtle paper texture, vertical 9:16 format.
+
+Main visual, occupying roughly 55% of the page, centered in the upper 2/3:
+a single photorealistic photo, like a Wikipedia or magazine photo, no cartoon,
+no Curio character: a small boy hiding behind a wooden door, peeking out with wide eyes and trembling hands, dim natural light
+This photo illustrates the key word below — do not substitute any other
+subject, do not reuse a generic or unrelated scene.
+
+Below the photo, ONE single short word in large bold black handwritten-style
+text, correctly spelled: "peur"
+Color ONLY the letter "p" inside that word in a bright contrasting
+blue — every other letter of the word stays black.
+
+CRITICAL — DO NOT DRAW ANYTHING ELSE:
+- No sentence, no rule, no test, no correct/incorrect comparison, no ✅/❌,
+  no paragraph of any kind. The single word above is the ONLY text on this
+  image. All pedagogical explanation is spoken in the audio narration only —
+  a full paragraph here would be illegible on a phone screen.
+- Leave the bottom 30% of the image completely empty (plain notebook
+  background, nothing drawn there) — that zone is reserved for video
+  captions and must stay clear.
+
+Magazine clipping style, fine white border, soft drop shadow. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Devine ce que ressent un personnage"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage/miniature.png]
+
+======================================================================
+REEL DU 17/08/2026 — Les lacs roses existent vraiment
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Vue aérienne photoréaliste du lac Hillier en Australie, eau d'un rose vif intense contrastant avec la bande de forêt verte et l'océan bleu foncé qui l'entoure, style photo satellite de magazine National Geographic, lumière naturelle de jour.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photographie réaliste du lac Rose (Retba) au Sénégal, eau rose pâle striée de reflets, petits tas de sel blanc sur les rives, quelques pêcheurs en pirogue au loin, ciel bleu clair, style reportage photo.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photo réaliste en gros plan de cristaux de sel blancs posés sur une eau rose saumon, effet de flottaison à la surface, lumière dorée de fin de journée, ambiance sereine, style photo macro de magazine nature.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Les lacs roses existent vraiment"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal/miniature.png]
+
+======================================================================
+REEL DU 20/08/2026 — Le Papa Manchot Ne Mange Pas
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur
+======================================================================
+--- illus_1.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photographie réaliste style National Geographic d'un manchot empereur mâle debout sur la banquise en Antarctique, tenant un œuf unique sur ses pattes, recouvert par un repli de peau et de plumes (poche incubatrice), ciel gris et neige autour, lumière naturelle froide.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur/illus_1.png]
+
+--- illus_2.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photographie réaliste d'une immense colonie de manchots empereurs mâles serrés en un groupe compact pendant une tempête de neige antarctique, vent visible, flocons en mouvement, ambiance glaciale et blanche, vue large.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur/illus_2.png]
+
+--- illus_3.png (qualité medium) ---
+Background: clean white French school notebook page with discrete light blue
+grid lines forming small squares (Seyès grid style), subtle paper texture,
+soft shadow at bottom, vertical 9:16 format.
+
+Centered on the page, occupying approximately 65% of visible area:
+Photographie réaliste en gros plan de plusieurs manchots empereurs se déplaçant lentement les uns contre les autres dans le blizzard, texture du plumage et de la neige bien visible, lumière naturelle diffuse, scène hivernale authentique.
+
+The image is styled like a magazine clipping with a fine white border
+and soft drop shadow, as if pasted on the notebook page.
+Leave generous empty space at the bottom (30%) for future captions.
+Photorealistic quality, like a photo from Wikipedia or a science magazine.
+No text overlays. No subtitles. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur/illus_3.png]
+
+--- miniature.png (qualité high) ---
+Instagram feed thumbnail for an educational Reel, vertical 9:16 canvas.
+The reference thumbnail is a LAYOUT/STYLE example ONLY — copy its notebook
+page background, its tilted magazine-clipping photo framing, its logo badge
+placement and its handwritten title typography. Do NOT reproduce its specific
+photo content (do not draw a wheat field, harvest workers, or a calendar) and
+do NOT reuse its title text — those are from a different, unrelated Reel.
+
+CRITICAL FEED-CROP RULE: Instagram feed shows only the CENTRAL 4:3 crop of
+this 9:16 canvas. ALL meaningful content (title, photos, Curio logo) must fit
+entirely inside the central 4:3 area — keep the top ~20% and bottom ~20% of
+the canvas as plain notebook-page background with nothing important in them.
+Make the title and photos correspondingly compact.
+
+Reuse the provided illustration image as the main visual.
+Add ONLY these two elements, both inside the central 4:3 safe area:
+1. The provided Curio penguin logo as a small rounded app-icon badge,
+   centered horizontally, at the BOTTOM EDGE of the central safe area.
+2. The Reel title at the TOP EDGE of the central safe area, same style as
+   the reference: bold rounded handwritten-style lettering, dark blue ink:
+"Le Papa Manchot Ne Mange Pas"
+Title must be perfectly legible and correctly spelled, every accent present.
+No other text. No watermark.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur/miniature.png]

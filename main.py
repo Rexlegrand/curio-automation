@@ -44,7 +44,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Pipeline Reels Curio (@curio.education)")
     parser.add_argument("--type", choices=["curiosite", "competence"], help="Type de Reel")
     parser.add_argument("--sujet", help="Sujet du Reel (obligatoire pour curiosite)")
-    parser.add_argument("--niveau", choices=["CP", "CE1", "CE2", "CM1", "CM2"], help="Niveau (Type B)")
+    parser.add_argument("--niveau", choices=["CP", "CE1", "CE2", "CM1", "CM2", "6e"], help="Niveau (Type B)")
     parser.add_argument("--matiere", help="maths ou francais (Type B)")
     parser.add_argument("--date", default=datetime.date.today().isoformat(), help="Date YYYY-MM-DD")
     parser.add_argument("--only", choices=["images", "audio"], help="Relance une seule étape")

@@ -1,5 +1,11 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.9 — Fix v2.8 : le template compétence français demandait encore à GPT Image 2
+Version : 2.10 — Ajout niveau 6e (main.py --niveau accepte désormais CP/CE1/CE2/CM1/CM2/6e,
+en plus des 5 niveaux CP→CM2 d'origine). Le calendrier éditorial prévoyait déjà des reels
+6e (grammaire/pourcentages) que le pipeline rejetait faute de ce niveau dans les choix
+argparse. Fonctionne uniquement avec --sujet fourni explicitement : data/Competences_Curio.xlsx
+n'a toujours que 5 onglets CP→CM2, donc la sélection aléatoire pick_competence() reste
+impossible pour 6e (onglet absent) — un reel 6e sans --sujet explicite échoue encore.
+Hérite v2.9 — Fix v2.8 : le template compétence français demandait encore à GPT Image 2
 de dessiner un paragraphe entier (bloc ✅ Correct/Test/❌ Incorrect/Test complet) sur
 l'illustration — illisible sur mobile, et cette masse de texte débordait de la zone de
 sécurité 30% réservée aux sous-titres (le débordement venait du CONTENU de l'illustration,

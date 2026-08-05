@@ -1,0 +1,274 @@
+PRIORITÉ ABSOLUE — HOOKS À GÉNÉRER CE SOIR (Dreamina bientôt inaccessible)
+Pour chaque reel : prompt image GPT Image (hook_frame) PUIS prompt Seedance juste en dessous.
+Flux : génère l'image → colle le prompt Seedance dans Dreamina avec cette image → next.
+======================================================================
+
+======================================================================
+REEL DU 07/08/2026 — D'où viennent ces mots français ?
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: soft colorful gradient background, neutral and clean
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment ces mots existent ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: soft colorful gradient background, neutral and clean
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-07/ces_mots_francais_venus_du_grec_et_du_latin/hook_video.mp4]
+
+======================================================================
+REEL DU 08/08/2026 — C'est quoi un pourcentage ?
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: giant chalkboard with relevant equation, classroom ambiance
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment ce qu'est un pourcentage ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: giant chalkboard with relevant equation, classroom ambiance
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-08/c_est_quoi_un_pourcentage_vraiment/hook_video.mp4]
+
+======================================================================
+REEL DU 10/08/2026 — Le Gecko Marche Au Plafond
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... le gecko peut marcher au plafond, la tête en bas !"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-10/le_gecko_peut_marcher_la_tete_en_bas_au_plafond_ses_doigts_sont_couverts_de_millions_de_poils_microscopiques_qui_lui_permettent_de_coller_a_presque_toutes_les_surfaces_il_peut_rester_suspendu_a_une_vitre_par_un_seul_doigt/hook_video.mp4]
+
+======================================================================
+REEL DU 11/08/2026 — L'astuce anti-fautes en orthographe
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: soft colorful gradient background, neutral and clean
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment ne plus te tromper sur les lettres muettes ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: soft colorful gradient background, neutral and clean
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-11/les_mots_de_la_meme_famille_l_astuce_anti_fautes/hook_video.mp4]
+
+======================================================================
+REEL DU 12/08/2026 — Les Compléments à 10
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-12/les_complements_a_10_la_base_du_calcul_mental
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: giant chalkboard with relevant equation, classroom ambiance
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-12/les_complements_a_10_la_base_du_calcul_mental/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment trouver les compléments à 10 ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: giant chalkboard with relevant equation, classroom ambiance
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-12/les_complements_a_10_la_base_du_calcul_mental/hook_video.mp4]
+
+======================================================================
+REEL DU 13/08/2026 — Vikings sans cornes : la vérité
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: relevant historical setting, dramatic lighting
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... les Vikings portaient vraiment des casques à cornes ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: relevant historical setting, dramatic lighting
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-13/les_vikings_ne_portaient_pas_de_casques_a_cornes_cette_image_vient_d_un_spectacle_invente_bien_plus_tard_leurs_vrais_casques_etaient_simples_sans_cornes_des_cornes_au_combat_auraient_ete_bien_genantes/hook_video.mp4]
+
+======================================================================
+REEL DU 14/08/2026 — Devine ce que ressent un personnage
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: soft colorful gradient background, neutral and clean
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... tu sais vraiment comment deviner ce que ressent un personnage ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: soft colorful gradient background, neutral and clean
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-14/deviner_ce_que_ressent_un_personnage/hook_video.mp4]
+
+======================================================================
+REEL DU 17/08/2026 — Les lacs roses existent vraiment
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... il existe des lacs entièrement roses ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-17/il_existe_des_lacs_entierement_roses_leur_couleur_vient_de_minuscules_algues_et_du_sel_de_loin_on_dirait_un_immense_lac_de_fraise_on_en_trouve_par_exemple_en_australie_et_au_senegal/hook_video.mp4]
+
+======================================================================
+REEL DU 20/08/2026 — Le Papa Manchot Ne Mange Pas
+Dossier : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur
+======================================================================
+--- PROMPT IMAGE (GPT Image, hook_frame.png) ---
+Curio character: cute blue and white penguin, large expressive eyes,
+red knitted scarf, holding DJI wireless microphone with furry windscreen
+close to his beak. Extremely surprised expression, eyes wide open,
+beak partially open in shock. Direct eye contact with camera.
+Medium shot from waist up. Perfectly centered for vertical 9:16.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Pixar-quality rendering. Ultra detailed feathers.
+No text. No watermark. Vertical 9:16.
+
+[Enregistrer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur/hook_frame.png]
+
+--- PROMPT SEEDANCE (colle dans Dreamina avec l'image générée ci-dessus) ---
+cute blue penguin character with red knitted scarf, holding a small DJI
+wireless microphone with furry windscreen close to his beak, speaking
+directly into the camera in French.
+The character says out loud in French: "Attends... un papa qui ne mange rien pendant deux mois ?"
+Beak and mouth moving naturally in perfect sync with the French phrase,
+accurate lip-sync animation for each syllable.
+Surprised expression: eyes wide open in surprise, then slight head tilt.
+Background: relevant natural environment (fjord, ocean, meadow, etc.)
+Static locked camera on Curio, no camera movement, no zoom.
+9:16 vertical frame, cinematic lighting, Pixar-quality rendering.
+Duration: 4 seconds. Generate audio.
+[MP4 Dreamina à déposer sous : /Users/benjamin.ptryhuml/Desktop/curio-automation/output/2026-08-20/le_manchot_empereur_peut_jeuner_deux_mois_pour_couver_son_uf_c_est_le_papa_qui_garde_l_uf_sur_ses_pattes_environ_60_jours_il_ne_mange_rien_et_affronte_le_froid_glacial_les_males_se_serrent_les_uns_contre_les_autres_pour_garder_la_chaleur/hook_video.mp4]
