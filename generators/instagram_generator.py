@@ -2,7 +2,7 @@
 
 import anthropic
 
-from config import CLAUDE_MODEL, COST_DESCRIPTION, ENV, log_api_call
+from config import CLAUDE_MODEL, COST_DESCRIPTION, CTA_TEXTE, ENV, log_api_call
 
 MENTIONS = {
     "toujours": ["@scilabus", "@lumni_off", "@cestpassorcier_off"],
@@ -31,10 +31,8 @@ Jamais de hashtag de niveau scolaire (#cp, #ce1, #cm1...) sauf Reel compétence.
 
 [2-3 MENTIONS STRATÉGIQUES selon sujet]"""
 
-LIGNE_CTA = {
-    "abonnement": "📩 Envoie CURIO en MP et reçois gratuitement une activité pédagogique\nniveau CP-CM2 sur [SUJET].",
-    "commentaire": "💬 Commente CURIO et reçois gratuitement une activité pédagogique\nniveau CP-CM2 sur [SUJET].",
-}
+# v2.11 — CTA unique fixe (CTA_TEXTE, config.py), plus d'alternance abonnement/commentaire (v2.3 abandonnée).
+LIGNE_CTA = f"📩 {CTA_TEXTE}"
 
 
 def generate_description(script, output_dir):
@@ -47,9 +45,8 @@ def generate_description(script, output_dir):
     client = anthropic.Anthropic(api_key=ENV["ANTHROPIC_API_KEY"])
     mentions_pool = "\n".join(f"- {k} : {', '.join(v)}" for k, v in MENTIONS.items())
     niveau = f"\nNiveau scolaire : {script['niveau']}" if script.get("niveau") else ""
-    cta_type = script.get("cta_type", "abonnement")
-    structure = STRUCTURE.format(ligne_cta=LIGNE_CTA[cta_type])
-    cta_note = f"\nCTA du Reel : {cta_type}. La ligne CTA de la structure est déjà la bonne, reprends-la."
+    structure = STRUCTURE.format(ligne_cta=LIGNE_CTA)
+    cta_note = "\nLa ligne CTA de la structure est fixe, reprends-la mot pour mot."
 
     prompt = f"""Écris la description Instagram d'un Reel du compte @curio.education
 (éducation primaire française, mascotte pingouin Curio).

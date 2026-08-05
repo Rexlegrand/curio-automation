@@ -12,6 +12,9 @@ ASSETS_DIR = ROOT / "assets"
 REFERENCE_DIR = ASSETS_DIR / "curio_reference"
 CLIPS_DIR = ASSETS_DIR / "clips"
 LOGO_PATH = ASSETS_DIR / "logo_curio.png"
+HOOK_FRAMES_DIR = ASSETS_DIR / "hook_frames"
+HOOK_FRAME_FRANCAIS = HOOK_FRAMES_DIR / "hook_frame_francais.png"
+HOOK_FRAME_MATHS = HOOK_FRAMES_DIR / "hook_frame_maths.png"
 DATA_XLSX = ROOT / "data" / "Competences_Curio.xlsx"
 OUTPUT_DIR = ROOT / "output"
 
@@ -39,6 +42,10 @@ COST_IMAGE = 0.011
 COST_AUDIO_VERSION = 0.11
 COST_SCRIPT = 0.02
 COST_DESCRIPTION = 0.02
+
+# CTA — v2.11 : un seul CTA fixe partout (script narré, CTA visuel, description
+# Instagram), plus d'alternance abonnement/commentaire (v2.3 abandonnée).
+CTA_TEXTE = "Envoie CURIO en MP pour recevoir une activité/un exercice gratuit !"
 
 ELEVENLABS_CONFIG = {
     "model_id": "eleven_v3",
@@ -130,7 +137,7 @@ def confirm_cost(step_label, cost_usd):
 
 
 def log_api_call(output_dir, service, cost_usd, generated_file):
-    """Log JSONL de chaque appel API : timestamp, service, coût, fichier."""
+    """Log JSONL de chaque appel API : timestamp, coût réel, fichier généré (0.0 pour le rendu code)."""
     entry = {
         "timestamp": datetime.datetime.now().isoformat(timespec="seconds"),
         "service": service,

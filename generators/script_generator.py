@@ -14,7 +14,7 @@ import sys
 
 import anthropic
 
-from config import CLAUDE_MODEL, DATA_XLSX, ELEVENLABS_CONFIG, ENV
+from config import CLAUDE_MODEL, CTA_TEXTE, DATA_XLSX, ELEVENLABS_CONFIG, ENV
 
 WORD_MIN, WORD_MAX = ELEVENLABS_CONFIG["word_count_target"]
 
@@ -167,21 +167,13 @@ def pick_competence(niveau, matiere):
     return competence
 
 
-CTA_INSTRUCTIONS = {
-    "abonnement": (
-        "Le dernier segment (role cta) est un appel à s'abonner, court et naturel "
-        "(variante de : Abonne-toi pour une nouvelle curiosité chaque jour !)."
-    ),
-    "commentaire": (
-        "Le dernier segment (role cta) demande de commenter le mot CURIO (toujours CURIO, "
-        "jamais un autre mot) pour recevoir une activité pédagogique gratuite "
-        "(ex : Commente CURIO et je t'envoie une activité gratuite !). "
-        "Ajoute aussi un champ \"cta_mot\": \"CURIO\" dans le JSON."
-    ),
-}
+# v2.11 — CTA unique fixe (CTA_TEXTE, config.py), plus d'alternance abonnement/commentaire (v2.3 abandonnée).
+CTA_INSTRUCTION = (
+    f'Le dernier segment (role cta) est EXACTEMENT ce texte, mot pour mot, sans variation : "{CTA_TEXTE}"'
+)
 
 
-def _build_prompt(reel_type, sujet, niveau, matiere, cta_type):
+def _build_prompt(reel_type, sujet, niveau, matiere):
     is_maths = reel_type == "competence" and matiere and "math" in matiere.lower()
     if reel_type == "curiosite":
         schema = SCHEMA_TYPE_A
@@ -207,7 +199,6 @@ def _build_prompt(reel_type, sujet, niveau, matiere, cta_type):
             "tous les accents présents, règle conforme aux programmes officiels."
         )
     schema = schema.replace("85-100", f"{WORD_MIN}-{WORD_MAX}")
-    cta_instruction = CTA_INSTRUCTIONS[cta_type]
     return f"""Tu écris le script d'un Reel Instagram de 28-35 secondes pour @curio.education,
 compte éducatif français pour enfants de primaire (CP-CM2) et leurs parents.
 Le narrateur est Curio, un pingouin curieux et enthousiaste. Ton : simple, vivant,
@@ -228,7 +219,7 @@ Contraintes :
 - Les segments suivent le découpage timecode imposé et la somme des textes = la narration.
 - AUCUNE DIGRESSION : chaque phrase sert directement le sujet principal. Si une info est
   seulement cousine du sujet (autre règle, autre récompense, anecdote hors sujet), ne pas l'inclure.
-- {cta_instruction}
+- {CTA_INSTRUCTION}
 {regles}
 
 Réponds UNIQUEMENT avec un objet JSON valide (aucun texte autour, pas de bloc markdown) suivant ce schéma :
@@ -386,11 +377,11 @@ def _validate_francais_illustrations(script):
         raise ValueError("français : sujet_photo identique/répété sur plusieurs illustrations, il en faut un différent par mot-exemple")
 
 
-def generate_script(reel_type, sujet, niveau=None, matiere=None, cta_type="abonnement"):
+def generate_script(reel_type, sujet, niveau=None, matiere=None):
     """Appelle Claude, valide le nombre de mots (+ classification maths), retourne le dict script."""
     is_maths = reel_type == "competence" and matiere and "math" in matiere.lower()
     client = anthropic.Anthropic(api_key=ENV["ANTHROPIC_API_KEY"])
-    prompt = _build_prompt(reel_type, sujet, niveau, matiere, cta_type)
+    prompt = _build_prompt(reel_type, sujet, niveau, matiere)
     feedback = ""
     best = None  # (ecart_mots, script, wc) — meilleur essai si seul le nombre de mots coince
     for attempt in range(3):
@@ -459,7 +450,6 @@ def generate_script(reel_type, sujet, niveau=None, matiere=None, cta_type="abonn
     script["sujet"] = sujet
     script["niveau"] = niveau
     script["matiere"] = matiere
-    script["cta_type"] = cta_type
     script["word_count"] = wc
     return script
 

@@ -51,17 +51,7 @@ def parse_args():
     parser.add_argument("--assemble", action="store_true", help="Relance uniquement le montage")
     parser.add_argument("--output-dir", help="Dossier output existant (pour --only / --assemble)")
     parser.add_argument("--audio", type=int, choices=[1, 2], help="Version audio pour le montage")
-    parser.add_argument("--cta", choices=["abonnement", "commentaire"], help="Type de CTA (défaut : alternance automatique)")
     return parser.parse_args()
-
-
-def next_cta():
-    """Alternance 50-50 : l'opposé du CTA du dernier script généré."""
-    scripts = sorted(OUTPUT_DIR.glob("*/*/script.json"), key=lambda p: p.stat().st_mtime)
-    if scripts:
-        last = json.loads(scripts[-1].read_text()).get("cta_type", "abonnement")
-        return "commentaire" if last == "abonnement" else "abonnement"
-    return "abonnement"
 
 
 def load_existing(output_dir):
@@ -87,20 +77,29 @@ def checkpoint(number, label):
 
 
 def _images_todo(script, output_dir):
-    """Images manquantes, séparées gpt_image (payant) / code_render (0€, ADDENDUM v2.6)."""
+    """Images manquantes, séparées gpt_image (payant) / code_render / asset_copy (0€, v2.6/v2.11)."""
     missing = [e for e in image_generator.build_image_plan(script) if not (output_dir / e["name"]).exists()]
     n_gpt = sum(1 for e in missing if e["route"] == "gpt_image")
     n_code = sum(1 for e in missing if e["route"] == "code_render")
-    return missing, n_gpt, n_code
+    n_asset = sum(1 for e in missing if e["route"] == "asset_copy")
+    return missing, n_gpt, n_code, n_asset
+
+
+def _images_label(n_gpt, n_code, n_asset):
+    label = f"{n_gpt} image(s) GPT Image 2"
+    if n_code:
+        label += f" + {n_code} rendu(s) code (0€)"
+    if n_asset:
+        label += f" + {n_asset} hook frame réutilisé(s) (0€)"
+    return label
 
 
 def run_images(script, output_dir):
-    missing, n_gpt, n_code = _images_todo(script, output_dir)
+    missing, n_gpt, n_code, n_asset = _images_todo(script, output_dir)
     if not missing:
         print("Toutes les images existent déjà, rien à générer.")
         return
-    label = f"Génération de {n_gpt} image(s) GPT Image 2" + (f" + {n_code} rendu(s) code (0€)" if n_code else "")
-    if not confirm_cost(label, n_gpt * COST_IMAGE):
+    if not confirm_cost(f"Génération de {_images_label(n_gpt, n_code, n_asset)}", n_gpt * COST_IMAGE):
         sys.exit("Génération images annulée.")
     retry_loop("images", lambda: image_generator.generate_images(script, output_dir))
 
@@ -120,7 +119,7 @@ def run_audio(script, output_dir):
 
 def run_parallel_generation(script, output_dir):
     """Étape 1 : Thread A images + Thread B audio, coût affiché avant lancement."""
-    missing_images, n_gpt, n_code = _images_todo(script, output_dir)
+    missing_images, n_gpt, n_code, n_asset = _images_todo(script, output_dir)
     n_audios = sum(
         1 for v in range(1, ELEVENLABS_CONFIG["versions_to_generate"] + 1)
         if not (output_dir / f"audio_v{v}.mp3").exists()
@@ -129,7 +128,7 @@ def run_parallel_generation(script, output_dir):
     if not missing_images and n_audios == 0:
         print("Images et audios déjà présents, étape 1 sautée.")
         return
-    label = f"Étape 1 — {n_gpt} image(s) GPT Image" + (f" + {n_code} rendu(s) code (0€)" if n_code else "") + f" + {n_audios} audio(s) en parallèle"
+    label = f"Étape 1 — {_images_label(n_gpt, n_code, n_asset)} + {n_audios} audio(s) en parallèle"
     if not confirm_cost(label, total):
         sys.exit("Étape 1 annulée.")
 
@@ -224,11 +223,9 @@ def run_full_pipeline(args):
     else:
         if not confirm_cost("Génération du script (Claude API)", COST_SCRIPT):
             sys.exit("Pipeline annulé.")
-        cta_type = args.cta or next_cta()
-        print(f"CTA de ce reel : {cta_type}")
         script = retry_loop(
             "script",
-            lambda: script_generator.generate_script(args.type, sujet, args.niveau, args.matiere, cta_type),
+            lambda: script_generator.generate_script(args.type, sujet, args.niveau, args.matiere),
         )
         script_generator.save_script(script, output_dir)
     write_prompt_files(script, output_dir)
@@ -240,6 +237,8 @@ def run_full_pipeline(args):
         print(f"\nIllustrations : rendu code ({script['render_type']}, 0€) — {describe(script['operation_data'])}")
     elif script.get("image_route") == "gpt_image" and script.get("matiere") and "math" in str(script.get("matiere", "")).lower():
         print("\nIllustrations : GPT Image 2 (concept sans calcul exact, pas d'opération à vérifier)")
+    if args.type == "competence":
+        print("\nHook frame : asset fixe réutilisé (0€, pas de génération GPT Image 2)")
     print(f"\nTous les prompts : {output_dir / 'prompts_all.txt'}")
     print((output_dir / "prompts_all.txt").read_text())
     if not confirm("Script et prompts validés ?"):

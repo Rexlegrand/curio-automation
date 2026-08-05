@@ -1,5 +1,35 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.10 — Ajout niveau 6e (main.py --niveau accepte désormais CP/CE1/CE2/CM1/CM2/6e,
+Version : 2.12 — Langue de travail de Claude Code sur ce repo : anglais ou
+français uniquement, jamais portugais (ni aucune autre langue). S'applique à
+toute réponse, tout commentaire ajouté, tout message de commit généré pour
+ce projet. Voir §0.
+Hérite v2.11 — Deux changements systémiques.
+(1) CTA unique fixe : suppression de l'alternance abonnement/commentaire (v2.3).
+Un seul CTA désormais, partout, sans variation : "Envoie CURIO en MP pour
+recevoir une activité/un exercice gratuit !" (constante CTA_TEXTE, config.py).
+Appliqué au script narré (dernier segment, role cta, mot pour mot), au CTA
+visuel (déjà un asset fixe unique, assets/clips/curio_cta.mp4, inchangé côté
+code) et à la description Instagram (LIGNE_CTA, instagram_generator.py).
+generators/script_generator.py : cta_type, CTA_INSTRUCTIONS et la sélection
+alternée supprimés (générateur devenu déterministe sur ce point) ; main.py :
+--cta et next_cta() supprimés ; script.json n'a plus de champ cta_type.
+(2) Hook frame réutilisable pour les compétences : pour type=competence
+(français ET maths), hook_frame.png n'est plus jamais généré par GPT Image 2.
+Deux assets fixes déposés (assets/hook_frames/hook_frame_francais.png,
+hook_frame_maths.png) — image_generator.py copie simplement le fichier
+correspondant à la matière dans output/[date]/[slug]/hook_frame.png (route
+"asset_copy", 0€, 0 appel API, log_api_call quand même tracé pour audit). Le
+prompt Seedance continue de se générer normalement à partir de cette image
+fixe et du hook textuel du jour — seule l'animation change. Ne s'applique PAS
+aux curiosités (Type A) : leur hook_frame reste généré à chaque reel via GPT
+Image 2 car le fond thématique doit varier selon le sujet (BACKGROUNDS,
+curiosity_prompts.py).
+Coût économisé par reel compétence : 1 image GPT Image 2 (0,011$) en moins —
+reel compétence français/maths concept passe de 5 à 4 GPT Image 2 (0,044$ au
+lieu de 0,055$) ; reel compétence maths opération posée/astuce (déjà en
+rendu code depuis v2.6, hook+miniature seulement) passe de 2 à 1 GPT Image 2
+(0,011$ au lieu de 0,022$) — la moitié du poste images sur ces reels.
+Hérite v2.10 — Ajout niveau 6e (main.py --niveau accepte CP/CE1/CE2/CM1/CM2/6e,
 en plus des 5 niveaux CP→CM2 d'origine). Le calendrier éditorial prévoyait déjà des reels
 6e (grammaire/pourcentages) que le pipeline rejetait faute de ce niveau dans les choix
 argparse. Fonctionne uniquement avec --sujet fourni explicitement : data/Competences_Curio.xlsx
@@ -38,6 +68,11 @@ ligne = un calcul), v2.6 (moteur de rendu code maths, 0€, 0 hallucination) et 
 alterné 50-50, anti-digression).
 Modèle cible : Claude-fable 5 (ou équivalent le plus puissant disponible)
 Rédigé par : Benjamin Petry—Hummel — Juillet 2026
+
+## 0. LANGUE DE TRAVAIL
+
+Claude Code répond uniquement en anglais ou en français sur ce projet — jamais
+en portugais, jamais dans une autre langue. Règle absolue, sans exception.
 
 RÈGLE ABSOLUE N°1 — STRUCTURE DU CODE
 Ne jamais empiler du code sur du code existant. Si une modification est nécessaire, réécrire le fichier complet de A à Z. Zéro patch, zéro commentaire "// TODO", zéro code mort laissé en place. Chaque fichier doit être lisible et autonome à tout moment.
@@ -84,10 +119,10 @@ Règles éditoriales du script (tous types) :
   revérifie automatiquement le word_count après chaque génération et régénère (jusqu'à 3
   tentatives) AVANT de présenter le script au Checkpoint 1 — un script hors cible ne doit
   jamais être découvert au montage.
-* CTA alterné 50-50, automatique (l'opposé du dernier reel, forçable via --cta) :
-  - « abonnement » : Abonne-toi pour une nouvelle curiosité chaque jour !
-  - « commentaire » : Commente CURIO et reçois une activité pédagogique gratuite !
-    Le mot-clé est TOUJOURS « CURIO » (jamais un mot lié au sujet), repris dans la description.
+* CTA unique fixe (v2.11 — plus d'alternance) : « Envoie CURIO en MP pour recevoir
+  une activité/un exercice gratuit ! » (constante CTA_TEXTE, config.py). Identique
+  dans le script narré (dernier segment), le CTA visuel (asset fixe unique,
+  assets/clips/curio_cta.mp4) et la description Instagram (LIGNE_CTA).
 
 ## 3. STRUCTURE D'UN REEL — SÉQUENCE DE MONTAGE EXACTE
 
@@ -120,7 +155,7 @@ Règles de montage :
 | Asset | Outil | Quantité | Paramètres |
 |---|---|---|---|
 | Script JSON horodaté | Claude API | 1 | 85-100 mots, segments timecodes, doit correspondre au temps 28-35s |
-| Image hook frame | GPT Image 2 | 1 | 1024×1792, standard quality |
+| Image hook frame | GPT Image 2 (Type A) **ou asset fixe copié (Type B, v2.11)** | 1 | 1024×1792, standard quality — Type B : copie assets/hook_frames/hook_frame_francais.png ou hook_frame_maths.png, 0€, 0 appel API |
 | Illustrations structure | GPT Image 2 **ou rendu code (v2.6)** | 3 | 1024×1792 — code_render si compétence maths avec opération posée/astuce (§7 bis), sinon GPT Image 2 standard quality |
 | Miniature feed | GPT Image 2 | 1 | 1024×1792, high quality |
 | Audio voix | ElevenLabs | 2 versions | Curio 8, Eleven v3, ~28-35s |
@@ -129,8 +164,10 @@ Règles de montage :
 | Montage final | FFmpeg Python | 1 | MP4 9:16 1080p |
 | Description Instagram | Claude API | 1 | .txt avec hashtags + mentions |
 
-Total images GPT Image 2 : 5 par Reel (hook + 3 illus + miniature), ou 2 par Reel
-(hook + miniature) quand les 3 illustrations passent par le rendu code (§7 bis).
+Total images GPT Image 2 : 5 par Reel curiosité (hook + 3 illus + miniature) ;
+4 par Reel compétence français/maths-concept (hook asset fixe, v2.11 + 3 illus
++ miniature) ; 1 par Reel compétence maths opération posée/astuce (hook asset
+fixe + miniature seulement — 3 illustrations en rendu code, 0€, §7 bis).
 
 ## 5. RÈGLES VISUELLES — CHARTE GRAPHIQUE CURIO
 
@@ -368,15 +405,16 @@ sa colonne plutôt que de le positionner à un x fixe (`draw_col_text`).
 2. Pas de logo Curio sur les illustrations en rendu code, cohérent avec les illustrations GPT Image 2 (jamais eu de logo, §5).
 3. Légère rotation aléatoire (-2° à +2°) sur toutes les illustrations en rendu code — effet "collé à la main" cohérent avec le style magazine-clip existant.
 
-## 9. COÛT — IMPACT DU RENDU CODE (v2.6)
+## 9. COÛT — IMPACT DU RENDU CODE (v2.6) ET DU HOOK FRAME FIXE (v2.11)
 
-| Reel | Avant v2.6 | Depuis v2.6 (maths avec opération posée/astuce) |
-|---|---|---|
-| Images | 5 GPT Image 2 × 0,011$ = 0,055$ | 2 GPT Image 2 (hook + miniature) × 0,011$ = 0,022$ |
-| Risque hallucination chiffre | réel | nul sur les illustrations (code_render) |
+| Reel | Type A curiosité | Type B compétence (concept/français) | Type B compétence maths opération posée/astuce |
+|---|---|---|---|
+| Images | 5 GPT Image 2 × 0,011$ = 0,055$ | 4 GPT Image 2 (hook asset fixe, v2.11) × 0,011$ = 0,044$ | 1 GPT Image 2 (hook asset fixe + miniature seulement) × 0,011$ = 0,011$ |
+| Risque hallucination chiffre | — | — | nul sur les illustrations (code_render) |
 
-Reels curiosité, compétence français, et compétence maths "concept sans
-calcul" : coût images inchangé (5 × GPT Image 2).
+Hook frame Type B (français ET maths) : asset fixe copié depuis
+assets/hook_frames/ (v2.11), jamais régénéré, 0€. Hook frame Type A : GPT
+Image 2 à chaque reel, le fond thématique doit varier selon le sujet.
 
 ## 10. FLUX D'EXÉCUTION — CHECKPOINTS HUMAINS
 
@@ -390,7 +428,8 @@ calcul" : coût images inchangé (5 × GPT Image 2).
   (Type B maths) + tous les prompts images + prompt Seedance
 
 ÉTAPE 1 — GÉNÉRATION PARALLÈLE (si checkpoint 1 validé)
-  Thread A : GPT Image 2 (et/ou rendu code maths, 0€) → 5 images (hook + 3 illus + miniature)
+  Thread A : GPT Image 2 et/ou rendu code maths (0€) et/ou hook frame asset
+    fixe copié (0€, Type B, v2.11) → 5 images (hook + 3 illus + miniature)
   Thread B : ElevenLabs → 2 fichiers audio (v1 + v2)
   Affiche : coût estimé avant lancement + demande confirmation
 
@@ -458,6 +497,9 @@ curio-automation/
 │   │   └── curio_cta.mp4              ← Curio CTA final (4s)
 │   ├── fonts/
 │   │   └── PatrickHand-Regular.ttf    ← NOUVEAU v2.6 — police manuscrite rendu code (Google Fonts)
+│   ├── hook_frames/                   ← NOUVEAU v2.11 — hook frames fixes Type B (0 régénération)
+│   │   ├── hook_frame_francais.png    ← Copié tel quel dans hook_frame.png (Type B français)
+│   │   └── hook_frame_maths.png       ← Copié tel quel dans hook_frame.png (Type B maths)
 │   └── logo_curio.png                 ← Logo Curio pour miniatures
 │
 ├── data/
@@ -506,8 +548,9 @@ python main.py --assemble --output-dir ./output/2026-07-07/dilatation_rails/
 
 | Poste | Outil | Coût estimé |
 |---|---|---|
-| Images (curiosité / français / maths concept) | GPT Image 2 (0,011$/image × 5) | ~0,055$ |
-| Images (maths opération posée/astuce, v2.6) | GPT Image 2 (hook+miniature) + rendu code (3 illus, 0€) | ~0,022$ |
+| Images (curiosité) | GPT Image 2 (0,011$/image × 5, hook regénéré à chaque reel) | ~0,055$ |
+| Images (compétence français / maths concept, v2.11) | GPT Image 2 (0,011$/image × 4, hook asset fixe) | ~0,044$ |
+| Images (maths opération posée/astuce, v2.6+v2.11) | GPT Image 2 (miniature seulement, hook asset fixe) + rendu code (3 illus, 0€) | ~0,011$ |
 | 2 audios | ElevenLabs API | ~0,22$ |
 | Scripts + prompts | Claude API Sonnet | ~0,04$ |
 | Sous-titres | Whisper local | 0$ |
@@ -538,8 +581,8 @@ ELEVENLABS_VOICE_ID=...
 
 👇 [QUESTION D'ENGAGEMENT pour les commentaires]
 
-📩 Envoie CURIO en MP et reçois gratuitement une activité pédagogique
-niveau CP-CM2 sur [SUJET].
+📩 Envoie CURIO en MP pour recevoir une activité/un exercice gratuit !
+(v2.11 — ligne CTA fixe, LIGNE_CTA dans instagram_generator.py, plus de variante commentaire/abonnement)
 
 🔔 Suis Curio pour une nouvelle curiosité chaque jour.
 
@@ -577,7 +620,8 @@ MENTIONS = {
 9. Pillow — ✅ installé dans .venv (v2.6, requis par generators/math_renderers/)
 10. Python — ✅ 3.12.13 via uv, venv dans .venv/
 11. Excel compétences — ✅ data/Competences_Curio.xlsx (30 maths + 30 français par niveau)
-12. Démarrage — pipeline complet construit, montage validé sur assets synthétiques + clips réels, moteur de rendu code maths validé sur division/soustraction/addition/multiplication/astuce
+12. Hook frames fixes Type B — ✅ assets/hook_frames/hook_frame_francais.png + hook_frame_maths.png (v2.11, copiés depuis le vivier « Compétences Curio »)
+13. Démarrage — pipeline complet construit, montage validé sur assets synthétiques + clips réels, moteur de rendu code maths validé sur division/soustraction/addition/multiplication/astuce
 
 ## 17. RÈGLES DE CODAGE NON NÉGOCIABLES
 

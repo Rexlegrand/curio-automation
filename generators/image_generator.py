@@ -1,13 +1,18 @@
-"""Génération des 5 images PNG — GPT Image 2 (référence injectée) ou code_render (ADDENDUM v2.6).
+"""Génération des 5 images PNG — GPT Image 2, code_render (ADDENDUM v2.6) ou asset_copy (v2.11).
 
-Routage par image : hook_frame et miniature restent toujours GPT Image 2
-(Curio y apparaît, pas de calcul à représenter). Les 3 illustrations d'un
-Reel compétence maths passent par generators/math_renderers/ (0€, 0 risque
-de chiffre halluciné) quand script["image_route"] == "code_render" ;
-sinon comportement GPT Image 2 existant, inchangé.
+Routage par image : hook_frame reste GPT Image 2 uniquement pour les Reels
+curiosité (le fond thématique doit varier selon le sujet) ; pour un Reel
+compétence (français ET maths), hook_frame.png est copié depuis un asset fixe
+(assets/hook_frames/) — zéro appel API, zéro régénération (v2.11 §hook frame
+compétence). La miniature reste toujours GPT Image 2 (Curio y apparaît, pas
+de calcul à représenter). Les 3 illustrations d'un Reel compétence maths
+passent par generators/math_renderers/ (0€, 0 risque de chiffre halluciné)
+quand script["image_route"] == "code_render" ; sinon comportement GPT Image 2
+existant, inchangé.
 """
 
 import base64
+import shutil
 from contextlib import ExitStack
 
 from openai import BadRequestError, OpenAI
@@ -15,6 +20,8 @@ from openai import BadRequestError, OpenAI
 from config import (
     COST_IMAGE,
     ENV,
+    HOOK_FRAME_FRANCAIS,
+    HOOK_FRAME_MATHS,
     IMAGE_SIZE,
     IMAGE_SIZE_FALLBACK,
     LOGO_PATH,
@@ -42,18 +49,26 @@ MATH_RENDERERS = {
 def build_image_plan(script):
     """Retourne la liste ordonnée des images à produire, chacune avec sa route.
 
-    Chaque entrée : {"name", "route": "gpt_image"|"code_render", ...}
+    Chaque entrée : {"name", "route": "gpt_image"|"code_render"|"asset_copy", ...}
     - gpt_image : "prompt", "quality", "extra" (références supplémentaires)
-    - code_render : "render_type", "operation_data"
+    - code_render : "render_type", "operation_data", "stage"
+    - asset_copy : "asset_path" (fichier source à copier tel quel, 0€)
     """
     theme = script.get("theme", "default")
-    plan = [{
-        "name": "hook_frame.png",
-        "route": "gpt_image",
-        "prompt": curiosity_prompts.build_hook_frame_prompt(theme),
-        "quality": QUALITY_STANDARD,
-        "extra": [],
-    }]
+    is_maths = bool(script.get("matiere")) and "math" in script["matiere"].lower()
+
+    if script.get("type") == "competence":
+        # v2.11 — hook fixe par matière, jamais régénéré (assets/hook_frames/).
+        asset_path = HOOK_FRAME_MATHS if is_maths else HOOK_FRAME_FRANCAIS
+        plan = [{"name": "hook_frame.png", "route": "asset_copy", "asset_path": asset_path}]
+    else:
+        plan = [{
+            "name": "hook_frame.png",
+            "route": "gpt_image",
+            "prompt": curiosity_prompts.build_hook_frame_prompt(theme),
+            "quality": QUALITY_STANDARD,
+            "extra": [],
+        }]
 
     illus_route = script.get("image_route", "gpt_image")
     if illus_route == "code_render":
@@ -73,7 +88,7 @@ def build_image_plan(script):
         for i, illus in enumerate(script["illustrations"], start=1):
             if script["type"] == "curiosite":
                 prompt = curiosity_prompts.build_illustration_prompt(illus["description_visuelle"])
-            elif script.get("matiere") and "math" in script["matiere"].lower():
+            elif is_maths:
                 prompt = competence_prompts.build_concept_prompt(illus["description_visuelle"], script["niveau"])
             else:
                 data = dict(illus)
@@ -98,7 +113,7 @@ def build_image_plan(script):
 def build_image_prompts(script):
     """Compat : liste [(nom_fichier, prompt, qualité, refs_extra)] pour les entrées gpt_image uniquement.
 
-    Utilisé par main.py pour écrire prompts_all.txt (rien à copier-coller pour code_render).
+    Utilisé par main.py pour écrire prompts_all.txt (rien à copier-coller pour code_render/asset_copy).
     """
     return [(e["name"], e["prompt"], e["quality"], e["extra"]) for e in build_image_plan(script) if e["route"] == "gpt_image"]
 
@@ -169,6 +184,15 @@ def _generate_code_render(entry, output_dir):
     log_api_call(output_dir, f"code_render ({entry['render_type']})", 0.0, target)
 
 
+def _generate_asset_copy(entry, output_dir):
+    target = output_dir / entry["name"]
+    source = entry["asset_path"]
+    if not source.exists():
+        raise FileNotFoundError(f"Asset hook frame manquant : {source}")
+    shutil.copyfile(source, target)
+    log_api_call(output_dir, f"asset_copy ({source.name})", 0.0, target)
+
+
 def generate_images(script, output_dir):
     """Génère les 5 images. Skip si le fichier existe déjà. Bloque sans références GPT Image."""
     check_references()
@@ -184,6 +208,8 @@ def generate_images(script, output_dir):
 
         if entry["route"] == "code_render":
             _generate_code_render(entry, output_dir)
+        elif entry["route"] == "asset_copy":
+            _generate_asset_copy(entry, output_dir)
         else:
             _generate_gpt_image(client, entry, output_dir)
 
