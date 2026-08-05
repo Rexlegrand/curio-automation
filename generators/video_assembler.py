@@ -7,6 +7,14 @@ prorata des timecodes RÉELS du script.json de ce reel (segments correspondant,
 dans l'ordre, aux slots illustration_1/2/3 de TIMELINE) — jamais un poids
 statique codé en dur, pour rester synchronisé même quand l'audio final
 (ElevenLabs) s'éloigne de la durée nominale visée par le script (v2.8).
+
+Audio des clips vidéo (hook, Curio A/B, CTA) : AUCUN — même quand le fichier
+en porte une (assets/clips/curio_cta.mp4 a sa propre piste lip-sync Seedance),
+elle n'est jamais mappée dans le montage. La voix ElevenLabs choisie (v1/v2)
+est la SEULE piste audio du reel, plaquée en continu du début à la fin, hook
+compris — le CTA doit suivre la même règle que le hook (v2.15, retour arrière
+sur v2.14 : le lip-sync natif du clip CTA sonnait dans une voix différente de
+celle d'ElevenLabs, cassait le rythme du reel).
 """
 
 import re
@@ -111,26 +119,37 @@ def _load_segments(output_dir):
 def compute_segments(output_dir, audio_path):
     """Retourne [(chemin, durée, trim_start)] : total = durée audio + AUDIO_TAIL.
 
-    Les slots "fixed" gardent leur durée d'asset imposée. Les slots "flex"
-    (illustrations) se partagent le budget restant au prorata de la durée
-    nominale du segment script.json correspondant (même index que TIMELINE).
+    Les slots "fixed" gardent leur durée nominale de config. Le slot
+    "dynamic" (CTA, v2.14) est mesuré sur le fichier réel plutôt que codé en
+    dur, pour ne pas se désynchroniser si le clip est remplacé par un autre
+    d'une durée différente. Les slots "flex" (illustrations) se partagent le
+    budget restant au prorata de la durée nominale du segment script.json
+    correspondant (même index que TIMELINE).
     """
     total = media_duration(audio_path) + AUDIO_TAIL
     nominal_durations = _load_segments(output_dir)
 
-    fixed = sum(spec["fixed"] for _, spec in TIMELINE if "fixed" in spec)
+    imposed = {}
+    for i, (source, spec) in enumerate(TIMELINE):
+        if "fixed" in spec:
+            imposed[i] = spec["fixed"]
+        elif "dynamic" in spec:
+            path = output_dir / source if isinstance(source, str) else source
+            imposed[i] = media_duration(path)
+
+    fixed = sum(imposed.values())
     flex_weights = sum(d for (_, spec), d in zip(TIMELINE, nominal_durations) if "flex" in spec)
     flex_budget = total - fixed
     if flex_budget < 1.5:
         raise RuntimeError(
             f"Audio trop court ({total - AUDIO_TAIL:.1f}s) : il reste {flex_budget:.1f}s "
-            f"pour les 3 illustrations après les {fixed:.0f}s de clips fixes."
+            f"pour les 3 illustrations après les {fixed:.1f}s de clips fixes."
         )
 
     segments = []
-    for (source, spec), nominal in zip(TIMELINE, nominal_durations):
+    for i, ((source, spec), nominal) in enumerate(zip(TIMELINE, nominal_durations)):
         path = output_dir / source if isinstance(source, str) else source
-        duration = spec["fixed"] if "fixed" in spec else flex_budget * nominal / flex_weights
+        duration = imposed[i] if i in imposed else flex_budget * nominal / flex_weights
         segments.append((path, round(duration, 2), spec.get("trim_start", 0.0)))
     return segments, round(total, 2)
 
@@ -182,6 +201,9 @@ def assemble_reel(output_dir, audio_path):
     concat_in = "".join(f"[v{i}]" for i in range(len(segments)))
     filters.append(f"{concat_in}concat=n={len(segments)}:v=1:a=0[vcat]")
     filters.append("[vcat]ass=subtitles_styled.ass[vout]")
+    # Voix ElevenLabs seule, en continu sur tout le reel (hook + CTA compris,
+    # v2.15) — les pistes audio natives des clips vidéo (dont curio_cta.mp4)
+    # ne sont jamais mappées, quelle que soit leur présence dans le fichier.
     filters.append(f"[{audio_index}:a]apad[aout]")
 
     cmd += [
@@ -196,6 +218,7 @@ def assemble_reel(output_dir, audio_path):
 
     plan = " | ".join(f"{p.name} {d}s" + (f" (début +{t}s)" if t else "") for p, d, t in segments)
     print(f"  Plan de montage ({total}s) : {plan}")
+    print(f"  Audio : ElevenLabs en continu sur les {total}s (voix native des clips ignorée)")
     print(f"  FFmpeg assemble {total}s de vidéo...")
     result = subprocess.run(cmd, cwd=output_dir, capture_output=True, text=True)
     if result.returncode != 0:

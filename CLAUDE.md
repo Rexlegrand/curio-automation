@@ -1,8 +1,53 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.12 — Langue de travail de Claude Code sur ce repo : anglais ou
+Version : 2.15 — Retour arrière sur l'audio natif du clip CTA (v2.14).
+Constaté en prod sur le reel du 05/08 : la voix lip-sync Seedance du clip
+curio_cta.mp4 sonne différemment de la voix ElevenLabs qui porte tout le
+reste du reel — le changement de voix en toute fin casse le rythme, le
+spectateur ne comprend pas la rupture. RÈGLE CORRIGÉE : le CTA doit suivre
+EXACTEMENT la même règle que le hook — la piste audio native d'un clip vidéo
+n'est jamais utilisée dans le montage, même quand le fichier en porte une ;
+seule la voix ElevenLabs choisie (v1/v2) joue, en continu, du tout premier
+au tout dernier cadre du reel. generators/video_assembler.py : suppression
+du split amain/acta + concat audio introduit en v2.14, retour à
+`[audio_index:a]apad[aout]` unique sur toute la durée. Ce qui RESTE de v2.14
+et reste correct : le clip curio_cta.mp4 est toujours utilisé tel quel côté
+VIDÉO (plus de trim_start, plein cadrage du lip-sync visuel — seul l'audio
+est ignoré) et sa durée réelle reste mesurée dynamiquement sur le fichier
+(TIMELINE "dynamic", config.py) plutôt que codée en dur. Le reel du 05/08
+(output/2026-08-05/multiplier_un_nombre_a_virgule_par_5_version_rapide/)
+avait été assemblé avec le montage v2.14 buggé — reel_final.mp4 supprimé et
+réassemblé avec le code corrigé.
+Hérite v2.14 — CTA final 100% fixe (texte, vidéo ET audio). Benjamin a
+déposé un nouveau assets/clips/curio_cta.mp4 avec sa propre piste audio
+(vidéo + voix lip-sync Seedance, ~4,1s mesurés). Ce clip est désormais
+utilisé tel quel — plus de trim_start (l'ancien clip sautait ses 2 premières
+secondes, gardait les 3 dernières, silencieux ; le nouveau est utilisé en
+entier). config.py : TIMELINE bascule l'entrée CLIP_CTA de {"fixed": 3,
+"trim_start": 2.0} à {"dynamic": True} — sa durée réelle est mesurée sur le
+fichier à chaque montage (video_assembler.compute_segments) plutôt que codée
+en dur, pour ne jamais se désynchroniser si Benjamin dépose un clip d'une
+durée légèrement différente. video_assembler.py : l'audio final concatène la
+voix ElevenLabs (segments hook → illustration_3) puis la piste audio native
+du clip CTA — plus aucun appel ElevenLabs ni aucune piste ElevenLabs jouée
+sur ce segment (le script narré continue d'inclure la phrase CTA en texte,
+utile aux sous-titres et à la cohérence du word_count, mais cette portion de
+l'audio ElevenLabs n'est plus mappée dans la vidéo finale, remplacée par la
+voix native du clip). Vérifié : aucune ancienne référence à un clip CTA
+audio/vidéo séparé dans le code (le CTA a toujours été un seul fichier
+assets/clips/curio_cta.mp4, un seul point à corriger). Coût : zéro par reel
+sur cette étape, comme avant — asset fixe unique réutilisé sur tous les
+reels, jamais régénéré (mêmes régime que curio_explication.mp4/2). Testé de
+bout en bout (montage réel sur un reel existant, filtre audio concat validé,
+durée finale exacte = durée totale calculée).
+Hérite v2.13 — Langue de travail resserrée : français exclusivement avec
+Benjamin, jamais anglais ni portugais ni aucune autre langue, sauf demande
+explicite contraire. Remplace v2.12 (qui tolérait l'anglais par défaut).
+Ajouté aussi en §17 règle 10 (règles de codage non négociables), pour éviter
+d'avoir à le répéter à chaque session. Voir §0.
+Hérite v2.12 — Langue de travail de Claude Code sur ce repo : anglais ou
 français uniquement, jamais portugais (ni aucune autre langue). S'applique à
 toute réponse, tout commentaire ajouté, tout message de commit généré pour
-ce projet. Voir §0.
+ce projet.
 Hérite v2.11 — Deux changements systémiques.
 (1) CTA unique fixe : suppression de l'alternance abonnement/commentaire (v2.3).
 Un seul CTA désormais, partout, sans variation : "Envoie CURIO en MP pour
@@ -71,8 +116,10 @@ Rédigé par : Benjamin Petry—Hummel — Juillet 2026
 
 ## 0. LANGUE DE TRAVAIL
 
-Claude Code répond uniquement en anglais ou en français sur ce projet — jamais
-en portugais, jamais dans une autre langue. Règle absolue, sans exception.
+Claude Code répond exclusivement en français à Benjamin sur ce projet — jamais
+en anglais, jamais en portugais, jamais dans une autre langue — sauf demande
+explicite contraire de sa part (v2.13, resserre v2.12 : l'anglais n'est plus
+toléré par défaut). Voir aussi §17 règle 10.
 
 RÈGLE ABSOLUE N°1 — STRUCTURE DU CODE
 Ne jamais empiler du code sur du code existant. Si une modification est nécessaire, réécrire le fichier complet de A à Z. Zéro patch, zéro commentaire "// TODO", zéro code mort laissé en place. Chaque fichier doit être lisible et autonome à tout moment.
@@ -133,20 +180,27 @@ Clip Curio A      — curio_explication.mp4, 4s fixes
 Illustration 2    — PNG GPT Image 2 ou rendu code, durée flexible
 Clip Curio B      — curio_explication_2.mp4, 4s fixes
 Illustration 3    — PNG GPT Image 2 ou rendu code, durée flexible
-CTA               — curio_cta.mp4, 3s fixes (on saute les 2 premières secondes du clip)
+CTA               — curio_cta.mp4, utilisé tel quel côté vidéo (durée réelle mesurée
+                    sur le fichier, ~4s) — sa piste audio native n'est jamais utilisée (v2.15)
 ```
 
 Durée totale du reel = durée de l'audio choisi + 0,2s : la vidéo s'arrête quand la voix
-s'arrête. Les clips sont fixes (4+4+4+3 = 15s, assets physiques à longueur imposée) ; les
-3 illustrations se partagent le temps restant au prorata des TIMECODES RÉELS du
-script.json de ce reel (segments correspondant, dans l'ordre, aux 3 slots illustration —
-v2.8, plus de poids statique 5:5:3 codé en dur : un poids fixe désynchronisait l'affichage
-dès que l'audio final s'éloignait de la durée nominale visée par le script). Le pipeline
-bloque avec une erreur claire si l'audio est trop court (< ~16,5s).
+s'arrête. Les clips Curio A/B (hook_video.mp4, curio_explication.mp4/2) restent fixes à
+4s chacun (assets physiques à longueur imposée) ; le clip CTA est fixe lui aussi mais sa
+durée est mesurée dynamiquement (v2.14, ~4s, jamais recodée en dur) ; les 3 illustrations
+se partagent le temps restant au prorata des TIMECODES RÉELS du script.json de ce reel
+(segments correspondant, dans l'ordre, aux 3 slots illustration — v2.8, plus de poids
+statique 5:5:3 codé en dur : un poids fixe désynchronisait l'affichage dès que l'audio
+final s'éloignait de la durée nominale visée par le script). Le pipeline bloque avec une
+erreur claire si l'audio est trop court (< ~16,5s).
 
 Règles de montage :
 * Format sortie : MP4 1080×1920 (9:16), 30fps, 4-8 Mbps
-* Audio : fichier ElevenLabs choisi (v1 ou v2), plaqué sur toute la durée (les clips Curio n'ont pas de piste audio)
+* Audio : fichier ElevenLabs choisi (v1 ou v2), SEUL, en continu du premier au dernier
+  cadre du reel — hook compris ET CTA compris (v2.15). Aucun clip vidéo n'apporte sa
+  propre piste audio dans le montage, même quand le fichier physique en porte une (le clip
+  curio_cta.mp4 a une piste native lip-sync Seedance, jamais mappée) : deux voix
+  différentes sur le CTA cassaient le rythme du reel (retour arrière sur v2.14).
 * Sous-titres : Whisper avec timestamps mot à mot, format SRT, rendu ASS : 60px, blanc bold, contour noir épais + ombre légère, sans boîte de fond, baseline ~79% de la hauteur. UNE SEULE PHRASE à l'écran à la fois — « Attends... » s'affiche seul, le reste du hook n'apparaît que quand il est prononcé. Phrases longues coupées en blocs équilibrés de 2 lignes max (28 caractères/ligne), contractions et typographie françaises respectées (qu'il, Abonne-toi, espace avant ? et !)
 * Transitions : cut sec entre chaque segment (pas de fondu)
 
@@ -494,7 +548,7 @@ curio-automation/
 │   ├── clips/                         ← Clips Curio réutilisables (MP4)
 │   │   ├── curio_explication.mp4      ← Curio talking head segment 1 (5s)
 │   │   ├── curio_explication_2.mp4    ← Curio talking head segment 2 (5s)
-│   │   └── curio_cta.mp4              ← Curio CTA final (4s)
+│   │   └── curio_cta.mp4              ← Curio CTA final, vidéo (~4,1s, mesuré dynamiquement) — piste audio native jamais utilisée (v2.15)
 │   ├── fonts/
 │   │   └── PatrickHand-Regular.ttf    ← NOUVEAU v2.6 — police manuscrite rendu code (Google Fonts)
 │   ├── hook_frames/                   ← NOUVEAU v2.11 — hook frames fixes Type B (0 régénération)
@@ -634,5 +688,6 @@ MENTIONS = {
 7. Pas de dépendances inutiles — n'installer que ce qui est strictement nécessaire.
 8. Référence visuelle obligatoire — si assets/curio_reference/ est vide, le pipeline bloque et avertit (illustrations GPT Image 2 uniquement — sans objet pour le rendu code).
 9. Aucun chiffre de compétence maths sans vérification — un render_type d'opération posée ne fait jamais confiance au résultat de Claude, il est recalculé par le code (§7 bis).
+10. Toute communication avec Benjamin se fait en français exclusivement, jamais en anglais ni dans aucune autre langue, sauf demande explicite contraire (v2.13, remplace v2.12 §0).
 
 Ce fichier est la source de vérité absolue pour Claude Code. En cas de contradiction avec toute autre source, ce fichier prime. Ne pas modifier sans mettre à jour la version en en-tête.

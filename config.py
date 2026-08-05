@@ -66,8 +66,14 @@ ELEVENLABS_CONFIG = {
 # sont flexibles et se partagent le temps restant au prorata des timecodes RÉELS
 # du script.json de chaque reel (v2.8 — plus de poids statique codé en dur : un
 # poids fixe désynchronise l'affichage dès que l'audio final s'éloigne de la
-# durée nominale visée par le script). CTA : on saute les 2 premières secondes
-# du clip (inutiles), on garde les 3 dernières.
+# durée nominale visée par le script). CTA : clip utilisé tel quel côté vidéo
+# (plus de trim_start) — "dynamic" au lieu de "fixed" : sa durée réelle est
+# mesurée sur le fichier à chaque montage (generators/video_assembler.py), pas
+# recodée en dur, pour ne pas se désynchroniser si le clip est remplacé par un
+# autre d'une durée légèrement différente. Sa piste audio native (lip-sync
+# Seedance) n'est en revanche jamais utilisée (v2.15) : comme pour le hook,
+# seule la voix ElevenLabs choisie joue, en continu sur tout le reel — deux
+# voix différentes sur le CTA cassaient le rythme du reel (retour sur v2.14).
 TIMELINE = [
     ("hook_video.mp4", {"fixed": 4}),
     ("illus_1.png", {"flex": True}),
@@ -75,7 +81,7 @@ TIMELINE = [
     ("illus_2.png", {"flex": True}),
     (CLIP_EXPLICATION_B, {"fixed": 4}),
     ("illus_3.png", {"flex": True}),
-    (CLIP_CTA, {"fixed": 3, "trim_start": 2.0}),
+    (CLIP_CTA, {"dynamic": True}),
 ]
 AUDIO_TAIL = 0.2  # marge après la fin de la voix, en secondes
 
