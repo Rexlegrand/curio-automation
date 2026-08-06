@@ -54,7 +54,6 @@ def build_image_plan(script):
     - code_render : "render_type", "operation_data", "stage"
     - asset_copy : "asset_path" (fichier source à copier tel quel, 0€)
     """
-    theme = script.get("theme", "default")
     is_maths = bool(script.get("matiere")) and "math" in script["matiere"].lower()
 
     if script.get("type") == "competence":
@@ -62,10 +61,13 @@ def build_image_plan(script):
         asset_path = HOOK_FRAME_MATHS if is_maths else HOOK_FRAME_FRANCAIS
         plan = [{"name": "hook_frame.png", "route": "asset_copy", "asset_path": asset_path}]
     else:
+        # v2.17 — hook_background résolu une fois par script_generator.py
+        # (fond fixe pour une sous-catégorie réutilisable, ou texte spécifique
+        # au sujet réel) : même champ que celui utilisé par le prompt Seedance.
         plan = [{
             "name": "hook_frame.png",
             "route": "gpt_image",
-            "prompt": curiosity_prompts.build_hook_frame_prompt(theme),
+            "prompt": curiosity_prompts.build_hook_frame_prompt(script["hook_background"]),
             "quality": QUALITY_STANDARD,
             "extra": [],
         }]

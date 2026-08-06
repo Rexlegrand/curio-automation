@@ -27,6 +27,7 @@ from generators import (
     subtitle_generator,
     video_assembler,
 )
+from prompts.curiosity_prompts import REUSABLE_HOOK_BACKGROUNDS
 from prompts.seedance_prompts import build_seedance_prompt
 
 OPERATION_DESCRIPTIONS = {
@@ -63,7 +64,14 @@ def load_existing(output_dir):
 
 
 def write_prompt_files(script, output_dir):
-    seedance = build_seedance_prompt(script["hook"], script.get("theme", "default"))
+    # v2.17 — curiosité : hook_background résolu par script_generator.py (source
+    # unique, cf. prompts/curiosity_prompts.py). Compétence : hook_frame est un
+    # asset fixe (pas de fond à faire correspondre), on garde l'ancien mapping
+    # par theme ("maths" chalkboard / "default" gradient) pour Seedance.
+    background = script.get("hook_background") or REUSABLE_HOOK_BACKGROUNDS.get(
+        script.get("theme", "default"), REUSABLE_HOOK_BACKGROUNDS["default"]
+    )
+    seedance = build_seedance_prompt(script["hook"], background)
     (output_dir / "seedance_prompt.txt").write_text(seedance)
 
     blocks = [f"=== SEEDANCE (hook animé) ===\n{seedance}"]

@@ -1,5 +1,49 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.15 — Retour arrière sur l'audio natif du clip CTA (v2.14).
+Version : 2.17 — Fond du hook (curiosité) : fin du theme large, source unique
+hook_background. Bug constaté : le theme "sport" mélangeait football et MMA
+(pas le même décor visuellement), et plus généralement un theme large
+(histoire, nature...) ne garantit AUCUNE cohérence visuelle entre deux sujets
+différents — un fond "historique générique" pouvait tomber à côté du sujet
+réel (ex : Vikings). Root cause plus profonde : le hook_frame (GPT Image 2)
+ET le prompt Seedance dérivaient chacun le fond indépendamment à partir du
+même theme large — aucune garantie qu'ils restent identiques, et aucun des
+deux n'était spécifique au sujet réel.
+Fix : script_generator.py fait désormais classifier Claude sur un champ
+`hook_subcategory` (identifiant précis, ex "mma_combat", "histoire_vikings",
+jamais une famille large comme "sport"/"histoire") + un champ `hook_background`
+(texte photoréaliste toujours rédigé, spécifique au sujet réel). Une seule
+fonction (`resolve_hook_background`, prompts/curiosity_prompts.py) tranche :
+texte fixe si hook_subcategory est dans REUSABLE_HOOK_BACKGROUNDS (liste
+étroite ci-dessous, fond réellement interchangeable dans la sous-catégorie),
+sinon le texte spécifique de Claude. Le résultat est stocké dans
+script["hook_background"] — SOURCE UNIQUE ensuite consommée identiquement par
+curiosity_prompts.build_hook_frame_prompt() ET seedance_prompts.build_seedance_prompt()
+(main.py, image_generator.py) : impossible que les deux prompts divergent
+désormais. Sous-catégories réutilisables (fond fixe, cohérent quel que soit
+le sujet précis à l'intérieur) : cyclisme_tdf, football, mma_combat, maths,
+meteo, default. Tout le reste (histoire, nature/animaux, tennis, science,
+transport, et toute nouvelle sous-catégorie que Claude invente) reçoit un
+fond spécifique au sujet réel à chaque reel, jamais de générique par famille.
+"science" a été explicitement retiré du groupe réutilisable après audit des
+reels déjà générés (le seul sujet réel — dinosaures à plumes — ne correspond
+pas à un fond labo/éprouvettes).
+Cas du reel 13/08 (Vikings) : script.json corrigé manuellement avec
+hook_subcategory="histoire_vikings" et un hook_background Vikings (drakkar,
+fjord norvégien) ; seedance_prompt.txt régénéré en conséquence (aucun appel
+API — write_prompt_files() est pure côté Python). Benjamin dépose lui-même le
+hook_frame.png de ce reel (généré manuellement hors pipeline, abonnement GPT
+personnel) — non touché par le pipeline.
+Hérite v2.16 — Tolérance de durée assouplie : cible 28-35s inchangée, mais
+un dépassement jusqu'à 40s n'est plus un problème (Benjamin, constaté sur les
+reels du 07/08 à 36,84s et 08/08 à 35,88s — aucune des deux versions audio
+ElevenLabs ne rentrait sous 35s malgré un word_count dans la cible 78-88,
+juste un débit de voix plus lent ce jour-là). Le pipeline ne bloquait déjà
+rien au-delà de 35s (aucun check de durée maximale dans le code, seulement un
+seuil minimum ~16,5s dans video_assembler.py) — ce changement est purement
+éditorial : script_generator.py continue de viser 78-88 mots comme avant,
+mais un reel entre 35 et 40s n'a plus besoin d'être régénéré ou signalé.
+Au-delà de 40s, revoir la narration.
+Hérite v2.15 — Retour arrière sur l'audio natif du clip CTA (v2.14).
 Constaté en prod sur le reel du 05/08 : la voix lip-sync Seedance du clip
 curio_cta.mp4 sonne différemment de la voix ElevenLabs qui porte tout le
 reste du reel — le changement de voix en toute fin casse le rythme, le
@@ -126,7 +170,7 @@ Ne jamais empiler du code sur du code existant. Si une modification est nécessa
 
 ## 1. OBJECTIF DU PROJET
 
-Construire un pipeline CLI Python semi-automatisé qui produit un Reel Instagram complet (28-35 secondes) pour le compte @curio.education en moins de 30 minutes, avec validation humaine à chaque étape critique.
+Construire un pipeline CLI Python semi-automatisé qui produit un Reel Instagram complet (28-35 secondes visées, toléré jusqu'à 40s — v2.16) pour le compte @curio.education en moins de 30 minutes, avec validation humaine à chaque étape critique.
 
 Stack :
 * Python 3.10+
@@ -143,13 +187,13 @@ Coût cible : < 1,10 € par Reel — Temps cible : < 30 minutes par Reel — Fr
 
 Type A — Curiosité du jour
 * Fréquence : 4/semaine (lundi, mardi, jeudi, vendredi)
-* Durée : 28-35 secondes (jamais plus de 35)
+* Durée : 28-35 secondes visées, toléré jusqu'à 40s (v2.16 — la voix ElevenLabs peut lire plus lentement que prévu même avec un word_count dans la cible ; au-delà de 40s, revoir la narration)
 * Sujet : fait insolite, anecdote, phénomène scientifique, histoire
 * Hook : "Attends... [fait surprenant en question ou affirmation choc]"
 
 Type B — Compétence scolaire
 * Fréquence : 2/semaine (mercredi, samedi)
-* Durée : 28-35 secondes (jamais plus de 35)
+* Durée : 28-35 secondes visées, toléré jusqu'à 40s (v2.16 — la voix ElevenLabs peut lire plus lentement que prévu même avec un word_count dans la cible ; au-delà de 40s, revoir la narration)
 * Sujet : règle de maths ou français — niveaux CP, CE1, CE2, CM1, CM2
 * Hook : "Attends... tu sais vraiment comment [compétence] ?"
 * Source des sujets : data/Competences_Curio.xlsx
@@ -337,22 +381,34 @@ et distincts, et que chaque `lettre_cle` est une seule lettre présente dans son
 `mot_cle`, avant Checkpoint 1 (régénère sinon, jusqu'à 3 tentatives, même
 mécanisme que la classification maths).
 
-Backgrounds thématiques selon sujet :
+Fond du hook (curiosité) — v2.17, remplace l'ancien mapping par `theme` large
+(BACKGROUNDS keyé par sport/combat/velo/nature/histoire/maths/science/
+transport/meteo/default, abandonné : un theme large ne garantit aucune
+cohérence visuelle entre deux sujets différents — voir en-tête v2.17).
+Claude classe chaque reel curiosité sur `hook_subcategory` (identifiant
+précis, jamais une famille large) + rédige toujours `hook_background` (texte
+spécifique au sujet réel). `resolve_hook_background()` (prompts/curiosity_prompts.py)
+retourne le texte fixe ci-dessous si `hook_subcategory` y figure, sinon le
+texte spécifique de Claude — jamais de rattachement approximatif à la
+sous-catégorie la plus proche :
 
 ```python
-BACKGROUNDS = {
-    "sport":      "football stadium at golden hour, French flags, crowd blurred",
-    "combat":     "MMA octagon cage arena at night, dramatic spotlight, blurred cheering crowd",
-    "velo":       "Tour de France mountain road at golden hour, cheering crowd waving French flags, blurred peloton",
-    "nature":     "relevant natural environment (fjord, ocean, meadow, etc.)",
-    "histoire":   "relevant historical setting, dramatic lighting",
-    "maths":      "giant chalkboard with relevant equation, classroom ambiance",
-    "science":    "scientific laboratory, colorful liquids, dramatic lighting",
-    "transport":  "train station platform, departure board showing SUPPRIMÉ",
-    "meteo":      "scorching cityscape, heat shimmer, orange sky",
-    "default":    "soft colorful gradient background, neutral and clean",
+REUSABLE_HOOK_BACKGROUNDS = {
+    "cyclisme_tdf": "Tour de France mountain road at golden hour, cheering crowd waving French flags, blurred peloton of cyclists in the background",
+    "football":     "football stadium at golden hour, French flags, crowd blurred",
+    "mma_combat":   "MMA octagon cage arena at night, dramatic spotlight, blurred cheering crowd, professional fight venue ambiance",
+    "maths":        "giant chalkboard with relevant equation, classroom ambiance",
+    "meteo":        "scorching cityscape, heat shimmer, orange sky",
+    "default":      "soft colorful gradient background, neutral and clean",
 }
 ```
+
+Tout sujet historique, animalier/nature, tennis, science, transport ou tout
+autre sujet à décor réel précis reçoit un `hook_background` rédigé par Claude
+pour CE sujet exact — jamais un des 6 textes fixes ci-dessus. Ce même champ
+`hook_background` alimente identiquement le hook_frame (GPT Image 2) ET le
+prompt Seedance (main.py, image_generator.py) : une seule source, jamais deux
+descriptions de fond qui divergent entre l'image et l'animation.
 
 ## 7 bis. MOTEUR DE RENDU CODE — COMPÉTENCES MATHS (v2.6, fix illustrations v2.7)
 

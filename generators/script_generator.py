@@ -15,13 +15,16 @@ import sys
 import anthropic
 
 from config import CLAUDE_MODEL, CTA_TEXTE, DATA_XLSX, ELEVENLABS_CONFIG, ENV
+from prompts.curiosity_prompts import REUSABLE_HOOK_BACKGROUNDS, resolve_hook_background
 
 WORD_MIN, WORD_MAX = ELEVENLABS_CONFIG["word_count_target"]
 
 SCHEMA_TYPE_A = """\
 {
   "titre": "titre court pour la miniature (6 mots max)",
-  "theme": "un parmi: sport, combat, velo, nature, histoire, maths, science, transport, meteo, default",
+  "theme": "un parmi: sport, combat, velo, nature, histoire, maths, science, transport, meteo, default (indicatif, sert au choix des mentions Instagram)",
+  "hook_subcategory": "voir règle de classification hook_subcategory ci-dessous",
+  "hook_background": "voir règle de classification hook_subcategory ci-dessous",
   "hook": "Attends... [fait surprenant en question ou affirmation choc]",
   "narration": "texte complet parlé, commence par la phrase hook, 85-100 mots au total",
   "segments": [
@@ -39,6 +42,32 @@ SCHEMA_TYPE_A = """\
     {"description_visuelle": "illustration 3"}
   ]
 }"""
+
+# ADDENDUM v2.17 — classification hook_subcategory/hook_background, Type A uniquement.
+# Root cause corrigée : le fond du hook dépendait d'un theme large (ex "sport"),
+# partagé par des sujets sans rapport visuel (football et MMA n'ont pas le même
+# décor) — un fond générique de stade s'appliquait alors à tort à un sujet MMA.
+_REUSABLE_LIST = "\n".join(f'  - {slug} : {desc}' for slug, desc in REUSABLE_HOOK_BACKGROUNDS.items())
+HOOK_BACKGROUND_RULES = f"""
+Règle de classification hook_subcategory / hook_background (obligatoire, Type A) :
+- hook_subcategory : identifiant court en snake_case, la sous-catégorie RÉELLE
+  et PRÉCISE du sujet (pas la grande famille) — un sujet MMA n'est pas la même
+  sous-catégorie qu'un sujet football, même si les deux sont "du sport".
+- 6 sous-catégories RÉUTILISABLES existantes (fond déjà fixé, cohérent quel que
+  soit le sujet précis à l'intérieur) — utilise UN DE CES IDENTIFIANTS EXACTS
+  si et seulement si le sujet correspond VRAIMENT :
+{_REUSABLE_LIST}
+- Si le sujet ne correspond à AUCUNE de ces 6 sous-catégories (cas fréquent :
+  histoire, animaux/nature, tennis, athlétisme, science, transport, tout sujet
+  avec un décor réel précis et différent des autres sujets de sa famille) :
+  invente un identifiant court et descriptif (ex: "histoire_vikings",
+  "nature_requin", "tennis") — NE JAMAIS forcer le rattachement à une
+  sous-catégorie existante si le décor ne correspond pas vraiment.
+- hook_background : décris TOUJOURS un fond photoréaliste précis et spécifique
+  au sujet réel de ce reel (jamais le personnage Curio, juste le décor) — même
+  si hook_subcategory est l'une des 6 réutilisables (le texte sera alors
+  ignoré au profit du fond fixe, mais le champ doit rester cohérent et rempli).
+"""
 
 # ADDENDUM v2.6 §3 — classification image_route faite par Claude, même appel.
 SCHEMA_TYPE_B_MATHS = """\
@@ -181,7 +210,8 @@ def _build_prompt(reel_type, sujet, niveau, matiere):
         regles = (
             "- Les descriptions d'illustrations doivent être 100% photoréalistes, "
             "comme des photos Wikipédia ou de magazine. Jamais de personnage Curio, jamais de cartoon.\n"
-            "- Si un schéma est nécessaire : flèches + chiffres simples, minimaliste."
+            "- Si un schéma est nécessaire : flèches + chiffres simples, minimaliste.\n"
+            + HOOK_BACKGROUND_RULES
         )
     elif is_maths:
         schema = SCHEMA_TYPE_B_MATHS
@@ -444,6 +474,14 @@ def generate_script(reel_type, sujet, niveau=None, matiere=None):
         script.setdefault("image_route", "gpt_image")
         script.setdefault("render_type", None)
         script.setdefault("operation_data", None)
+
+    if reel_type == "curiosite":
+        # v2.17 — source unique du fond de hook (hook_frame ET Seedance) :
+        # texte fixe si hook_subcategory est réutilisable, sinon le texte
+        # spécifique rédigé par Claude pour le sujet réel de ce reel.
+        script["hook_background"] = resolve_hook_background(
+            script.get("hook_subcategory"), script.get("hook_background")
+        )
 
     script["genere_le"] = datetime.datetime.now().isoformat(timespec="seconds")
     script["type"] = reel_type

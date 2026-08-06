@@ -1,14 +1,25 @@
-"""Templates de prompts images Type A — Curiosité du jour."""
+"""Templates de prompts images Type A — Curiosité du jour.
 
-BACKGROUNDS = {
-    "sport": "football stadium at golden hour, French flags, crowd blurred",
-    "combat": "MMA octagon cage arena at night, dramatic spotlight, blurred cheering crowd, professional fight venue ambiance",
-    "velo": "Tour de France mountain road at golden hour, cheering crowd waving French flags, blurred peloton of cyclists in the background",
-    "nature": "relevant natural environment (fjord, ocean, meadow, etc.)",
-    "histoire": "relevant historical setting, dramatic lighting",
+v2.17 — fin du fond de hook dérivé d'un theme large (bug : un sujet MMA et un
+sujet football partageaient la même famille "sport", un fond générique de
+stade s'appliquait à tort à des sujets sans rapport visuel). Le fond du hook
+vient désormais d'un unique champ `hook_background`, résolu une fois par
+script_generator.py (soit un texte générique fixé pour une sous-catégorie
+étroite et vraiment interchangeable — REUSABLE_HOOK_BACKGROUNDS ci-dessous —
+soit un texte rédigé par Claude, spécifique au sujet réel de ce reel). Ce même
+texte alimente aussi le prompt Seedance (prompts/seedance_prompts.py) : une
+seule source, jamais deux descriptions de fond qui divergent.
+"""
+
+# Sous-catégories RÉUTILISABLES (v2.17) : le fond reste visuellement cohérent
+# quel que soit le sujet précis à l'intérieur de la sous-catégorie. Liste
+# volontairement étroite — ne jamais y rattacher un sujet par approximation
+# (ex : tennis, athlétisme, escrime restent hors de "football"/"mma_combat").
+REUSABLE_HOOK_BACKGROUNDS = {
+    "cyclisme_tdf": "Tour de France mountain road at golden hour, cheering crowd waving French flags, blurred peloton of cyclists in the background",
+    "football": "football stadium at golden hour, French flags, crowd blurred",
+    "mma_combat": "MMA octagon cage arena at night, dramatic spotlight, blurred cheering crowd, professional fight venue ambiance",
     "maths": "giant chalkboard with relevant equation, classroom ambiance",
-    "science": "scientific laboratory, colorful liquids, dramatic lighting",
-    "transport": "train station platform, departure board showing SUPPRIMÉ",
     "meteo": "scorching cityscape, heat shimmer, orange sky",
     "default": "soft colorful gradient background, neutral and clean",
 }
@@ -34,7 +45,7 @@ red knitted scarf, holding DJI wireless microphone with furry windscreen
 close to his beak. Extremely surprised expression, eyes wide open,
 beak partially open in shock. Direct eye contact with camera.
 Medium shot from waist up. Perfectly centered for vertical 9:16.
-Background: {background_thematique}
+Background: {hook_background}
 Pixar-quality rendering. Ultra detailed feathers.
 No text. No watermark. Vertical 9:16.
 """
@@ -65,16 +76,23 @@ No other text. No watermark.
 """
 
 
-def get_background(theme):
-    return BACKGROUNDS.get(theme, BACKGROUNDS["default"])
+def resolve_hook_background(hook_subcategory, hook_background_specifique):
+    """Source unique du fond de hook (v2.17) : texte générique fixe si la
+
+    sous-catégorie est dans REUSABLE_HOOK_BACKGROUNDS (fond interchangeable
+    par construction), sinon le texte spécifique rédigé par Claude pour le
+    sujet réel de ce reel. Jamais de fallback approximatif sur une
+    sous-catégorie voisine.
+    """
+    return REUSABLE_HOOK_BACKGROUNDS.get(hook_subcategory, hook_background_specifique)
 
 
 def build_illustration_prompt(description_visuelle):
     return PROMPT_ILLUSTRATION.format(description_visuelle=description_visuelle)
 
 
-def build_hook_frame_prompt(theme):
-    return PROMPT_HOOK_FRAME.format(background_thematique=get_background(theme))
+def build_hook_frame_prompt(hook_background):
+    return PROMPT_HOOK_FRAME.format(hook_background=hook_background)
 
 
 VISUAL_REUSE = "Reuse the provided illustration image as the main visual."
