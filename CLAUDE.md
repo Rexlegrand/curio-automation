@@ -1,5 +1,41 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.17 — Fond du hook (curiosité) : fin du theme large, source unique
+Version : 2.18 — Sous-titres : remplacement du burn-in ASS/FFmpeg par un rendu
+Remotion dédié (dossier remotion/, projet Node/TypeScript autonome, Remotion
+4.0.507). Montage en 3 passes désormais (generators/video_assembler.py) : (1)
+FFmpeg concatène clips + illustrations + audio ElevenLabs SANS sous-titres →
+fichier intermédiaire _tmp_no_subtitles.mp4 ; (2) Remotion (composition
+TikTokCaptions, remotion/src/tiktok-captions/) rend les sous-titres en séquence
+PNG transparente, calée sur le subtitles.srt du reel et la durée EXACTE du
+montage (audio + AUDIO_TAIL) — jamais sur le seul dernier timestamp du SRT ;
+(3) FFmpeg incruste cette séquence sur la vidéo de l'étape 1, réencode
+reel_final.mp4. Le reste du montage (TIMELINE, compute_segments, concat
+clips/illustrations, voix ElevenLabs seule en continu hook+CTA compris) reste
+100 % FFmpeg, strictement inchangé — seule l'étape sous-titres change de moteur.
+srtText et totalSeconds sont passés à Remotion via un fichier --props temporaire
+(_remotion_props.json, supprimé après usage), jamais en JSON inline sur la
+ligne de commande : les apostrophes françaises du script ("qu'il", "l'appelle")
+cassent l'échappement shell.
+Règle sous-titres RESSERRÉE : UNE SEULE LIGNE affichée à la fois, jamais de
+wrap multi-ligne — l'ancien rendu ASS tolérait 2 lignes empilées simultanément
+pour une même phrase (ex. "un ours se cache dans le" / "logo du Toblerone !") ;
+en Remotion, un même bloc du SRT trop long pour une ligne de 28 caractères
+devient plusieurs FENÊTRES D'AFFICHAGE SÉQUENTIELLES, jamais deux lignes en
+même temps. Regroupement toujours phrase par phrase (jamais à cheval sur deux
+blocs du SRT). Nouveauté visuelle : mot en cours de prononciation surligné en
+bleu (effet "pop" TikTok), absent de l'ancien ASS — timing mot à mot approximé
+par répartition proportionnelle à la longueur des mots à l'intérieur de chaque
+bloc de phrase (remotion/src/tiktok-captions/words.ts), PAS les vrais
+timestamps Whisper : subtitle_generator.py les lit puis les jette
+(json.unlink()) et ne les persiste jamais — limite connue, à lever un jour en
+faisant persister ce JSON si la précision mot à mot devient insuffisante.
+Nettoyage code mort : srt_to_ass(), ASS_HEADER, _ass_time() supprimés de
+video_assembler.py (remplacés) ; SUBTITLE_FONT_SIZE et SUBTITLE_MARGIN_V
+supprimés de config.py (taille de police et position gérées côté Remotion
+désormais, mêmes valeurs visuelles : 60px, baseline ~79%). subtitles_styled.ass
+n'est plus généré. Validé bout en bout sur le reel réel du 03/08 (toblerone,
+copie sandboxée, original jamais touché) avant bascule définitive. Coût : 0€
+additionnel (Remotion tourne en local, comme FFmpeg/Whisper).
+Hérite v2.17 — Fond du hook (curiosité) : fin du theme large, source unique
 hook_background. Bug constaté : le theme "sport" mélangeait football et MMA
 (pas le même décor visuellement), et plus généralement un theme large
 (histoire, nature...) ne garantit AUCUNE cohérence visuelle entre deux sujets
@@ -179,6 +215,7 @@ Stack :
 * Anthropic API (génération de scripts et prompts)
 * FFmpeg (montage vidéo local, gratuit)
 * Pillow (rendu code des opérations posées maths, gratuit — v2.6)
+* Remotion (rendu des sous-titres TikTok-style, local, gratuit — v2.18)
 * Seedance 2.0 / Dreamina (hook animé — manuel, pas d'API)
 
 Coût cible : < 1,10 € par Reel — Temps cible : < 30 minutes par Reel — Fréquence cible : 6 Reels/semaine
@@ -245,7 +282,7 @@ Règles de montage :
   propre piste audio dans le montage, même quand le fichier physique en porte une (le clip
   curio_cta.mp4 a une piste native lip-sync Seedance, jamais mappée) : deux voix
   différentes sur le CTA cassaient le rythme du reel (retour arrière sur v2.14).
-* Sous-titres : Whisper avec timestamps mot à mot, format SRT, rendu ASS : 60px, blanc bold, contour noir épais + ombre légère, sans boîte de fond, baseline ~79% de la hauteur. UNE SEULE PHRASE à l'écran à la fois — « Attends... » s'affiche seul, le reste du hook n'apparaît que quand il est prononcé. Phrases longues coupées en blocs équilibrés de 2 lignes max (28 caractères/ligne), contractions et typographie françaises respectées (qu'il, Abonne-toi, espace avant ? et !)
+* Sous-titres : Whisper avec timestamps mot à mot → subtitles.srt. Rendu par Remotion (v2.18, remplace le burn-in ASS/FFmpeg) : 60px, blanc bold, contour noir épais + ombre légère, sans boîte de fond, baseline ~79% de la hauteur — mêmes réglages visuels que l'ancien ASS. UNE SEULE LIGNE à l'écran à la fois, jamais de wrap multi-ligne (resserré : l'ancien ASS empilait jusqu'à 2 lignes simultanées) — un bloc de phrase trop long pour une ligne de 28 caractères devient plusieurs fenêtres d'affichage séquentielles, jamais deux lignes en même temps. « Attends... » s'affiche seul, le reste du hook n'apparaît que quand il est prononcé. Mot en cours de prononciation surligné en bleu (effet pop TikTok, timing approximé — voir en-tête v2.18). Contractions et typographie françaises respectées (qu'il, Abonne-toi, espace avant ? et !)
 * Transitions : cut sec entre chaque segment (pas de fondu)
 
 ## 4. ASSETS À GÉNÉRER PAR REEL
@@ -582,7 +619,7 @@ curio-automation/
 │   ├── image_generator.py             ← Routage GPT Image 2 / rendu code (v2.6) → images PNG
 │   ├── audio_generator.py             ← ElevenLabs → v1 + v2 .mp3
 │   ├── subtitle_generator.py          ← Whisper local (CLI) → .srt
-│   ├── video_assembler.py             ← FFmpeg → montage final .mp4
+│   ├── video_assembler.py             ← FFmpeg (montage) + Remotion (sous-titres, v2.18) → montage final .mp4
 │   ├── instagram_generator.py         ← Claude API → description .txt
 │   └── math_renderers/                ← NOUVEAU v2.6 — rendu code opérations maths
 │       ├── __init__.py
@@ -598,6 +635,15 @@ curio-automation/
 │   ├── curiosity_prompts.py           ← Templates prompts Type A (+ variante miniature générique v2.6)
 │   ├── competence_prompts.py          ← Type B : concept maths sans calcul + français (validés prod)
 │   └── seedance_prompts.py            ← Template prompt hook animé Seedance
+│
+├── remotion/                           ← NOUVEAU v2.18 — rendu sous-titres (remplace ASS/FFmpeg)
+│   ├── package.json                    ← Projet Node/TypeScript autonome, Remotion 4.0.507
+│   ├── public/sample-captions.srt      ← Exemple SRT pour prévisualisation Studio (npm run dev)
+│   └── src/
+│       ├── Root.tsx                    ← Enregistre la composition TikTokCaptions
+│       └── tiktok-captions/
+│           ├── TikTokCaptions.tsx      ← Composition : une ligne à la fois, mot actif surligné
+│           └── words.ts                ← Approximation mots + regroupement ≤28 caractères/ligne
 │
 ├── assets/
 │   ├── curio_reference/               ← Références visuelles injectées (PNG)
@@ -629,7 +675,7 @@ curio-automation/
             ├── audio_v1.mp3
             ├── audio_v2.mp3
             ├── hook_video.mp4         ← Droppé manuellement par Benjamin
-            ├── subtitles.srt
+            ├── subtitles.srt          ← Whisper — consommé par Remotion (v2.18), plus de .ass intermédiaire
             ├── reel_final.mp4
             ├── description_instagram.txt
             └── api_log.jsonl          ← Log de chaque appel API (0.0 pour code_render)
@@ -663,7 +709,7 @@ python main.py --assemble --output-dir ./output/2026-07-07/dilatation_rails/
 | Images (maths opération posée/astuce, v2.6+v2.11) | GPT Image 2 (miniature seulement, hook asset fixe) + rendu code (3 illus, 0€) | ~0,011$ |
 | 2 audios | ElevenLabs API | ~0,22$ |
 | Scripts + prompts | Claude API Sonnet | ~0,04$ |
-| Sous-titres | Whisper local | 0$ |
+| Sous-titres | Whisper local (transcription) + Remotion local (rendu, v2.18) | 0$ |
 | Montage | FFmpeg local | 0$ |
 | Hook animé | Dreamina 10€/mois | ~0,42€ |
 | TOTAL | | < 0,80$ + 0,42€ ≈ 1,15€ (≤ 0,75€ pour un reel maths opération posée) |
@@ -732,6 +778,7 @@ MENTIONS = {
 11. Excel compétences — ✅ data/Competences_Curio.xlsx (30 maths + 30 français par niveau)
 12. Hook frames fixes Type B — ✅ assets/hook_frames/hook_frame_francais.png + hook_frame_maths.png (v2.11, copiés depuis le vivier « Compétences Curio »)
 13. Démarrage — pipeline complet construit, montage validé sur assets synthétiques + clips réels, moteur de rendu code maths validé sur division/soustraction/addition/multiplication/astuce
+14. Remotion — ✅ projet remotion/ installé (v4.0.507), composition TikTokCaptions validée bout en bout sur un reel réel (v2.18)
 
 ## 17. RÈGLES DE CODAGE NON NÉGOCIABLES
 

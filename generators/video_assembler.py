@@ -1,4 +1,4 @@
-"""Montage final FFmpeg : hook + illustrations + clips + audio + sous-titres.
+"""Montage final : FFmpeg (hook + illustrations + clips + audio) + Remotion (sous-titres).
 
 La durée du reel est calée sur la durée de l'audio choisi (+ AUDIO_TAIL) :
 les clips (hook, Curio A/B, CTA) gardent leur durée fixe (assets physiques à
@@ -15,15 +15,25 @@ est la SEULE piste audio du reel, plaquée en continu du début à la fin, hook
 compris — le CTA doit suivre la même règle que le hook (v2.15, retour arrière
 sur v2.14 : le lip-sync natif du clip CTA sonnait dans une voix différente de
 celle d'ElevenLabs, cassait le rythme du reel).
+
+Sous-titres : rendus par le projet Remotion (remotion/) au lieu d'un burn-in
+FFmpeg/ASS. Une seule ligne à l'écran à la fois, jamais de wrap multi-lignes
+(règle CLAUDE.md, resserrée par rapport à l'ancien ASS qui tolérait 2 lignes
+empilées) — voir remotion/src/tiktok-captions/. Le montage se fait en 3 passes
+FFmpeg/Remotion : (1) concat vidéo+audio sans sous-titres, (2) Remotion rend
+une séquence PNG transparente calée sur les timestamps du subtitles.srt du
+reel et sur la durée exacte du montage, (3) FFmpeg incruste cette séquence sur
+la vidéo de l'étape 1 pour produire reel_final.mp4.
 """
 
+import json
 import re
+import shutil
 import subprocess
 
 from config import (
     AUDIO_TAIL,
-    SUBTITLE_FONT_SIZE,
-    SUBTITLE_MARGIN_V,
+    ROOT,
     TIMELINE,
     VIDEO_BITRATE,
     VIDEO_FPS,
@@ -31,54 +41,10 @@ from config import (
     VIDEO_WIDTH,
 )
 
-# Style aligné sur la référence publiée @curio.education :
-# blanc bold, contour noir épais, ombre légère, pas de boîte de fond
-ASS_HEADER = f"""[Script Info]
-ScriptType: v4.00+
-PlayResX: {VIDEO_WIDTH}
-PlayResY: {VIDEO_HEIGHT}
-WrapStyle: 0
+REMOTION_DIR = ROOT / "remotion"
+REMOTION_COMPOSITION = "TikTokCaptions"
 
-[V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Curio,Arial,{SUBTITLE_FONT_SIZE},&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,8,2,2,80,80,{SUBTITLE_MARGIN_V},1
-
-[Events]
-Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-"""
-
-SRT_TIME = re.compile(r"(\d+):(\d+):(\d+),(\d+)\s*-->\s*(\d+):(\d+):(\d+),(\d+)")
 FFMPEG_DURATION = re.compile(r"Duration:\s*(\d+):(\d+):(\d+)\.(\d+)")
-
-
-def _ass_time(h, m, s, ms):
-    return f"{int(h)}:{int(m):02d}:{int(s):02d}.{int(ms) // 10:02d}"
-
-
-def srt_to_ass(srt_path, ass_path):
-    """Convertit le SRT Whisper en ASS stylé charte Curio (60px, blanc, contour noir, Y=75%)."""
-    events = []
-    block_text = []
-    times = None
-    lines = srt_path.read_text().splitlines() + [""]
-    for line in lines:
-        line = line.strip()
-        match = SRT_TIME.match(line)
-        if match:
-            times = match.groups()
-            block_text = []
-        elif line == "":
-            if times and block_text:
-                start = _ass_time(*times[0:4])
-                end = _ass_time(*times[4:8])
-                text = "\\N".join(block_text)
-                events.append(f"Dialogue: 0,{start},{end},Curio,,0,0,0,,{text}")
-            times = None
-            block_text = []
-        elif times is not None and not line.isdigit():
-            block_text.append(line)
-    ass_path.write_text(ASS_HEADER + "\n".join(events) + "\n")
-    return ass_path
 
 
 def media_duration(path):
@@ -102,8 +68,6 @@ def _segment_duration(segment):
 
 
 def _load_segments(output_dir):
-    import json
-
     script_path = output_dir / "script.json"
     if not script_path.exists():
         raise FileNotFoundError(f"{script_path} introuvable — impossible de caler les illustrations sur les timecodes réels.")
@@ -164,6 +128,53 @@ def _preflight(segments, output_dir, audio_path):
         raise FileNotFoundError("Fichiers manquants pour le montage :\n" + "\n".join(f"  - {m}" for m in missing))
 
 
+def _render_captions_overlay(output_dir, total_seconds):
+    """Rend les sous-titres (Remotion, une ligne à la fois) en séquence PNG transparente.
+
+    srtText et totalSeconds passés via un fichier --props temporaire, jamais en
+    JSON inline sur la ligne de commande : les apostrophes françaises du script
+    ("qu'il", "l'appelle"...) cassent l'échappement shell. totalSeconds impose
+    la durée exacte du montage à la composition Remotion (calculateMetadata,
+    remotion/src/tiktok-captions/TikTokCaptions.tsx) — les sous-titres doivent
+    durer aussi longtemps que la vidéo, jamais calés sur le seul dernier
+    timestamp du SRT.
+    """
+    seq_dir = output_dir / "_remotion_captions_seq"
+    if seq_dir.exists():
+        shutil.rmtree(seq_dir)
+
+    props_path = output_dir / "_remotion_props.json"
+    props_path.write_text(
+        json.dumps(
+            {
+                "srtText": (output_dir / "subtitles.srt").read_text(),
+                "totalSeconds": total_seconds,
+            },
+            ensure_ascii=False,
+        )
+    )
+
+    cmd = [
+        "npx", "remotion", "render", REMOTION_COMPOSITION, str(seq_dir),
+        "--sequence", "--image-format=png", f"--props={props_path}",
+    ]
+    result = subprocess.run(cmd, cwd=REMOTION_DIR, capture_output=True, text=True)
+    props_path.unlink()
+    if result.returncode != 0:
+        raise RuntimeError(f"Remotion a échoué : {result.stderr.strip()[-800:]}")
+
+    expected_frames = round(total_seconds * VIDEO_FPS)
+    frame_count = len(list(seq_dir.glob("element-*.png")))
+    if frame_count != expected_frames:
+        raise RuntimeError(
+            f"Remotion a rendu {frame_count} images, {expected_frames} attendues "
+            f"({total_seconds}s à {VIDEO_FPS}fps) — séquence incomplète."
+        )
+
+    pad_width = len(str(expected_frames - 1))
+    return seq_dir, pad_width
+
+
 def assemble_reel(output_dir, audio_path):
     """Assemble reel_final.mp4, durée calée sur l'audio. Skip si déjà présent."""
     output_dir = output_dir.resolve()
@@ -175,7 +186,6 @@ def assemble_reel(output_dir, audio_path):
 
     segments, total = compute_segments(output_dir, audio_path)
     _preflight(segments, output_dir, audio_path)
-    srt_to_ass(output_dir / "subtitles.srt", output_dir / "subtitles_styled.ass")
 
     normalize = (
         f"scale={VIDEO_WIDTH}:{VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,"
@@ -183,6 +193,8 @@ def assemble_reel(output_dir, audio_path):
         f"setsar=1,fps={VIDEO_FPS},format=yuv420p"
     )
 
+    # Étape 1 — concat vidéo + audio, sans sous-titres, fichier intermédiaire.
+    no_subs = output_dir / "_tmp_no_subtitles.mp4"
     cmd = ["ffmpeg", "-y"]
     filters = []
     for i, (path, duration, trim_start) in enumerate(segments):
@@ -199,8 +211,7 @@ def assemble_reel(output_dir, audio_path):
     cmd += ["-i", str(audio_path)]
 
     concat_in = "".join(f"[v{i}]" for i in range(len(segments)))
-    filters.append(f"{concat_in}concat=n={len(segments)}:v=1:a=0[vcat]")
-    filters.append("[vcat]ass=subtitles_styled.ass[vout]")
+    filters.append(f"{concat_in}concat=n={len(segments)}:v=1:a=0[vout]")
     # Voix ElevenLabs seule, en continu sur tout le reel (hook + CTA compris,
     # v2.15) — les pistes audio natives des clips vidéo (dont curio_cta.mp4)
     # ne sont jamais mappées, quelle que soit leur présence dans le fichier.
@@ -213,7 +224,7 @@ def assemble_reel(output_dir, audio_path):
         "-c:v", "libx264", "-b:v", VIDEO_BITRATE, "-pix_fmt", "yuv420p",
         "-r", str(VIDEO_FPS),
         "-c:a", "aac", "-b:a", "192k",
-        target.name,
+        no_subs.name,
     ]
 
     plan = " | ".join(f"{p.name} {d}s" + (f" (début +{t}s)" if t else "") for p, d, t in segments)
@@ -222,6 +233,32 @@ def assemble_reel(output_dir, audio_path):
     print(f"  FFmpeg assemble {total}s de vidéo...")
     result = subprocess.run(cmd, cwd=output_dir, capture_output=True, text=True)
     if result.returncode != 0:
-        raise RuntimeError(f"FFmpeg a échoué : {result.stderr.strip()[-800:]}")
+        raise RuntimeError(f"FFmpeg a échoué (montage) : {result.stderr.strip()[-800:]}")
+
+    # Étape 2 — sous-titres Remotion (une ligne à la fois, style TikTok).
+    print("  Remotion rend les sous-titres (une ligne à la fois)...")
+    seq_dir, pad_width = _render_captions_overlay(output_dir, total)
+    print(f"  [ok] séquence de sous-titres rendue ({seq_dir.name})")
+
+    # Étape 3 — incruste les sous-titres sur la vidéo, réencode reel_final.mp4.
+    overlay_cmd = [
+        "ffmpeg", "-y",
+        "-i", no_subs.name,
+        "-framerate", str(VIDEO_FPS), "-i", str(seq_dir / f"element-%0{pad_width}d.png"),
+        "-filter_complex", "[0:v][1:v]overlay=0:0[v]",
+        "-map", "[v]", "-map", "0:a",
+        "-t", str(total),
+        "-c:v", "libx264", "-b:v", VIDEO_BITRATE, "-pix_fmt", "yuv420p",
+        "-r", str(VIDEO_FPS),
+        "-c:a", "copy",
+        target.name,
+    ]
+    print("  FFmpeg incruste les sous-titres...")
+    result = subprocess.run(overlay_cmd, cwd=output_dir, capture_output=True, text=True)
+    shutil.rmtree(seq_dir)
+    no_subs.unlink()
+    if result.returncode != 0:
+        raise RuntimeError(f"FFmpeg a échoué (incrustation sous-titres) : {result.stderr.strip()[-800:]}")
+
     print(f"  [ok] {target.name}")
     return target

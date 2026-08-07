@@ -90,11 +90,6 @@ VIDEO_HEIGHT = 1920
 VIDEO_FPS = 30
 VIDEO_BITRATE = "6M"
 
-# Sous-titres : style aligné sur la référence publiée @curio.education
-# (blanc bold, contour noir épais, sans boîte), une seule phrase à l'écran
-SUBTITLE_FONT_SIZE = 60
-SUBTITLE_MARGIN_V = int(VIDEO_HEIGHT * 0.21)  # baseline ~79% de la hauteur
-
 
 def load_env():
     """Lit le fichier .env à la racine et retourne un dict clé → valeur."""
