@@ -37,9 +37,10 @@ SCHEMA_TYPE_A = """\
     {"start": 25, "end": 30, "role": "cta", "texte": "..."}
   ],
   "illustrations": [
-    {"description_visuelle": "description hyper-réaliste illustration 1 (photo style Wikipédia/magazine, jamais de personnage Curio, jamais de cartoon)"},
-    {"description_visuelle": "illustration 2"},
-    {"description_visuelle": "illustration 3"}
+    {"description_visuelle": "description hyper-réaliste illustration 1 (photo style Wikipédia/magazine, jamais de personnage Curio, jamais de cartoon)",
+     "stock_query_en": "2-5 mots anglais, sujet concret et identifiable de CETTE photo (ex: 'red panda eating bamboo', 'Eiffel Tower sunset') — TOUJOURS rempli, même si l'illustration nécessite finalement un schéma/texte (ignoré par le pipeline dans ce cas)"},
+    {"description_visuelle": "illustration 2", "stock_query_en": "..."},
+    {"description_visuelle": "illustration 3", "stock_query_en": "..."}
   ]
 }"""
 
@@ -211,6 +212,8 @@ def _build_prompt(reel_type, sujet, niveau, matiere):
             "- Les descriptions d'illustrations doivent être 100% photoréalistes, "
             "comme des photos Wikipédia ou de magazine. Jamais de personnage Curio, jamais de cartoon.\n"
             "- Si un schéma est nécessaire : flèches + chiffres simples, minimaliste.\n"
+            "- stock_query_en : 2-5 mots anglais, sujet photographiable concret "
+            "(objet/animal/lieu/personne publique) — TOUJOURS rempli pour les 3 illustrations.\n"
             + HOOK_BACKGROUND_RULES
         )
     elif is_maths:

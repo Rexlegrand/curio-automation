@@ -1,9 +1,10 @@
-"""POC recherche + téléchargement d'images stock (Pexels, Wikimedia Commons).
+"""Recherche + téléchargement d'images stock (Pexels, Wikimedia Commons).
 
-Test isolé pour valider si une image récupérée via API peut remplacer une
-génération GPT Image 2. Non branché au pipeline existant (image_generator.py,
-main.py) — voir test_stock_image_search.py à la racine pour le test bout en
-bout.
+Branché dans generators/image_generator.py (étape de décision avant tout
+appel GPT Image, illustrations Type A curiosité uniquement) : le résultat
+brut d'ici est ensuite filtré sur pertinence (result['title'] contient un
+terme clé de la requête) et composé sur le fond cahier Curio par
+image_generator._try_stock_search(), jamais utilisé tel quel.
 
 Wikimedia : vérifié dans la doc officielle (mediawiki.org/wiki/API:Search,
 API:Etiquette) — aucune clé API requise pour la recherche/téléchargement
@@ -11,7 +12,12 @@ anonyme, uniquement un header User-Agent descriptif obligatoire (sinon risque
 d'IP-block). Pas de variable d'env Wikimedia pour ce POC.
 
 Pexels : clé requise via variable d'env PEXELS_API_KEY (voir .env.example),
-jamais hardcodée.
+jamais hardcodée. Le champ 'alt' de l'API (texte descriptif généré par
+Pexels, ex: "Vertical close-up of a penguin from a low angle, highlighting
+its beak and plumage.") est la seule métadonnée textuelle disponible côté
+Pexels — il n'y a pas de vrai titre. Utilisé comme result['title'] pour
+rester homogène avec Wikimedia (vrai titre de fichier) côté filtrage
+pertinence en aval.
 """
 
 import re
@@ -69,7 +75,7 @@ def search_pexels(query, per_page=10, orientation="portrait"):
             "id": str(photo["id"]),
             "url": photo["url"],
             "download_url": photo["src"]["large2x"],
-            "title": None,
+            "title": photo.get("alt"),
             "author": photo.get("photographer"),
             "author_url": photo.get("photographer_url"),
             "width": photo.get("width"),
