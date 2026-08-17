@@ -159,6 +159,11 @@ def generate_subtitles(audio_path, output_dir, initial_prompt=None):
         "--task", "transcribe",
         "--verbose", "False",
         "--word_timestamps", "True",
+        # v2.19 — sans ce flag (défaut Whisper CLI : True), un segment à
+        # confiance basse fait boucler le modèle sur du texte déjà transcrit
+        # (recommence à "Attends..." en pleine narration) au lieu de
+        # continuer — observé sur le reel éclipse du 13/08 (audio ~20-39s).
+        "--condition_on_previous_text", "False",
     ]
     if initial_prompt:
         cmd += ["--initial_prompt", initial_prompt]

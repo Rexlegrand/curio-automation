@@ -1,5 +1,24 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.18 — Sous-titres : remplacement du burn-in ASS/FFmpeg par un rendu
+Version : 2.19 — Fix bug Remotion bloquant TOUT montage : le CLI Remotion
+(remotion/node_modules/@remotion/renderer/dist/get-extension-of-filename.js)
+détecte une extension de fichier en découpant le CHEMIN ABSOLU ENTIER sur les
+points (split('.') sur toute la string, pas juste le nom de fichier final) —
+bug amont, pas dans notre code. Le home Mac (/Users/benjamin.ptryhuml/...)
+contient un point dans "benjamin.ptryhuml" : toute sortie de séquence PNG
+Remotion placée sous output_dir (chemin absolu) ou même en chemin relatif via
+".." (qui contient aussi des points) faisait planter le render avec "The
+output directory of the image sequence cannot have an extension". Ce bug
+existe depuis toujours sur cette machine — indépendant du sujet/slug du reel
+— et n'avait simplement jamais été déclenché avant le premier reel réel
+généré après v2.18 (éclipse du 12/08, reel du 13/08). Fix : generators/video_assembler.py,
+`_render_captions_overlay()` rend désormais la séquence PNG dans un dossier
+temporaire système (tempfile.mkdtemp(), ex. /var/folders/.../T/...) au lieu
+d'un sous-dossier de output_dir — un chemin temp système ne contient jamais
+de point. Le dossier temp est toujours nettoyé (shutil.rmtree) après
+incrustation sur la vidéo finale, comme avant. Aucun autre comportement du
+montage changé. Validé bout en bout sur le reel réel éclipse du 13/08
+(output/2026-08-13/l_eclipse_solaire_du_12_aout_2026_vue_de_france_.../).
+Hérite v2.18 — Sous-titres : remplacement du burn-in ASS/FFmpeg par un rendu
 Remotion dédié (dossier remotion/, projet Node/TypeScript autonome, Remotion
 4.0.507). Montage en 3 passes désormais (generators/video_assembler.py) : (1)
 FFmpeg concatène clips + illustrations + audio ElevenLabs SANS sous-titres →

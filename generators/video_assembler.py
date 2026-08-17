@@ -30,6 +30,8 @@ import json
 import re
 import shutil
 import subprocess
+import tempfile
+from pathlib import Path
 
 from config import (
     AUDIO_TAIL,
@@ -138,10 +140,20 @@ def _render_captions_overlay(output_dir, total_seconds):
     remotion/src/tiktok-captions/TikTokCaptions.tsx) — les sous-titres doivent
     durer aussi longtemps que la vidéo, jamais calés sur le seul dernier
     timestamp du SRT.
+
+    seq_dir est un dossier temporaire système (tempfile.mkdtemp), jamais un
+    sous-dossier de output_dir (v2.19) : le CLI Remotion découpe le CHEMIN
+    ABSOLU ENTIER sur les points pour détecter une extension de fichier (bug
+    amont, remotion/node_modules/@remotion/renderer/get-extension-of-filename.js
+    fait un split('.') sur tout le chemin, pas juste le nom de fichier final).
+    Le home du Mac (/Users/benjamin.ptryhuml/...) contient un point dans
+    "benjamin.ptryhuml" : tout chemin de sortie de séquence sous output_dir
+    (ou même relatif via "..", qui contient aussi des points) fait planter le
+    render avec "The output directory of the image sequence cannot have an
+    extension". Un dossier temp système (/var/folders/.../T/...) n'a pas ce
+    problème car son chemin ne contient aucun point.
     """
-    seq_dir = output_dir / "_remotion_captions_seq"
-    if seq_dir.exists():
-        shutil.rmtree(seq_dir)
+    seq_dir = Path(tempfile.mkdtemp(prefix="remotion_captions_"))
 
     props_path = output_dir / "_remotion_props.json"
     props_path.write_text(
