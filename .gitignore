@@ -6,6 +6,7 @@ node_modules/
 output/
 hyperframes/
 testing_remotion/
+testing_stock_images/
 venv/
 .venv/
 *.log
