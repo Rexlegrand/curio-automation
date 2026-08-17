@@ -156,8 +156,15 @@ def build_image_plan(script):
         for i, illus in enumerate(script["illustrations"], start=1):
             if script["type"] == "curiosite":
                 prompt = curiosity_prompts.build_illustration_prompt(illus["description_visuelle"])
-                stock_eligible = _stock_eligible(illus["description_visuelle"])
-                stock_query = illus.get("stock_query_en") or illus["description_visuelle"]
+                stock_query = illus.get("stock_query_en")
+                # Bascule GPT Image direct si stock_query_en absent (script.json
+                # généré avant ce champ, v2.19) : le français comme requête de
+                # repli a produit de faux positifs sur le terrain (17/08) — un
+                # mot court français ("eau") matche par pur hasard une sous-chaîne
+                # anglaise ("beautiful"), le filtre de pertinence passe alors qu'il
+                # n'y a aucun rapport. Mieux vaut le comportement d'avant (GPT
+                # Image direct) que ce filtre non fiable en anglais/français mêlés.
+                stock_eligible = bool(stock_query) and _stock_eligible(illus["description_visuelle"])
             else:
                 # Type B : mot_cle/lettre_cle (français) ou diagramme pédagogique
                 # (maths concept) toujours imprimés sur l'image — jamais éligible au stock.
