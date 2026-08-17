@@ -81,12 +81,12 @@ export const TikTokCaptions: React.FC<Props> = ({ captions }) => {
   }
 
   return (
-    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: "21%" }}>
+    <AbsoluteFill style={{ justifyContent: "flex-end", alignItems: "center", paddingBottom: "32%" }}>
       <div
         style={{
           fontFamily: "Arial, sans-serif",
           fontWeight: 700,
-          fontSize: 60,
+          fontSize: 76,
           whiteSpace: "nowrap",
         }}
       >
