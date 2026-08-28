@@ -1,5 +1,14 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.19 — Fix bug Remotion bloquant TOUT montage : le CLI Remotion
+Version : 2.20 — Nouvelle règle obligatoire de motion design (§10). Benjamin a
+ajouté `motion-catalog.md` à la racine du projet (catalogue des types de beats
+et des techniques de caméra/cadrage disponibles pour le motion design des
+reels). Règle : avant toute génération de motion design sur un reel,
+segmenter le script en beats (voir motion-catalog.md pour les types de
+beats). Assigner une technique du catalogue à CHAQUE beat non-HOOK — aucun
+beat sans motion assigné. Ne pas répéter la même technique de caméra/cadrage
+plus de 2 fois consécutives. Référence complète : motion-catalog.md. Détail
+en §10.
+Hérite v2.19 — Fix bug Remotion bloquant TOUT montage : le CLI Remotion
 (remotion/node_modules/@remotion/renderer/dist/get-extension-of-filename.js)
 détecte une extension de fichier en découpant le CHEMIN ABSOLU ENTIER sur les
 points (split('.') sur toute la string, pas juste le nom de fichier final) —
@@ -584,6 +593,15 @@ Image 2 à chaque reel, le fond thématique doit varier selon le sujet.
 
 ## 10. FLUX D'EXÉCUTION — CHECKPOINTS HUMAINS
 
+**RÈGLE MOTION DESIGN — OBLIGATOIRE (v2.20)** : avant toute génération de
+motion design sur un reel, segmenter le script en beats (voir
+`motion-catalog.md`, à la racine du projet, pour les types de beats
+disponibles). Assigner une technique du catalogue à CHAQUE beat non-HOOK —
+aucun beat sans motion assigné. Ne pas répéter la même technique de
+caméra/cadrage plus de 2 fois consécutives (évite la monotonie visuelle d'un
+reel à l'autre comme à l'intérieur d'un même reel). Référence complète :
+`motion-catalog.md`.
+
 ```
 ÉTAPE 0 — INPUT
   Benjamin saisit : sujet + type + niveau (si compétence)
@@ -629,6 +647,8 @@ PUBLICATION (manuelle)
 ```
 curio-automation/
 ├── CLAUDE.md                          ← Ce fichier (référence absolue)
+├── motion-catalog.md                  ← NOUVEAU v2.20 — catalogue des types de beats
+│                                          et techniques de caméra/cadrage motion design
 ├── main.py                            ← CLI point d'entrée
 ├── config.py                          ← Clés API + constantes globales + helpers partagés
 ├── requirements.txt
