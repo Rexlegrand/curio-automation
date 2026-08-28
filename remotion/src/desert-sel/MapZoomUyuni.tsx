@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AbsoluteFill,
   CalculateMetadataFunction,
   Composition,
+  continueRender,
+  delayRender,
   Easing,
   Img,
   interpolate,
@@ -128,9 +130,29 @@ const WORLD_VIEW_BOX: ExtendedFeature = {
   },
 };
 
+// Le <image> SVG brut (nécessaire pour appliquer la transform affine calculée
+// plus bas) ne bloque PAS le rendu Remotion tant qu'il n'est pas chargé,
+// contrairement au composant <Img> — bug constaté : au tout premier frame de
+// la scène (le cut à 20s), Remotion capturait avant que la texture ait fini
+// de décoder, laissant voir un frame quasi vide/glitché. delayRender/
+// continueRender force Remotion à attendre le chargement réel avant de
+// capturer, exactement comme le fait <Img> en interne.
+const useDelayedImagePreload = (src: string) => {
+  useEffect(() => {
+    const handle = delayRender(`preload-${src}`);
+    const img = new Image();
+    img.src = src;
+    img.onload = () => continueRender(handle);
+    img.onerror = () => continueRender(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src]);
+};
+
 export const MapZoomUyuni: React.FC<Props> = ({ countries }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  useDelayedImagePreload(staticFile("desert-sel/map_texture_world.jpg"));
 
   const renderedFeatures = countries.features.filter((f) => f.id !== WIDE_SHOT_MAX_LATITUDE_ID_EXCLUDE);
   const scaleWide = scaleToFit(WORLD_VIEW_BOX, WIDTH, HEIGHT, FOCUS, SCREEN_TARGET);
