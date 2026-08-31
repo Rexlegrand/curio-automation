@@ -50,17 +50,23 @@ Règle qui en découle, à ne pas enfreindre :
 ### Dépendances 3D optionnelles
 
 `three`, `@react-three/fiber`, `@react-three/drei` et `@remotion/three` sont
-déclarés en **`optionalDependencies`**. Ils ne servent qu'à une seule
-composition expérimentale (`VoxLayeredScene3D`).
+déclarés en **`devDependencies`**. Ils ne servent qu'à une seule composition
+expérimentale (`VoxLayeredScene3D`) et ne sont jamais chargés par la production.
 
 ```bash
-npm install                    # installe tout, expérimentations comprises
-npm install --omit=optional    # installation minimale, production uniquement
+npm install               # installe tout, expérimentations comprises
+npm install --omit=dev    # installation minimale, production uniquement
 ```
 
-Après une installation `--omit=optional`, retirer l'import de
-`VoxLayeredScene3D` dans `Root.experiments.tsx` — la production, elle, n'est
-pas concernée.
+Après une installation `--omit=dev`, retirer l'import de `VoxLayeredScene3D`
+dans `Root.experiments.tsx` — la production, elle, n'est pas concernée.
+
+> **Ne jamais utiliser `npm install --omit=optional` ici.** Remotion est
+> configuré sur le bundler rspack (`Config.setRspack(true)`), et rspack livre
+> son binaire natif en `optionalDependencies`. L'omettre casse le bundler,
+> donc l'incrustation des sous-titres, donc tout le montage — vérifié sur un
+> clone neuf. C'est pour cette raison que les libs 3D sont en
+> `devDependencies` et non en `optionalDependencies`.
 
 ---
 

@@ -20,7 +20,10 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
     "@remotion/eslint-config-flat": "4.0.507",
+    "@remotion/three": "^4.0.507",
     "@types/d3-geo": "^3.1.1",
     "@types/geojson": "^7946.0.16",
     "@types/react": "19.2.7",
@@ -29,6 +32,7 @@
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
     "prettier": "3.8.1",
+    "three": "^0.185.1",
     "typescript": "5.9.3"
   },
   "scripts": {
@@ -39,11 +43,5 @@
   },
   "sideEffects": [
     "*.css"
-  ],
-  "optionalDependencies": {
-    "@react-three/drei": "^10.7.8",
-    "@react-three/fiber": "^9.7.0",
-    "@remotion/three": "^4.0.507",
-    "three": "^0.185.1"
-  }
+  ]
 }
