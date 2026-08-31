@@ -266,7 +266,7 @@ Ces points ne concernent pas le pipeline de production, qui n'utilise ni
 
 | Chemin | Raison |
 |---|---|
-| `references/` | ~250 Mo de vidéos de référence — matière de travail, pas du code |
+| `references/` | vidéos de référence — voir §9 |
 | `remotion/src/curio-motion/` sauf `03-CameraJourney.tsx` + `shared.tsx` | 4 des 5 prototypes restent locaux ; seule la direction retenue est versionnée |
 | `remotion/src/browser-search-cta/` | CTA du projet ads Meta, autre projet |
 | `hyperframes-test/`, `.agents/`, `agent/` | bacs à sable et caches d'outils externes |
@@ -274,3 +274,56 @@ Ces points ne concernent pas le pipeline de production, qui n'utilise ni
 
 Ces chemins sont dans `.gitignore`. Ne pas les enregistrer dans
 `Root.experiments.tsx` : un clone neuf ne compilerait plus.
+
+---
+
+## 9. Vidéos de référence (`references/`, non versionné)
+
+Le dossier `references/motion-examples/` sert de matière de travail : ce sont
+les montages dont on s'inspire, analysés image par image via le plugin `watch`.
+
+**Il n'est volontairement pas commité**, pour deux raisons :
+
+- ~250 Mo dont un fichier de 77 Mo. GitHub avertit au-delà de 50 Mo et bloque à
+  100 Mo par fichier. Surtout, ces octets entreraient **définitivement dans
+  l'historique Git** : même supprimés plus tard, chaque clone continuerait à les
+  télécharger.
+- Ce sont des contenus tiers (reels d'autres créateurs, vidéos YouTube)
+  téléchargés comme référence. Les republier sur un dépôt partagé serait de la
+  redistribution.
+
+Les sources sont donc listées ici pour que l'information reste dans le repo,
+sans les fichiers. Pour retrouver la matière, retélécharger depuis la source.
+
+### Sources identifiées
+
+| Fichier local | Source |
+|---|---|
+| `dreamina-…-Animate this exact image….mp4` | généré via Dreamina à partir du prompt de `prompts/curio_talking_head_reusable.md` |
+| `Screen Recording 2026-08-28 at 4.46.32 pm.mov` | capture d'écran locale de la scène Vox de la vidéo YouTube ci-dessous |
+| `ScreenRecording_08-26-2026 19-*.MP4` | captures d'écran locales (Benjamin) |
+| `cartora_reliefs_*.mp4` | reel Instagram — compte `@cartora_reliefs` |
+| `cesar_cultureg_*.mp4` | reel Instagram — compte `@cesar_cultureg` |
+| `geoglobe_tales_*.mp4` (×2) | reels Instagram — compte `@geoglobe_tales` |
+| `laminutegeographie_*.mp4` | reel Instagram — compte `@laminutegeographie` |
+
+Les noms de fichiers Instagram conservent le handle du compte et les
+identifiants média d'origine, ce qui permet de les retrouver.
+
+### Références YouTube (URLs stables)
+
+| Vidéo | URL | Ce qu'on en a tiré |
+|---|---|---|
+| *How I Fully Automated Video Editing with Claude Opus 5* — Ryen, 9 min 15 | https://youtu.be/rjLuHtvrmMo | la scène Vox en couches (§5) et le brief exact lu à 3:08-3:34 |
+| *How My AI Agent Gets Leads with Content* — même chaîne, Short 50 s | https://youtube.com/shorts/ZhOIoat5WDU | le format « deux carrés » (§6) et le rail de 3 icônes calées sur les mots |
+
+### Les relire
+
+Le plugin `watch` (marketplace `bradautomates/claude-video`) télécharge,
+extrait des images et récupère la transcription :
+
+```
+/watch:watch <url>
+```
+
+Il a besoin de `ffmpeg`, `ffprobe` et `yt-dlp` — voir §7.
