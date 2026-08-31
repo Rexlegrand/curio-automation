@@ -1,13 +1,33 @@
 CURIO AUTOMATION — CLAUDE CODE BRIEF
-Version : 2.20 — Nouvelle règle obligatoire de motion design (§10). Benjamin a
+Version : 2.21 — Correction de la règle motion design (§10) : la caméra seule
+ne suffit plus. Constaté sur le reel désert de sel/Uyuni (26/08) : un beat
+entier (10s, silhouette qui marche) assigné à une seule technique caméra
+(Ken Burns) sur une photo plate — aucun vrai motion design, juste un zoom lent
+sur une image figée. Cause racine identifiée : les images sourcées
+(Pexels/Wikimedia) sont des photos composites plates (sujet déjà fondu dans
+le décor), jamais décomposées en couches (fond seul + sujet détouré) comme le
+fait `hyperframes-test/` (`assets/backgrounds/` + `assets/cutouts/`, PNG
+alpha). Sans couches séparées, aucune vraie technique de personnage/objet/
+reveal n'est possible — seule la caméra reste utilisable, d'où le glissement
+vers "caméra seule = motion design". Règle corrigée : une technique de la
+catégorie 1 (caméra/cadrage) ne peut plus, à elle seule, constituer
+l'assignation d'un beat — elle doit toujours être combinée à au moins une
+technique hors catégorie 1 (reveal, typo, comparaison, personnage, objet,
+overlay, carte, liste). La caméra devient un modifier optionnel qui habille
+une autre technique, jamais une technique autosuffisante. Corollaire
+sourcing : quand un beat a besoin d'une technique personnage/objet/reveal
+(catégories 2, 5, 6), le sourcing d'images doit chercher des assets
+décomposables (requête fond seul + requête sujet isolable, puis détourage)
+plutôt qu'une seule photo composite — sinon le beat retombe sur la caméra par
+défaut. Détail en §10.
+Hérite v2.20 — Nouvelle règle obligatoire de motion design (§10). Benjamin a
 ajouté `motion-catalog.md` à la racine du projet (catalogue des types de beats
 et des techniques de caméra/cadrage disponibles pour le motion design des
 reels). Règle : avant toute génération de motion design sur un reel,
 segmenter le script en beats (voir motion-catalog.md pour les types de
 beats). Assigner une technique du catalogue à CHAQUE beat non-HOOK — aucun
 beat sans motion assigné. Ne pas répéter la même technique de caméra/cadrage
-plus de 2 fois consécutives. Référence complète : motion-catalog.md. Détail
-en §10.
+plus de 2 fois consécutives. Référence complète : motion-catalog.md.
 Hérite v2.19 — Fix bug Remotion bloquant TOUT montage : le CLI Remotion
 (remotion/node_modules/@remotion/renderer/dist/get-extension-of-filename.js)
 détecte une extension de fichier en découpant le CHEMIN ABSOLU ENTIER sur les
@@ -593,14 +613,28 @@ Image 2 à chaque reel, le fond thématique doit varier selon le sujet.
 
 ## 10. FLUX D'EXÉCUTION — CHECKPOINTS HUMAINS
 
-**RÈGLE MOTION DESIGN — OBLIGATOIRE (v2.20)** : avant toute génération de
+**RÈGLE MOTION DESIGN — OBLIGATOIRE (v2.21)** : avant toute génération de
 motion design sur un reel, segmenter le script en beats (voir
 `motion-catalog.md`, à la racine du projet, pour les types de beats
 disponibles). Assigner une technique du catalogue à CHAQUE beat non-HOOK —
 aucun beat sans motion assigné. Ne pas répéter la même technique de
 caméra/cadrage plus de 2 fois consécutives (évite la monotonie visuelle d'un
-reel à l'autre comme à l'intérieur d'un même reel). Référence complète :
-`motion-catalog.md`.
+reel à l'autre comme à l'intérieur d'un même reel).
+Une technique de la catégorie 1 (caméra/cadrage) ne peut jamais constituer à
+elle seule l'assignation d'un beat. Chaque beat doit combiner minimum 1
+technique hors catégorie 1 (reveal, typo, comparaison, personnage, objet,
+overlay, carte, liste) — la caméra est un modifier optionnel, pas une
+technique autosuffisante (v2.21, corrige la dérive constatée sur le reel
+Uyuni du 26/08 : un beat de 10s réduit à un simple Ken Burns sur photo plate,
+faute d'asset décomposable pour une vraie technique personnage/objet). Quand
+le beat choisi nécessite une technique des catégories 2/5/6 (reveal,
+personnage, objet), le sourcing d'images (Pexels/Wikimedia) doit chercher des
+assets décomposables — requête fond seul + requête sujet isolable, puis
+détourage — plutôt qu'une seule photo composite, sur le modèle
+`hyperframes-test/assets/backgrounds/` + `assets/cutouts/` (PNG alpha). Une
+photo composite plate sans sujet détourable interdit de facto ces catégories
+et fait retomber le beat sur la caméra seule — non conforme à cette règle.
+Référence complète : `motion-catalog.md`.
 
 ```
 ÉTAPE 0 — INPUT
@@ -649,6 +683,11 @@ curio-automation/
 ├── CLAUDE.md                          ← Ce fichier (référence absolue)
 ├── motion-catalog.md                  ← NOUVEAU v2.20 — catalogue des types de beats
 │                                          et techniques de caméra/cadrage motion design
+├── docs/
+│   └── EXPERIMENTS.md                 ← NOUVEAU — chantiers OPTIONNELS (motion design,
+│                                          scènes Vox, format « deux carrés »). Rien de
+│                                          ce qui y est décrit n'est requis pour faire
+│                                          tourner le pipeline.
 ├── main.py                            ← CLI point d'entrée
 ├── config.py                          ← Clés API + constantes globales + helpers partagés
 ├── requirements.txt

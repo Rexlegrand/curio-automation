@@ -11,3 +11,29 @@ test_outputs/
 venv/
 .venv/
 *.log
+
+# Vidéos de référence téléchargées (~250 Mo) — matière de travail, pas du code
+references/
+
+# Prototypes motion design gardés en local uniquement (jamais commités :
+# décision de Benjamin). Ne pas les enregistrer dans Root.experiments.tsx,
+# sinon un clone neuf ne compile plus.
+remotion/src/curio-motion/
+remotion/src/browser-search-cta/
+
+# Bacs à sable et caches d'outils externes
+hyperframes-test/
+.agents/
+agent/
+data/skills/
+skills-lock.json
+.claude/skills/
+
+# Assets lourds de prototypes non versionnés (textures carte, audio, images
+# de test). Seules les 3 images utilisées en defaultProps par
+# remotion/src/camera-techniques/ sont commitées.
+remotion/public/desert-sel/map_texture_*.jpg
+remotion/public/desert-sel/audio_v1.mp3
+remotion/public/curio_motion/
+remotion/public/curio-mascotte.png
+remotion/public/curio-site-*.png

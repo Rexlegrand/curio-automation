@@ -165,4 +165,6 @@ Référence pour Claude Code. Chaque reel doit être découpé en **beats** (seg
 3. Assigner une technique de ce catalogue à chaque beat non-HOOK. Ne jamais laisser un beat sans technique assignée.  
 4. Ne pas répéter la même technique de caméra/cadrage plus de 2 fois consécutives dans le même reel — varier entre catégories (caméra, reveal, typo, overlay) pour éviter la monotonie visuelle.  
 5. Les techniques de la catégorie 7 (overlay/texture) peuvent tourner en continu par-dessus les autres techniques — elles ne remplacent pas le motion principal du beat, elles l'habillent.
+6. Une technique de la catégorie 1 (caméra/cadrage) ne peut jamais constituer à elle seule l'assignation d'un beat — toujours la combiner à au moins une technique hors catégorie 1. La caméra est un modifier optionnel, pas une technique autosuffisante (v2.21 CLAUDE.md).
+7. Si la technique choisie relève des catégories 2, 5 ou 6 (reveal, personnage, objet), l'asset source doit être décomposable (fond seul + sujet détouré, PNG alpha) — sourcer en conséquence (requête fond + requête sujet isolable) plutôt qu'une seule photo composite. Sans asset décomposé, ces catégories sont indisponibles et le beat retombe à tort sur la caméra seule.
 
