@@ -107,7 +107,28 @@ avec l'existant.
 
 ---
 
-## 3. Compositions de techniques de caméra
+## 3. Direction motion design retenue — `Curio-CameraJourney`
+
+`remotion/src/curio-motion/03-CameraJourney.tsx` (composition
+`Curio-CameraJourney`, ~11,3 s) : la caméra se déplace sur une grande surface
+quadrillée où des photos sont « collées » façon clip magazine, puis un dézoom
+final révèle la fresque entière.
+
+C'est la direction retenue par Benjamin parmi cinq prototypes testés. **Les
+quatre autres restent en local, non versionnés** — les enregistrer dans
+`Root.experiments.tsx` casserait le build sur un clone neuf.
+
+Dépendances : `curio-motion/shared.tsx` (fond Seyès, photo collée, mascotte) et
+quatre photos dans `remotion/public/curio_motion/`. Le sous-dossier
+`test_manchot_20260820/` (6 Mo) n'est utilisé par aucune composition et reste
+hors du repo.
+
+Durée actuelle ~11,3 s, un peu longue face à la cible de 5-10 s : les
+constantes `HOLD` / `TRAVEL` en tête de fichier permettent de la réduire.
+
+---
+
+## 4. Compositions de techniques de caméra
 
 `remotion/src/camera-techniques/` — une composition autonome et paramétrable
 par technique du `motion-catalog.md`, pour tester une technique isolément
@@ -128,7 +149,7 @@ déforme » qui donne le vertige — pas une vraie perspective changeante.
 
 ---
 
-## 4. Scènes « Vox » en couches
+## 5. Scènes « Vox » en couches
 
 Reproduction de la scène ouvrante de *How I Fully Automated Video Editing with
 Claude Opus 5* (Ryan, YouTube). Trois versions, gardées pour comparaison :
@@ -162,7 +183,7 @@ Ce que la version retenue reproduit fidèlement :
 
 ---
 
-## 5. Format « deux carrés » (chantier ouvert)
+## 6. Format « deux carrés » (chantier ouvert)
 
 Format repéré sur les Shorts de la même chaîne : l'écran est coupé en deux
 cartes arrondies empilées — Curio qui parle en haut, illustration ou motion
@@ -224,7 +245,7 @@ de mettre à jour §3 de `CLAUDE.md`. Décision non prise à ce jour.
 
 ---
 
-## 6. Dépendances système (hors repo)
+## 7. Dépendances système (hors repo)
 
 Découvert en installant le plugin `watch` (analyse de vidéos de référence) :
 
@@ -241,12 +262,12 @@ Ces points ne concernent pas le pipeline de production, qui n'utilise ni
 
 ---
 
-## 7. Fichiers volontairement non versionnés
+## 8. Fichiers volontairement non versionnés
 
 | Chemin | Raison |
 |---|---|
 | `references/` | ~250 Mo de vidéos de référence — matière de travail, pas du code |
-| `remotion/src/curio-motion/` | 5 prototypes motion design, non commités par décision de Benjamin |
+| `remotion/src/curio-motion/` sauf `03-CameraJourney.tsx` + `shared.tsx` | 4 des 5 prototypes restent locaux ; seule la direction retenue est versionnée |
 | `remotion/src/browser-search-cta/` | CTA du projet ads Meta, autre projet |
 | `hyperframes-test/`, `.agents/`, `agent/` | bacs à sable et caches d'outils externes |
 | `testing_remotion/` | tous les rendus de test |

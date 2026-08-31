@@ -15,10 +15,13 @@ venv/
 # Vidéos de référence téléchargées (~250 Mo) — matière de travail, pas du code
 references/
 
-# Prototypes motion design gardés en local uniquement (jamais commités :
-# décision de Benjamin). Ne pas les enregistrer dans Root.experiments.tsx,
+# Prototypes motion design gardés en local uniquement (décision de Benjamin).
+# Seule exception : 03-CameraJourney, la direction retenue parmi les 5, et son
+# module partagé. Ne pas enregistrer les autres dans Root.experiments.tsx,
 # sinon un clone neuf ne compile plus.
-remotion/src/curio-motion/
+remotion/src/curio-motion/*
+!remotion/src/curio-motion/03-CameraJourney.tsx
+!remotion/src/curio-motion/shared.tsx
 remotion/src/browser-search-cta/
 
 # Bacs à sable et caches d'outils externes
@@ -34,6 +37,12 @@ skills-lock.json
 # remotion/src/camera-techniques/ sont commitées.
 remotion/public/desert-sel/map_texture_*.jpg
 remotion/public/desert-sel/audio_v1.mp3
-remotion/public/curio_motion/
-remotion/public/curio-mascotte.png
 remotion/public/curio-site-*.png
+
+# curio_motion/ : seules les 4 photos consommées par shared.tsx sont commitées
+# (le sous-dossier test_manchot_20260820, 6 Mo, ne sert à aucune composition).
+remotion/public/curio_motion/*
+!remotion/public/curio_motion/img_eclipse.jpg
+!remotion/public/curio_motion/img_tdf.jpg
+!remotion/public/curio_motion/img_stadium.jpg
+!remotion/public/curio_motion/img_football_kid.jpg

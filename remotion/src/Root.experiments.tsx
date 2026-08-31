@@ -23,6 +23,11 @@ import "./index.css";
 import { MapZoomPinComposition } from "./map-zoom/MapZoomPin";
 import { CutoutDocComposition } from "./cutout-doc/CutoutDoc";
 
+// Direction motion design retenue parmi les 5 prototypes testés : caméra qui
+// se déplace sur une grande surface quadrillée, dézoom final révélant la
+// fresque. Les 4 autres prototypes restent en local, non versionnés.
+import { CurioCameraJourneyComposition } from "./curio-motion/03-CameraJourney";
+
 // Techniques de caméra du motion-catalog (une composition par technique)
 import { KenBurnsZoomInComposition } from "./camera-techniques/KenBurnsZoomIn";
 import { BeforeAfterSlideComposition } from "./camera-techniques/BeforeAfterSlide";
@@ -40,6 +45,7 @@ export const RemotionRoot: React.FC = () => {
     <>
       <MapZoomPinComposition />
       <CutoutDocComposition />
+      <CurioCameraJourneyComposition />
 
       <KenBurnsZoomInComposition />
       <BeforeAfterSlideComposition />
