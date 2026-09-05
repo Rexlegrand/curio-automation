@@ -350,15 +350,21 @@ https://claude.ai/code/artifact/50e669f7-bddb-4152-9eda-10a57c25b87f
 
 ### Ce qui est versionné et ce qui ne l'est pas
 
-Le code, les specs, les plans JPEG/PNG servis à Remotion (~10 Mo), les mots
-horodatés, la narration MP3 et **les hooks Dreamina** (irremplaçables, étape
-manuelle) sont commités.
+Règle posée par Benjamin : **le dépôt doit suffire à produire un reel sans rien
+télécharger à côté.** Tout entre donc — code, specs, sources brutes de GPT
+Image 2, narration MP3, clips de Curio, hooks Dreamina — et les reels FINAUX
+avec, aucun n'atteignant la limite GitHub de 100 Mo (le plus lourd,
+`reel_sahara.mp4`, fait 91,5 Mo).
 
-Ne le sont pas : les sources brutes de GPT Image 2 (`assets/<slug>/*.png`,
-58 Mo, regénérables pour 0,09 $) et les clips de Curio recopiés dans
-`remotion/public/` (93 Mo, dont quatre exemplaires de `curio_studio.mp4`).
-`prep_assets.py` les remet en place et tolère désormais l'absence des sources
-quand les dérivés sont déjà là — c'est ce qui rend un clone opérationnel.
+Seule exclusion restante : les rendus intermédiaires de `testing_remotion/`,
+c'est-à-dire les neuf plans séparés de chaque reel et leurs images de contrôle.
+Ce sont des SORTIES, pas de la matière de production — `render_reel.py` les
+refait à volonté — et ils pèsent 947 Mo, de quoi doubler le dépôt.
+
+Conséquence assumée : le dépôt passe de 102 Mo à ~1,1 Go. GitHub recommande de
+rester sous 1 Go et affiche un avertissement au-delà ; tout clone futur
+télécharge ce gigaoctet. Si le poids devient gênant, la sortie propre est
+git-lfs sur `*.mp4`, pas une reprise d'historique.
 
 ### Où on s'est arrêté
 

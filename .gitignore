@@ -5,7 +5,15 @@ __pycache__/
 node_modules/
 output/
 hyperframes/
-testing_remotion/
+# testing_remotion/ : les reels FINAUX (reel_*.mp4) sont versionnés — aucun
+# n'atteint la limite GitHub de 100 Mo, le plus lourd fait 91,5 Mo. Les rendus
+# intermédiaires, eux, restent dehors : un plan isolé et ses images de contrôle
+# sont des SORTIES, pas de la matière de production, `render_reel.py` les refait
+# à volonté, et ils pèsent 947 Mo à eux seuls — de quoi doubler le dépôt.
+testing_remotion/*
+!testing_remotion/*/
+testing_remotion/*/*
+!testing_remotion/*/reel_*.mp4
 testing_stock_images/
 test_outputs/
 venv/
@@ -55,26 +63,7 @@ remotion/public/craftedbycm/
 # ---------------------------------------------------------------------------
 # Reels de série (mariannes / soleil / polders) et reel sahara.
 #
-# Le CODE est versionné, la matière lourde ne l'est que si elle est
-# irremplaçable. Trois catégories :
-#
-#   1. les plans JPEG/PNG servis à Remotion (remotion/public/) SONT commités :
-#      ~10 Mo, et c'est eux qui permettent à un clone de rendre un reel sans
-#      repayer GPT Image 2 ;
-#   2. les sources brutes de GPT Image 2 (assets/<slug>/*.png) ne le sont PAS :
-#      58 Mo pour trois reels, et `python gen_images.py <slug>` les refait pour
-#      0,09 $ ;
-#   3. les clips de Curio recopiés dans remotion/public/ ne le sont PAS non
-#      plus : ce sont des doublons de assets/, 93 Mo à eux seuls
-#      (curio_studio.mp4 pèse 15 Mo et existe en quatre exemplaires).
-#      `python prep_assets.py <slug>` les remet en place.
-#
-# Les hooks Dreamina, eux, sont commités : ils sortent d'une étape manuelle,
-# rien ne les regénère à l'identique.
-assets/mariannes/*.png
-assets/soleil/*.png
-assets/polders/*.png
-assets/sahara_amazonie/*.png
-!assets/*/hook_frame.png
-remotion/public/reels/*/*.mp4
-remotion/public/sahara/*.mp4
+# TOUT est versionné : code, specs, sources brutes de GPT Image 2, narration,
+# clips de Curio, hooks Dreamina. Le dépôt doit suffire à produire un reel sans
+# télécharger quoi que ce soit à côté — c'est la contrainte posée pour Tony.
+# Rien à exclure ici : voir plus bas pour testing_remotion/.
