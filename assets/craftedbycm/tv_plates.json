@@ -1,0 +1,86 @@
+{
+  "canvasWidth": 1080,
+  "canvasHeight": 1920,
+  "plates": {
+    "blanc": {
+      "screenRect": {
+        "x": 70,
+        "y": 567,
+        "width": 940,
+        "height": 753
+      },
+      "tvRect": {
+        "x": -71,
+        "y": 408,
+        "width": 1535,
+        "height": 1103
+      },
+      "plate": "tv_plate_blanc.png",
+      "source": "tv_source_blanc.png"
+    },
+    "bois": {
+      "screenRect": {
+        "x": 70,
+        "y": 528,
+        "width": 940,
+        "height": 695
+      },
+      "tvRect": {
+        "x": -31,
+        "y": 430,
+        "width": 1426,
+        "height": 1060
+      },
+      "plate": "tv_plate_bois.png",
+      "source": "tv_source_bois.png"
+    },
+    "noir": {
+      "screenRect": {
+        "x": 70,
+        "y": 618,
+        "width": 940,
+        "height": 590
+      },
+      "tvRect": {
+        "x": -16,
+        "y": 539,
+        "width": 1112,
+        "height": 841
+      },
+      "plate": "tv_plate_noir.png",
+      "source": "tv_source_noir.png"
+    },
+    "officiel": {
+      "screenRect": {
+        "x": 173,
+        "y": 606,
+        "width": 736,
+        "height": 564
+      },
+      "tvRect": {
+        "x": 97,
+        "y": 490,
+        "width": 1098,
+        "height": 940
+      },
+      "plate": "tv_plate_officiel.png",
+      "source": "tv_source_officiel.png"
+    },
+    "portable": {
+      "screenRect": {
+        "x": 163,
+        "y": 829,
+        "width": 756,
+        "height": 589
+      },
+      "tvRect": {
+        "x": 20,
+        "y": 370,
+        "width": 1403,
+        "height": 1180
+      },
+      "plate": "tv_plate_portable.png",
+      "source": "tv_source_portable.png"
+    }
+  }
+}

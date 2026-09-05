@@ -124,6 +124,10 @@ Référence pour Claude Code. Chaque reel doit être découpé en **beats** (seg
 | Color grade shift | Teinte qui change progressivement (froid→chaud) selon le ton | NARRATIF, CONCLUSION |
 | Lens flare directionnel | Reflet de lumière qui traverse le cadre | HOOK, CONCLUSION |
 | Blur pulse au rythme | Flou qui pulse légèrement en rythme avec la voix/musique | Fond continu |
+| Normalisation d'une texture avant fusion | Choix du mode selon le fond de la texture : fond blanc → modes d'obscurcissement (ils ignorent le blanc et gardent les détails sombres), fond noir → modes d'éclaircissement. Pour incrustation ou lumière tamisée, NORMALISER d'abord : désaturer, puis niveaux pour recentrer le pic de l'histogramme sur le gris 50 % — sans ça la texture décale les couleurs du dessous. Empiler un second réglage de niveaux pour doser l'intensité | Fond continu |
+| Grain d'imprimé authentique (scan + passe-haut) | Le grain vient d'un vrai imprimé scanné, pas d'un pack de textures : un filtre passe-haut isole les détails du papier en effaçant le motif imprimé, la couche est posée en incrustation et son intensité réglée aux niveaux. Un léger décalage RVB sur les textes et les aplats reproduit le hors-repérage d'impression | Fond continu, registre rétro |
+| Texture tuilée à l'échelle réelle | La texture d'habillage est TUILÉE plutôt qu'agrandie (une texture trouvée en ligne agrandie perd son grain), puis calibrée en posant un objet familier dans le cadre — une pièce de monnaie — comme étalon, avant de le retirer. Même texture, deux échelles : l'une paraît tactile, l'autre fausse | Fond continu |
+| Cadre-dans-l'écran (TV vintage) | Le plan est inséré dans un asset détouré de téléviseur/moniteur d'époque : masque sur la vitre, scanlines et léger décalage RVB par-dessus. Le cadre habille le plan sans le remplacer | NARRATIF, HOOK (registre documentaire) |
 
 ## 8\. Carte / Géographie
 
@@ -135,6 +139,7 @@ Référence pour Claude Code. Chaque reel doit être découpé en **beats** (seg
 | Territory highlight fill | Zone géographique qui se colore progressivement | STAT, COMPARAISON |
 | Multi-pin sequence | Plusieurs points qui apparaissent successivement sur la carte | LISTE |
 | 3D globe rotation | Globe qui tourne pour situer un lieu dans le monde | DÉFINITION, HOOK |
+| Territory burn reveal (registre documentaire) | La zone est tracée en forme pleine posée en mode de fusion incrustation sur une carte désaturée, puis révélée par une brûlure de pellicule animée de 100 à 0. Nappe de texture et nuages animés par-dessus pour la profondeur | RÉVÉLATION, NARRATIF |
 
 ## 9\. Liste / Séquence
 

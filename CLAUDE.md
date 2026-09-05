@@ -252,6 +252,363 @@ toléré par défaut). Voir aussi §17 règle 10.
 RÈGLE ABSOLUE N°1 — STRUCTURE DU CODE
 Ne jamais empiler du code sur du code existant. Si une modification est nécessaire, réécrire le fichier complet de A à Z. Zéro patch, zéro commentaire "// TODO", zéro code mort laissé en place. Chaque fichier doit être lisible et autonome à tout moment.
 
+## Dernière session — 3 septembre 2026
+
+Journal d'état, pas une règle : rien ici ne modifie le brief, d'où l'absence de
+changement de version en en-tête.
+
+Test de MASSIFICATION : trois reels produits d'affilée selon la chaîne du reel
+Sahara, pour mesurer ce que coûte un reel une fois l'outillage en place.
+**Tout ce qui suit est commité et poussé sur `main`** — c'était le premier
+objectif, le dossier `sahara/` traînait non versionné depuis le 2 septembre et
+un clone neuf ne compilait pas.
+
+### Livrables — les trois reels
+
+| Fichier | Durée | Sujet | Beat du chiffre |
+|---|---|---|---|
+| `testing_remotion/mariannes/reel_mariannes.mp4` | 1:03,66 | la fosse des Mariannes | l'Everest posé au fond, 2,1 km d'eau au-dessus |
+| `testing_remotion/soleil/reel_soleil.mp4` | 1:01,30 | le Soleil, 99,8 % du système solaire | 1,3 million de Terres |
+| `testing_remotion/polders/reel_polders.mp4` | 0:56,70 | les Pays-Bas pris à la mer | 1 500 km² sortis de l'eau |
+
+Copiés ensemble dans `testing_remotion/fichier MP4 matinée 3 septembre 2026/`.
+`testing_remotion/` reste ignoré : les masters pèsent 60 Mo pièce.
+
+### La chaîne est devenue générique
+
+Les scripts du sahara étaient écrits pour UN reel. Ils sont maintenant
+paramétrés par un slug, et un reel se décrit dans un seul fichier de spec.
+
+| Script | Rôle |
+|---|---|
+| `reels/<slug>.py` | LA spec : narration segment par segment, prompts d'images, corrections Whisper |
+| `gen_narration.py <slug>` | ElevenLabs, un appel par segment |
+| `gen_images.py <slug>` | GPT Image 2, un appel par plan |
+| `gen_hooks_massif.py` / `gen_seedance_massif.py` | image de départ du hook + prompt Dreamina |
+| `prep_assets.py <slug>` | mise à l'échelle, détourage alpha, copie des clips |
+| `export_mots.py <slug>` | Whisper + mots corrigés |
+| `build_reel.py <slug>` | `--timings` puis le montage |
+| `render_reel.py <slug> [segment]` | les 9 plans + 3 images de contrôle chacun |
+
+Les scripts `*_sahara*.py` d'origine sont conservés tels quels : le sahara a
+servi de prototype, rien ne gagne à le réécrire.
+
+`README-WORKFLOW.md` à la racine explique la chaîne de A à Z pour quelqu'un qui
+découvre le projet (écrit pour Tony) : les 8 étapes dans l'ordre, où sortent les
+fichiers, les pièges connus, les coûts et les temps.
+
+### Composants : paramétrés, jamais dupliqués
+
+Les sept beats du sahara portaient leurs images et leurs textes en dur. Ils les
+reçoivent maintenant en props, **avec les valeurs du sahara par défaut** — le
+reel Sahara rend donc à l'identique, sans qu'aucune de ses compositions ait
+changé.
+
+Un seul composant vraiment neuf sur les trois reels, `reels/commun/Proportion` :
+le diptyque `DeuxSols` coupe le cadre en deux moitiés égales, ce qui dit le
+contraire d'une part de 99,8 %. Plus deux propres au reel 1,
+`reels/mariannes/{Descente,EchelleVerticale}`.
+
+`04-Camions` est le réemploi le plus parlant : la flotte de camions est devenue
+un champ de 1,3 million de Terres, puis un champ de fermes néerlandaises, en
+changeant une texture et quatre couleurs. Sa logique 3D n'a pas bougé.
+
+### Trois défauts trouvés dans le code partagé
+
+1. **`useMots` préfixait tout chemin par `sahara/`** — aucun sous-titre hors du
+   sahara, et le `.catch()` avalait le 404 en silence : le rendu sortait muet
+   sans la moindre erreur. Préfixe désormais conditionnel, et l'échec écrit une
+   erreur en console.
+2. **`DeuxSols` montait le grand mot DERRIÈRE le panneau plein cadre**, donc
+   jamais visible. Vérifié sur `sahara-05-deux-sols_debut.png` : « Phosphore »
+   ne s'affiche pas non plus dans le reel Sahara déjà livré. Prop `wordOnTop`
+   ajoutée, à `false` par défaut — **le sahara est délibérément laissé en
+   l'état**, il attend l'arbitrage avec Tony.
+3. **Whisper `small` saute des phrases entières** (`polders/05-niveau` : quatre
+   secondes sans sous-titre, audio pourtant à -20 dB de moyenne). `export_mots.py`
+   compare maintenant les mots transcrits au texte attendu et reprend sur
+   `medium` sous 70 %.
+
+### Coût et temps, mesurés
+
+Session 12:33 → 13:58, **1 h 24 min 49 s**. Coût API **0,559 $** au total :
+0,273 $ d'ElevenLabs (2 481 caractères) et 0,286 $ de GPT Image 2 (26 images).
+Whisper, Remotion et FFmpeg tournent en local, à zéro. Pexels et Wikimedia n'ont
+pas été appelés une seule fois.
+
+| Reel | Durée | Pourquoi |
+|---|---|---|
+| 1 — Mariannes | 34 min 13 | porte tout l'outillage + 2 composants neufs |
+| 2 — Soleil | 14 min 50 | 1 composant neuf — **c'est le régime de croisière** |
+| 3 — Polders | 27 min 41 | 0 composant neuf, mais les 3 défauts ci-dessus |
+
+Projection hors incident : **~15 min et 0,19 $ par reel**, dont une dizaine de
+minutes de rendu sans surveillance. Soit environ quatre reels à l'heure.
+
+Bilan partagé avec Tony :
+https://claude.ai/code/artifact/50e669f7-bddb-4152-9eda-10a57c25b87f
+
+### Ce qui est versionné et ce qui ne l'est pas
+
+Le code, les specs, les plans JPEG/PNG servis à Remotion (~10 Mo), les mots
+horodatés, la narration MP3 et **les hooks Dreamina** (irremplaçables, étape
+manuelle) sont commités.
+
+Ne le sont pas : les sources brutes de GPT Image 2 (`assets/<slug>/*.png`,
+58 Mo, regénérables pour 0,09 $) et les clips de Curio recopiés dans
+`remotion/public/` (93 Mo, dont quatre exemplaires de `curio_studio.mp4`).
+`prep_assets.py` les remet en place et tolère désormais l'absence des sources
+quand les dérivés sont déjà là — c'est ce qui rend un clone opérationnel.
+
+### Où on s'est arrêté
+
+**Encore ouvert**
+
+- **Les trois reels n'ont pas été visionnés en entier.** Contrôle fait sur les
+  images fixes, beat par beat. Le calage voix/image est garanti par
+  construction, le rythme et les raccords demandent un œil.
+- **Voix.** `ELEVENLABS_VOICE_ID` pointe toujours sur « Curio 8 v3 », refusée en
+  401 par le forfait pay-as-you-go. Les trois reels parlent avec
+  « curio 8 v2 » (`iDpRg8Sg5Xh5u2THyfPl`), codé en dur dans `gen_narration.py`.
+- **Le défaut n°2 ci-dessus** attend l'arbitrage sur le reel Sahara.
+- **Clé Pexels.** Benjamin a demandé de la committer en clair, jugeant l'offre
+  gratuite sans risque. Non fait : le dépôt est PUBLIC (vérifié sur l'API
+  GitHub) et la clé reste un identifiant personnel rattaché à son compte et à
+  son quota. Elle est en `.env`, déclarée vide dans `.env.example`. Wikimedia,
+  lui, n'a aucune clé — l'API Commons est ouverte, seul un `User-Agent` est
+  requis. À rouvrir si Benjamin maintient sa demande.
+
+**Prochaine action logique** : visionner les trois reels en entier, puis
+trancher avec Tony sur le montage Sahara — l'arbitrage du 2 septembre n'a
+toujours pas eu lieu et il conditionne le défaut n°2.
+
+## Dernière session — 2 septembre 2026
+
+Journal d'état, pas une règle : rien ici ne modifie le brief, d'où l'absence de
+changement de version en en-tête. Section datée du 2 septembre — tous les
+fichiers ci-dessous ont été produits ce jour-là, la session s'est terminée peu
+avant minuit.
+
+Deux chantiers : la reconstruction @craftedbycm (cadre-dans-l'écran TV) est
+close, et un reel complet « le Sahara nourrit l'Amazonie » a été produit en
+deux montages distincts.
+
+### Livrables — reels finaux
+
+| Fichier | Durée | Taille | Ce qui le distingue |
+|---|---|---|---|
+| `testing_remotion/sahara/reel_sahara.mp4` | 1:09,73 | 91,5 Mo | **Montage 1, version finale.** Ordre géographique (deux mondes, voyage, chiffre, effet, révélation, chute). Narration ElevenLabs à ponctuation hachée avec 0,33 s de silence après chaque segment, sous-titres TikTok complets du premier au dernier mot, Curio en carte haute à 10 s et 46 s, hook et CTA sous-titrés. |
+| `testing_remotion/sahara2/reel_sahara2.mp4` | 0:53,93 | 74,9 Mo | **Montage 2, version finale.** Même matière, ordre d'enquête (chiffre, origine, algues, voyage, phosphore, chute) et surtout montage BÂTI sur le switch plein écran / deux carrés : trois passages avec Curio, chacun sur une phrase d'explication, jamais sur une démonstration. Narration entièrement distincte (`audio2/`). |
+| `testing_remotion/sahara/reel_sahara_v1_corrige.mp4` | 1:09,67 | 91,1 Mo | Copie d'archive du montage 1 prise juste AVANT que le hook et le CTA passent par Remotion — c'est la seule version qui porte encore le défaut des deux clips sans sous-titres. À garder comme témoin, pas à publier. |
+| `testing_remotion/sahara/reel_sahara_apercu.mp4` | 0:58,37 | 69,6 Mo | Premier assemblage de la journée, **sans voix, sans hook ni CTA** : sept beats collés bout à bout pour juger l'enchaînement avant d'avoir la narration. Périmé, conservé comme point de départ du montage 2. |
+
+### Assets et références
+
+**Clips Curio** — aucune piste audio n'est jamais montée depuis ces fichiers,
+une seule voix porte le reel du premier au dernier cadre (règle v2.15).
+
+| Fichier | Durée | Taille | Rôle |
+|---|---|---|---|
+| `assets/sahara_amazonie/curio_studio.mp4` | 0:10,08 | 15,2 Mo | **Le seul clip Curio valable pour la carte haute** : Curio au micro sous le néon « curio.education ». Généré sous Dreamina le 31/08. Remplace les `curio_explication*.mp4` du pipeline, explicitement rejetés par Benjamin. |
+| `assets/sahara_amazonie/hook_video.mp4` | 0:04,10 | 7,6 Mo | Hook animé Seedance/Dreamina du reel Sahara, lip-sync sur « Attends... du sable qui nourrit une forêt ? ». Sort en 720×1280 à 24,15 fps : agrandi et recadencé au montage. |
+| `remotion/public/sahara/{curio_studio,hook_video,curio_cta}.mp4` | — | 30,1 Mo | Copies servies à Remotion. `curio_cta.mp4` vient de `assets/clips/`, l'asset CTA fixe commun à tous les reels. |
+
+**Reconstructions @craftedbycm** — technique « cadre-dans-l'écran (TV vintage) »,
+catégorie 7 de `motion-catalog.md`, d'après le short `Cw_521ifpT8`.
+
+| Fichier | Durée | Taille | Rôle |
+|---|---|---|---|
+| `testing_remotion/craftedbycm/craftedbycm-01_officiel.mp4` | 0:05,06 | 4,8 Mo | **LA version officielle.** Poste unique, le premier téléviseur généré, retenu par Benjamin comme le plus naturel des cinq. C'est celle-ci qu'on sort quand il demande « le motion design télé ». |
+| `..._bois.mp4`, `..._blanc.mp4`, `..._noir.mp4`, `..._portable.mp4` | 0:05,06 | 4,8-5,5 Mo | Les quatre autres postes, un rendu chacun. Servent uniquement à vérifier qu'un changement de code ne casse la mise en page sur aucun modèle — le bandeau au-dessus de l'écran va de 40 à 250 px selon le boîtier. |
+| `..._sequence.mp4` | 0:07,06 | 6,7 Mo | Variante qui enchaîne les cinq postes en coupe sèche, comme le short d'origine. Vue et **mise de côté** par Benjamin : jamais le livrable. |
+
+**Plans intermédiaires** — un fichier par beat, rendus séparément puis collés.
+`testing_remotion/sahara/sahara-{hook,01-hook,02-deux-mondes,03-route,04-camions,05-deux-sols,06-revelation,07-chute,cta}.mp4`
+(3,1 à 31,1 Mo, 3,5 à 14,9 s) et
+`testing_remotion/sahara2/sahara2-{hook,01-chiffre,02-origine,03-algues,04-voyage,05-phosphore,06-chute,cta}.mp4`
+(2,7 à 27,3 Mo, 3,4 à 10,3 s). Chacun dure exactement son segment de narration
+plus la pause : c'est ce qui fait tomber les switches sur les phrases.
+
+`testing_remotion/sahara/sahara-00-stage.mp4` (0:06,72, 3,5 Mo) est le banc
+d'essai de la bascule plein écran ↔ carte, deux allers-retours sur fond de dune,
+sans rien d'autre à l'écran pour que seul le mouvement soit jugé.
+
+### Où on s'est arrêté
+
+**Résolu dans la journée**
+
+- Le motion design TV est clos : `prep_tv_plate.py` détecte tout seul le
+  détourage, la vitre et son contour sur n'importe quel poste, sans une
+  coordonnée en dur.
+- Rendu 3D en headless : il exige `--gl=angle` (aucun contexte WebGL sinon), le
+  contexte Remotion ne traverse pas `<ThreeCanvas>` (charger les textures
+  dehors, tout passer en props), et rien ne doit être posé dans un `useEffect`
+  (Remotion capture sans attendre les effets — les 480 camions restaient
+  empilés à l'origine).
+- Montage calé sur la voix, pas au jugé : les durées posées à l'estime
+  s'écartaient jusqu'à 3,1 s, et le beat de la chute montrait ses deux plans
+  dans l'ordre inverse de la phrase.
+- Rythme : ponctuation hachée à la génération et 0,33 s de silence après chaque
+  segment — le montage ne coupe plus sec.
+- Sous-titres : style TikTok du pipeline, toujours en bas, avec les VRAIS
+  timestamps mot à mot plutôt que l'approximation proportionnelle de
+  `subtitle_generator.py`. Orthographe corrigée à l'export (Whisper écrivait
+  « beau délai » pour Bodélé).
+- Hook et CTA sous-titrés : montés bruts en FFmpeg, ils échappaient au système
+  de sous-titres et les deux reels n'en avaient ni sur leur première ni sur leur
+  dernière phrase.
+
+**Encore ouvert**
+
+- **Voix.** `ELEVENLABS_VOICE_ID` pointe toujours sur « Curio 8 v3 », une voix
+  clonée refusée en `401 subscription_required` par le forfait pay-as-you-go —
+  re-testée deux fois ce jour. Les deux reels parlent avec « curio 8 v2 »
+  (`iDpRg8Sg5Xh5u2THyfPl`). Le `.env` n'a pas été modifié : c'est la
+  configuration de production du pipeline.
+- **Rien n'est commité.** Tout le dossier `remotion/src/sahara/`, les scripts
+  `prep_sahara_assets.py`, `build_reel_sahara.py`, `test_sahara.py`,
+  `test_sahara2.py`, `export_mots_sahara.py`, `gen_narration_sahara*.py`,
+  `gen_hook_sahara.py`, et les compositions enregistrées dans
+  `Root.experiments.tsx` — même cas de figure que celui corrigé en v2.19, un
+  clone neuf ne compilerait pas.
+- **Exactitude du beat des algues.** `diatomees_noaa.jpg` montre des diatomées
+  vivantes ; le sable du Bodélé contient leurs frustules fossilisées. L'image
+  donne la bonne forme, pas le bon état. Des vues au microscope électronique
+  existent sur Commons mais en CC BY 4.0, donc avec attribution obligatoire.
+- **À nettoyer.** `references/craftedbycm/` contient ~50 vidéos (646 Mo)
+  téléchargées par erreur. `assets/craftedbycm/` garde encore `tv_source.jpg`,
+  `tv_plate.png`, `tv_plate.json`, `archive_tv_source_v3.png` et les deux
+  `tv_generated_v*.png`, tous remplacés.
+
+**Prochaine action logique** : les deux reels partent à Tony pour avis. Selon
+son retour, soit on tranche entre les deux montages et on commite le dossier
+`sahara/`, soit on repart sur une troisième version. Rien d'autre ne devrait
+être entrepris avant cet arbitrage — les deux montages partagent leurs
+composants, un changement de direction les touche tous les deux.
+
+## DERNIÈRE SESSION — 31 août / 1er septembre 2026
+
+Journal d'état, pas une règle : rien ici ne modifie le brief, d'où l'absence de
+changement de version en en-tête. À relire au démarrage pour savoir où on en est.
+
+### Chantier 1 — format « deux carrés » (reel manchot empereur du 20/08)
+
+Le corps du montage ne passe plus par un découpage FFmpeg bloc par bloc : il est
+rendu d'un seul tenant par Remotion, composition `CurioDeuxCarres`
+(`remotion/src/curio-deux-carres/DeuxCarres.tsx`). Le raccord plein écran ↔ deux
+cartes est animé, en deux styles au choix — `overshoot` (les cartes glissent avec
+un léger dépassement) et `crossfade` (les deux états se fondent).
+
+Règle de durée à ne pas casser : **une transition ne s'ajoute jamais au montage**,
+elle consomme les 11 premières images du bloc entrant. Le rythme reste à une
+coupe toutes les 2,92s et le total reste verrouillé à 37,40s sur l'audio, donc
+les sous-titres ne se décalent pas.
+
+`test_deux_carres_manchot.py` a été réécrit intégralement pour cette version. La
+version FFmpeg d'hier n'existe plus que dans git, au commit `c4fd972`.
+
+Deux pièges rencontrés, tous deux commentés dans le code :
+- `objectPosition` en CSS ne se paramètre pas comme le `crop` de FFmpeg — le
+  pourcentage CSS répartit le débordement, il ne centre pas la fenêtre. Reprendre
+  les valeurs FFmpeg telles quelles rognait l'enseigne néon de Curio.
+- Les fenêtres de découpe du clip Curio doivent respecter
+  `offset + durée de bloc + transition ≤ durée du clip`, sinon les dernières
+  images sont gelées pendant la transition de sortie.
+
+Livrables : `testing_remotion/manchot_deux_carres/reel_manchot_deux_carres_{overshoot,crossfade}.mp4`.
+
+### Chantier 2 — reel 100% local, sortie de Dreamina (reel lacs roses du 17/08)
+
+Objectif de fond : un reel complet en 10-15 minutes, sans plateforme externe.
+Dreamina est le seul maillon qui impose une tâche humaine et un aller-retour
+manuel. La piste ouverte le remplace par un Curio découpé animé dans Remotion.
+
+- `assets/curio_cutout/curio_flat.png` — Curio détouré (fond ET ombre au sol
+  retirés, deux passes de remplissage).
+- `remotion/src/curio-avatar/SpeakingAvatar.tsx` — Curio qui s'illumine au
+  rythme de la voix. **Anneau vert validé** (référence Discord), le bleu charte
+  a été écarté.
+- `remotion/src/curio-reel/CurioReel.tsx` — reel entier : décor photo animé,
+  Curio illuminé, sous-titres bicolores selon le locuteur.
+- `build_reel_curio_local.py` — chaîne complète Pexels → ElevenLabs par segment
+  → Whisper → Remotion, entièrement mise en cache (relancer ne refacture rien).
+
+La lumière autour de Curio n'est pas décorative : elle suit le RMS de l'audio,
+mesuré image par image côté Python. Attaque 0,55, relâchement 0,14, normalisation
+sur le 95e centile. Hors des fenêtres où Curio parle, le niveau est forcé à zéro.
+
+Deux architectures produites, `testing_remotion/curio_reel_local/` :
+- `reel_lacs_roses_full_curio.mp4` (31,99s) — Curio parle de bout en bout.
+- `reel_lacs_roses_narrateur.mp4` (35,43s) — Curio fait le hook et le CTA, un
+  narrateur porte la structure sans aucune présence à l'écran (registre
+  faceless), Curio n'intervient que deux fois en pastille.
+
+**Trois défauts trouvés, dont un qui concerne la production :**
+1. `ELEVENLABS_VOICE_ID` pointe sur « Curio 8 v3 », une voix clonée, refusée en
+   `401 ivc_not_permitted` par l'abonnement pay-as-you-go actuel. Contournement
+   en place : `curio 8 v2` (`iDpRg8Sg5Xh5u2THyfPl`).
+2. **Whisper avec la narration entière en `initial_prompt` est inexploitable** —
+   le modèle recrache le texte du prompt au lieu de transcrire (aucun sous-titre
+   avant 18,7s sur une version, bloc unique de 10,8s et phrases inventées sur
+   l'autre). Corrigé ici en transcrivant segment par segment. `generators/subtitle_generator.py`
+   est appelé de la même façon en production : ça ne s'est jamais déclenché parce
+   que l'audio de prod est une lecture continue unique correspondant mot pour mot
+   au prompt, mais la fragilité est réelle et **le pipeline n'a pas été touché**.
+3. La barre oblique de `CTA_TEXTE` (« activité/un exercice ») n'a pas de
+   prononciation : ElevenLabs la lit comme une syllabe parasite. Un champ
+   `texte_dit` sépare désormais ce qui est écrit de ce qui est prononcé.
+
+### Chantier 3 — reconstructions @craftedbycm (en cours)
+
+Cinq shorts de la chaîne analysés, cinq entrées ajoutées à `motion-catalog.md`
+(quatre en catégorie 7, une en catégorie 8). Quatre des cinq portent sur la
+TEXTURE, pas sur le mouvement — c'est l'axe de valeur de cette chaîne.
+
+Chaque technique est ensuite reconstruite en composition Remotion dans
+`remotion/src/craftedbycm/`, une par short, validée une par une avant de passer
+à la suivante.
+
+`craftedbycm-01` (cadre-dans-l'écran, TV vintage) en est à sa **troisième
+version**, en attente de validation :
+- v1 — télé dessinée en CSS : rejetée, ça lit comme une illustration.
+- v2 — vraie photo Wikimedia, mais poste vu de trois quarts sur un meuble dans
+  une pièce : rejetée, trop loin et trop contextualisé.
+- v3 — poste de face détouré, isolé sur noir de studio, vitre percée
+  (`prep_tv_plate.py`). Source : Wikimedia Commons, « SW Testbild auf Philips
+  TD1410U.jpg ».
+
+**Contrainte posée par Benjamin : zéro crédit, zéro génération.** Pexels et
+Wikimedia uniquement. Deux images de télé avaient été générées avec GPT Image 2
+avant cette consigne (`assets/craftedbycm/tv_generated_v*.png`) — inutilisées,
+à supprimer.
+
+### Ce qui reste à faire
+
+**Bloquant.** Rien de tout ça n'est commité. Les trois compositions Remotion sont
+enregistrées dans `Root.experiments.tsx` alors qu'elles ne sont pas versionnées —
+exactement le cas de figure qui casse un clone neuf, celui corrigé en v2.19.
+Soit on commite, soit on les sort de l'entrée expérimentations.
+
+**Bloquant côté compte.** Tant que le forfait ElevenLabs reste en pay-as-you-go,
+les voix clonées sont inaccessibles : « Curio 8 v3 » est hors service et cloner
+une voix de narrateur est impossible.
+
+**En attente d'arbitrage :**
+- overshoot ou crossfade pour le format deux carrés ;
+- quelle voix de narrateur (échantillons dans
+  `testing_remotion/curio_reel_local/narrateur_candidats/` — deux voix
+  anglophones lisant du français, accent résiduel possible) ;
+- validation de `craftedbycm-01` v3, puis reconstructions 02 à 05 ;
+- sécuriser ou non `subtitle_generator.py` sur le point Whisper ci-dessus.
+
+**Asset manquant.** Le cutout de Curio fait 250×314 px une fois détouré. À 860 px
+de haut à l'écran on est à 2,7× d'agrandissement et les contours bavent. Il
+faudrait un export d'au moins 1000 px de haut pour l'état « grand » ; la pastille
+n'a besoin de rien.
+
+**À nettoyer.** `references/craftedbycm/` contient ~50 vidéos (646 Mo)
+téléchargées par erreur, à supprimer.
+
 ## 1. OBJECTIF DU PROJET
 
 Construire un pipeline CLI Python semi-automatisé qui produit un Reel Instagram complet (28-35 secondes visées, toléré jusqu'à 40s — v2.16) pour le compte @curio.education en moins de 30 minutes, avec validation humaine à chaque étape critique.

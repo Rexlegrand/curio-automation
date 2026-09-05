@@ -21,6 +21,22 @@ import "./index.css";
 // ci-dessous. Détails dans docs/EXPERIMENTS.md.
 
 import { MapZoomPinComposition } from "./map-zoom/MapZoomPin";
+
+// Corps du reel au format « deux carrés » (Curio qui parle en haut,
+// illustration en bas), avec raccords animés entre plein écran et deux cartes.
+import { DeuxCarresComposition } from "./curio-deux-carres/DeuxCarres";
+
+// Curio découpé qui s'illumine au rythme de la voix (piste 100% locale,
+// destinée à remplacer le hook animé Dreamina).
+import { SpeakingAvatarComposition } from "./curio-avatar/SpeakingAvatar";
+
+// Reel complet rendu 100% localement (décor + Curio illuminé + sous-titres
+// bicolores), sans hook Dreamina.
+import { CurioReelComposition } from "./curio-reel/CurioReel";
+
+// Reconstructions de techniques repérées sur la chaîne @craftedbycm
+// (une composition par short analysé, cf. motion-catalog.md).
+import { VintageTvFrameComposition } from "./craftedbycm/01-VintageTvFrame";
 import { CutoutDocComposition } from "./cutout-doc/CutoutDoc";
 
 // Direction motion design retenue parmi les 5 prototypes testés : caméra qui
@@ -39,11 +55,32 @@ import { TextMaskRevealComposition } from "./camera-techniques/TextMaskReveal";
 import { VoxLayeredSceneComposition } from "./vox-test/VoxLayeredScene";
 import { VoxLayeredScene2Dv2Composition } from "./vox-test/VoxLayeredScene2D_v2";
 import { VoxLayeredScene3DComposition } from "./vox-test/VoxLayeredScene3D";
+import { StageDemoComposition } from "./sahara/00-StageDemo";
+import { HookComposition } from "./sahara/01-Hook";
+import { DeuxMondesComposition } from "./sahara/02-DeuxMondes";
+import { DustRouteComposition } from "./sahara/03-DustRoute";
+import { CamionsComposition } from "./sahara/04-Camions";
+import { DeuxSolsComposition } from "./sahara/05-DeuxSols";
+import { RevelationComposition } from "./sahara/06-Revelation";
+import { ChuteComposition } from "./sahara/07-Chute";
+import { V2OrigineComposition } from "./sahara/v2-Origine";
+import { V2AluesComposition } from "./sahara/v2-Algues";
+import { Root2Compositions } from "./sahara/Root2";
+import { ClipsComposition } from "./sahara/v-Clip";
+// Reels de série. Un fichier de compositions par reel, tous bâtis sur les
+// composants du sahara paramétrés par props.
+import { MariannesCompositions } from "./reels/mariannes";
+import { SoleilCompositions } from "./reels/soleil";
+import { PoldersCompositions } from "./reels/polders";
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
       <MapZoomPinComposition />
+      <DeuxCarresComposition />
+      <SpeakingAvatarComposition />
+      <CurioReelComposition />
+      <VintageTvFrameComposition />
       <CutoutDocComposition />
       <CurioCameraJourneyComposition />
 
@@ -56,6 +93,23 @@ export const RemotionRoot: React.FC = () => {
       <VoxLayeredSceneComposition />
       <VoxLayeredScene2Dv2Composition />
       <VoxLayeredScene3DComposition />
+
+      <StageDemoComposition />
+      <HookComposition />
+      <DeuxMondesComposition />
+      <DustRouteComposition />
+      <CamionsComposition />
+      <DeuxSolsComposition />
+      <RevelationComposition />
+      <ChuteComposition />
+
+      <V2OrigineComposition />
+      <V2AluesComposition />
+      <Root2Compositions />
+      <ClipsComposition />
+      <MariannesCompositions />
+      <SoleilCompositions />
+      <PoldersCompositions />
     </>
   );
 };

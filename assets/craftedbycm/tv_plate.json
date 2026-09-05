@@ -1,0 +1,18 @@
+{
+  "canvasWidth": 1080,
+  "canvasHeight": 1920,
+  "screenRect": {
+    "x": 65,
+    "y": 596,
+    "width": 738,
+    "height": 577
+  },
+  "screenRadius": 124,
+  "tvRect": {
+    "x": 0,
+    "y": 498,
+    "width": 1080,
+    "height": 924
+  },
+  "source": "tv_source_v3.png \u2014 poste g\u00e9n\u00e9r\u00e9 hors pipeline par Benjamin"
+}
